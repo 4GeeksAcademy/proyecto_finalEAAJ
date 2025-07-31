@@ -55,10 +55,10 @@ def generate_sitemap(app):
         <b style="color: purple;">api/user/new-password: (Método PUT)</b><br>
         Fija una nueva contraseña una vez iniciado sesión por forgotten. Requiere autorización.<br>
         <b style="color: red;">api/user/delete: (Método DELETE)</b><br>
-        Elimina la cuenta del usuario autenticado. Requiere autorización.<br>
+        Elimina la cuenta del usuario autenticado y todos los gastos y objetibos que coincidan con el id del usuario. Requiere autorización.<br>
         <b style="color: blue;">api/user/token: (Método POST)</b><br>
         Renueva el token de autorización. Requiere autorización.<br>
-        <br>Los endpoints requieren el token JWT para autenticar las peticiones, excepto los de registro y login. Esto permite gestionar de forma segura los usuarios de la API de forma sencilla con Flask.<br>
+        <br><b>Los endpoints requieren el token JWT para autenticar las peticiones, excepto los de registro y login. Esto permite gestionar de forma segura los usuarios de la API de forma sencilla con Flask.</b><br>
         <br><b style="color: Orange;">Endpoints de gastos:</b><br>
         <b style="color: blue;">api/gasto/register:(Método POST)</b><br>
         Registra un nuevo gasto almacenando concepto, cantidad y emoji. Vincula el gasto al usuario autenticado a través de su id obtenido del token.<br>
@@ -81,28 +81,26 @@ def generate_sitemap(app):
         Modifica la información de un objetivo existente enviada en el body. Validar que el objetivo sea del usuario autenticado.<br>
         <b style="color: red;">api/objetivo/delete/(int:objetivo_id):  (Método DELETE)</b><br>
         Elimina un objetivo.<br>
+        <br><b>Todos los endpoints de gasto y objetivo requieren el token JWT para autenticar las peticiones. Esto permite gestionar de forma segura los usuarios de la API de forma sencilla con Flask.</b><br>
         <br><b style="color: Orange;">Endpoints de Artículos:</b><br>
-        <b style="color: blue;">/articulo/register: (Método POST)</b><br>
+        <b style="color: blue;">api/articulo/register: (Método POST)</b><br>
         Este endpoint permite registrar un nuevo artículo. Recibe los datos del artículo (título y texto) a través del body de la petición. Crea un objeto Articulo en la base de datos y devuelve un mensaje de éxito junto con el artículo serializado. Requiere autenticación.<br>
-        <b style="color: green;">/articulo/int:articulo_id: (Método GET)</b><br>
+        <b style="color: green;">api/articulo/int:articulo_id: (Método GET)</b><br>
         Permite obtener un artículo mediante su id. Busca el artículo con ese id en la base de datos. Si lo encuentra, devuelve el artículo serializado junto a un mensaje. En caso contrario, devuelve un mensaje de error. No requiere autenticación.<br>
-        <b style="color: purple;">/articulo/update/int:articulo_id: (Método PUT)</b> <br>
+        <b style="color: purple;">api/articulo/update/int:articulo_id: (Método PUT)</b> <br>
         Actualiza los datos de un artículo existente. Busca el artículo por id, y si lo encuentra, actualiza los campos título y texto si están presentes en el body. Una vez actualizado, devuelve un mensaje y el artículo con los datos actualizados. No requiere autenticación.<br>
         <b style="color: red;">api/artículo/delete/int:artículo_id:  (Método DELETE)</b><br>
-        Elimina un artículo.<br>
+        Elimina el artículo identificado por la id y los links vinculados a la id.<br>
         <br><b style="color: Orange;">Endpoints de Links:</b><br>
-        <b style="color: blue;">/link/register: (Método POST)</b><br>
+        <b style="color: blue;">api/link/register: (Método POST)</b><br>
         Registra un nuevo enlace asociado a un artículo. Recibe los datos del link (imagen, url, id del artículo) y lo guarda en la base de datos. Devuelve el link creado y un mensaje. Requiere autenticación.<br>
-        <b style="color: green;">/link/int:link_id: (Método GET)</b><br>
+        <b style="color: green;">api/link/int:link_id: (Método GET)</b><br>
         Obtiene un link mediante su id. Busca el link, y si existe devuelve sus datos serializados junto a un mensaje. En caso contrario, error. No requiere autenticación.<br>
-        <b style="color: green;">/articulo/int:articulo_id/links: (Método GET)</b><br>
+        <b style="color: green;">api/link/int:articulo_id/links: (Método GET)</b><br>
         Obtiene todos los links asociados a un artículo. Busca todos los links filtrados por el id del artículo, serializa los resultados y los devuelve junto a un mensaje. No requiere autenticación.<br>
         <b style="color: purple;">api/link/update/(int:link.id):</b><br>
         Actualiza los datos de un link.(método PUT).<br>
         <b style="color: red;">api/link/delete/(int:link.id): (Método DELETE)</b><br>
         Elimina un link.</p>
         </div>"""
-
-
-
 

@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_bcrypt import Bcrypt
+#from datetime import datetime
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -16,6 +17,7 @@ class User(db.Model):
     firstname: Mapped[str] = mapped_column(String(120))
     lastname: Mapped[str] = mapped_column(String(120))
     country: Mapped[str] = mapped_column(String(120))
+    perfil: Mapped[str] = mapped_column(String(120))
     phone: Mapped[str] = mapped_column(String(27), unique=True, nullable=False)
     sueldo = db.Column(db.Float, nullable=False)
     is_student: Mapped[bool] = mapped_column(Boolean(), nullable=False)
@@ -29,6 +31,7 @@ class User(db.Model):
             "lastname": self.lastname,
             "country": self.country,
             "phone": self.phone,
+            "perfil": self.perfil,
             "sueldo": self.sueldo,
             "is_student": self.is_student,
             # do not serialize the password, its a security breach
@@ -63,6 +66,7 @@ class Objetivo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(255), nullable=False)
     descripcion = db.Column(db.Text)
+    emoji = db.Column(db.String(120))
     cantidad_meta = db.Column(db.Float, nullable=False)
     fecha_limite = db.Column(db.DateTime)
     completado = db.Column(db.Boolean, default=False)
@@ -73,6 +77,7 @@ class Objetivo(db.Model):
             "id": self.id,
             "titulo": self.titulo,
             "descripcion": self.descripcion,
+            "emoji": self.emoji,
             "cantidad_meta": self.cantidad_meta,
             "fecha_limite": self.fecha_limite,
             "completado": self.completado
@@ -101,4 +106,20 @@ class Link(db.Model):
             "url_imagen": self.url_imagen,
             "enlace": self.enlace,
             "articulo_id": self.articulo_id,
-        }    
+        }  
+
+""" class PostForo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(255), nullable=False)
+    contenido = db.Column(db.Text, nullable=False)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+
+    def serialize(self):
+        return { 
+            "id": self.id,
+            "titulo": self.titulo,
+            "contenido": self.contenido,
+            "fecha_creacion": self.fecha_creacion,
+            "user_id": self.user_id,
+        } """  
