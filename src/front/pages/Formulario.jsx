@@ -44,6 +44,7 @@ export const Formulario = () => {
 					firstname: nombre,
 					lastname: apellidos,
 					country: pais,
+					perfil: "/user-profile.png",
 					phone: prefijo+telefono,
 					sueldo: sueldo, 
 					is_student: situacionBoolean(),
@@ -58,7 +59,7 @@ export const Formulario = () => {
 				alert("Usuario registrado con éxito ✅");
 				localStorage.setItem('token', data.token); 
 				setTimeout(() => {
-					navigate("/");
+					navigate("/main");
 				}, 1000); 
 			} else if (response.status >= 400) {
 				alert("Error: " + data.msg);

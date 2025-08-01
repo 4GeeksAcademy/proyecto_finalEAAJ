@@ -1,14 +1,14 @@
 /* Estilos generales */
 body {
-  min-height: 95vh;
+  min-height: 85vh;
 }
 
 #root {
-  min-height: 95vh;
+  min-height: 85vh;
 }
 
 .page {
-  min-height: 93.4vh;
+  min-height: 76vh;
 }
 
 /* Componente ForgotPassword y ResetPassword */

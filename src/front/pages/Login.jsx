@@ -36,7 +36,7 @@ export const Login = () => {
             if (response.status === 200) {
                 // Si la respuesta es 200, redirigimos al usuario
                 localStorage.setItem('token', data.token); // Guardamos el token en localStorage
-                navigate("/");//window.location.href = '/'; // Redirigimos a la página principal
+                navigate("/main");//window.location.href = '/'; // Redirigimos a la página principal
             } else if (response.status >= 400) {
                 // Si la respuesta es 401, mostramos el mensaje
                 setMessage("⛔ "+ data.msg);
