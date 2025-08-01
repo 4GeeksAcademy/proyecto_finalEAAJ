@@ -23,6 +23,7 @@ def register():
         new_user.firstname = body["firstname"]
         new_user.lastname = body["lastname"]
         new_user.country = body["country"]
+        new_user.perfil = body["perfil"]
         new_user.phone = body["phone"] 
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
@@ -382,7 +383,7 @@ def delete_objetivo(objetivo_id):
     db.session.delete(objetivo)
     db.session.commit()
     return jsonify({"msg": "Objetivo eliminado correctamente"}), 200
-
+                                                                                                                               
 
 
 #____________________________________________________________________________________

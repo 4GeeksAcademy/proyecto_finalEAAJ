@@ -13,11 +13,11 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
-    username: Mapped[str] = mapped_column(String(120))
-    firstname: Mapped[str] = mapped_column(String(120))
-    lastname: Mapped[str] = mapped_column(String(120))
-    country: Mapped[str] = mapped_column(String(120))
-    perfil: Mapped[str] = mapped_column(String(120))
+    username: Mapped[str] = mapped_column(String(120), nullable=False)
+    firstname: Mapped[str] = mapped_column(String(120), nullable=True)
+    lastname: Mapped[str] = mapped_column(String(120), nullable=True)
+    country: Mapped[str] = mapped_column(String(120), nullable=True)
+    perfil: Mapped[str] = mapped_column(String(120), nullable=True)
     phone: Mapped[str] = mapped_column(String(27), unique=True, nullable=False)
     sueldo = db.Column(db.Float, nullable=False)
     is_student: Mapped[bool] = mapped_column(Boolean(), nullable=False)
@@ -65,10 +65,10 @@ class Gasto(db.Model):
 class Objetivo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(255), nullable=False)
-    descripcion = db.Column(db.Text)
+    descripcion = db.Column(db.Text, nullable=True)
     emoji = db.Column(db.String(120))
     cantidad_meta = db.Column(db.Float, nullable=False)
-    fecha_limite = db.Column(db.DateTime)
+    fecha_limite = db.Column(db.DateTime, nullable=True)
     completado = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -96,8 +96,8 @@ class Articulo(db.Model):
         }
 class Link(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    url_imagen = db.Column(db.String(255))
-    enlace = db.Column(db.String(255))
+    url_imagen = db.Column(db.String(255), nullable=True)
+    enlace = db.Column(db.String(255), nullable=True)
     articulo_id = db.Column(db.Integer, db.ForeignKey('articulo.id'), nullable=False)
 
     def serialize(self):

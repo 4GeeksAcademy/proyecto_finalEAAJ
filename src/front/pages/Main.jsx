@@ -12,11 +12,91 @@ export const Main = () => {
     setObjetivos(objetivosGuardados);
      const sueldoGuardado = localStorage.getItem("sueldo");
     const ahorroGuardado = localStorage.getItem("ahorro");
-
+    handleProfileUser();
     if (sueldoGuardado) setSueldo(parseFloat(sueldoGuardado));
     if (ahorroGuardado) setAhorro(parseFloat(ahorroGuardado));
   }, []);
   
+const handleProfileUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/user/profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        setSueldo(data.sueldo);
+      } else {
+        navigate(`/`);
+      }
+    } catch (error) {
+      navigate(`/`);
+    }
+  };
+
+  const handleGasto = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/gasto",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        
+        setResetLoading(false);
+      } else {
+        setResetLoading(false);
+      }
+    } catch (error) {
+      setResetLoading(false);
+    }
+  };
+
+  const handleObjetivo = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/objetivo",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        
+        setResetLoading(false);
+      } else {
+        setResetLoading(false);
+      }
+    } catch (error) {
+      setResetLoading(false);
+    }
+  };
+
 
   
   const calcularDiasRestantes = (fechaLimite) => {
