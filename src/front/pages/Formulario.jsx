@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
-/* import '@fontsource/bebas-neue'; */
-/* import { useNavigate } from "react-router-dom"; */
+
+import { useNavigate } from "react-router-dom";
 
 export const Formulario = () => {
 	const [situacion, setSituacion] = useState(null);
@@ -19,7 +19,7 @@ export const Formulario = () => {
 		if (isNaN(valor)) return 0;
 		return (valor * 0.2).toFixed(2);
 	};
-	/* const navigate = useNavigate(); */
+	const navigate = useNavigate(); 
 	const situacionBoolean = ()=> {
 		if (situacion === "estudiante") {
 			return true;
@@ -32,7 +32,7 @@ export const Formulario = () => {
 		e.preventDefault();
 
 		try {
-			const response = await fetch("https://special-waddle-q76694p5wq79f67p7-3001.app.github.dev/api/user/register", {
+			const response = await fetch(import.meta.env.VITE_BACKEND_URL+"/api/user/register", {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -44,21 +44,24 @@ export const Formulario = () => {
 					firstname: nombre,
 					lastname: apellidos,
 					country: pais,
+					perfil: "/user-profile.png",
 					phone: prefijo+telefono,
-					sueldo: sueldo, // Asegúrate de definir y capturar este estado en tu formulario
+					sueldo: sueldo, 
 					is_student: situacionBoolean(),
 				}),
 			});
 
 			const data = await response.json();
 
-			if (response.status === 201) {// Si la respuesta es 201, el usuario se registró correctamente
+			if (response.status === 201) {
+				localStorage.setItem("sueldo", sueldo);
+        		localStorage.setItem("ahorro", calcularAhorro());
 				alert("Usuario registrado con éxito ✅");
-				localStorage.setItem('token', data.token); // Guardamos el token en localStorage
+				localStorage.setItem('token', data.token); 
 				setTimeout(() => {
-					window.location.href = '/'; // Redirige al usuario a la página de login
-				}, 1000); // Espera 1 segundo antes de redirigir
-			} else if (response.status >= 400) {// Si la respuesta es un error, mostramos el mensaje
+					navigate("/main");
+				}, 1000); 
+			} else if (response.status >= 400) {
 				alert("Error: " + data.msg);
 			}
 		} catch (error) {
@@ -223,37 +226,6 @@ export const Formulario = () => {
 	);
 };
 
-export default function Footer() {
-  const frases = [
-    "Ahorra hoy para invertir mañana 💰",
-    "La constancia vence al interés compuesto 📈",
-    "Invierte en conocimiento antes que en activos 📚",
-    "Cada euro cuenta, cada decisión importa 💡"
-  ];
 
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % frases.length);
-    }, 5000); 
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <footer
-      className="w-full p-4 text-center"
-      style={{
-        backgroundColor: "#b7ff00",
-        color: "black",
-        borderTop: "2px solid #b7ff00"
-      }}
-    >
-      <p className="text-lg font-medium transition-opacity duration-500">
-        {frases[index]}
-      </p>
-    </footer>
-  );
-}
 
 
