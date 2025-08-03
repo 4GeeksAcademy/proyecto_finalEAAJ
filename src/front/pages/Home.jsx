@@ -94,8 +94,11 @@ export const Home = () => {
       <section className="text-center bg-light p-5 rounded shadow-sm">
         <h2 className="mb-3">Inversión</h2>
         <p className="lead">
-          ¡Próximamente podrás descubrir formas inteligentes de hacer crecer tu dinero!
+          Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
         </p>
+        <Link to="/inversion" className="btn btn-primary mt-3">
+          ¡Quiero que mi dinero crezca!
+        </Link>
       </section>
     </div>
   );
