@@ -22,7 +22,7 @@ useEffect(() => {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const nuevoObjetivo = { "titulo":concepto, "cantidad_meta":cantidad, "fecha_limite":fechaLimite, "descripcion":explicacion };
+  const nuevoObjetivo = { "titulo":concepto, "cantidad_meta":cantidad, "fecha_limite":fechaLimite, "descripcion":explicacion, "emoji":""};
 
   try {
     const res = await fetch(import.meta.env.VITE_BACKEND_URL + "api/objetivo/register", {

@@ -118,10 +118,10 @@ useEffect(() => {
     const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
     setSueldo(disponibleGuardado + sueldoNetoGuardado);
 
-    const ahorroGuardado = localStorage.getItem("ahorro");
-    handleProfileUser();
-    if (sueldoGuardado) setSueldo(parseFloat(sueldoGuardado));
-    if (ahorroGuardado) setAhorro(parseFloat(ahorroGuardado));
+    const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+
+  setSueldo(disponibleGuardado + sueldoNetoGuardado);
+  setAhorro(ahorroGuardado);
   }, []);
   
 const handleProfileUser = async (e) => {
