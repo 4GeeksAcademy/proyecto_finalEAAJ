@@ -20,6 +20,7 @@ import { Loader } from "./pages/Loader";
 import { Main } from "./pages/Main";
 import { Objetivos } from "./pages/Objetivos";
 import { EditarObjetivo } from "./pages/EditarObjetivo";
+import  Perfil  from "./pages/Perfil";
 
 
 export const router = createBrowserRouter(
@@ -36,6 +37,8 @@ export const router = createBrowserRouter(
       <Route path="/form" element={<Formulario />} />
       <Route path="/login" element={<Login />} />
       <Route path="/addnewgasto" element={<AddNewGasto />} />
+       <Route path="/perfil" element={<Perfil />} />
+       <Route path="/formulario" element={<Formulario />} />
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
   )

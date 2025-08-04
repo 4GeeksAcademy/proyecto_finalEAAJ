@@ -1,11 +1,12 @@
 import React from "react";
 
+
 const Perfil = () => {
   const usuario = {
-    username: "juanperez123",
-    nombre: "Juan Pérez",
-    apellido: "Pérez",
-    email: "juan@example.com",
+    username: "Username",
+    nombre: "nombre",
+    apellido: "apellido",
+    email: "email",
   };
 
   const inputStyle = {
@@ -17,6 +18,7 @@ const Perfil = () => {
     border: "1px solid #ccc",
     boxShadow: "0 2px 4px #FBFFE4",
     fontSize: "16px",
+    color: "grey",
   };
 
   const buttonStyle = {
@@ -56,9 +58,9 @@ const Perfil = () => {
     }}>
       <div style={{ marginBottom: "10px" }}>
         <img
-          src="https://via.placeholder.com/100"
+          src="/user-profile.png"
           alt="Foto de perfil"
-          style={{ borderRadius: "50%", marginBottom: "8px" }}
+          style={{ borderRadius: "50%", marginBottom: "8px", width: "120px", height: "120px", objectFit: "cover" }}
         />
         <div style={{ fontSize: "14px", color: "#555", marginBottom: "12px" }}>
           añadir foto
@@ -70,15 +72,7 @@ const Perfil = () => {
       <input type="text" value={usuario.apellido} readOnly style={inputStyle} />
       <input type="email" value={usuario.email} readOnly style={inputStyle} />
 
-      <button
-        style={buttonStyle}
-        onClick={handleBorrarUsuario}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-      >
-        borrar usuario
-      </button>
+
     </div>
   );
 };
