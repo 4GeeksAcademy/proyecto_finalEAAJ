@@ -20,20 +20,21 @@ import { Loader } from "./pages/Loader";
 import { Main } from "./pages/Main";
 import { Objetivos } from "./pages/Objetivos";
 import { EditarObjetivo } from "./pages/EditarObjetivo";
-
+import { EditarGasto } from "./pages/EditarGasto";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
-      <Route path="/" element={<Home />} />
-      <Route path="/Main" element={<Main />} />
-       <Route path="/Objetivos" element={<Objetivos />} />
-        <Route path="/objetivos/editar/:index" element={<EditarObjetivo />} />
+      <Route path="/"  element={<Home />} />
+      <Route path="/main" element={<Main />} />
+       <Route path="/objetivos" element={<Objetivos />} />
+        <Route path="/objetivos/editar/:id" element={<EditarObjetivo />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/resetpassword" element={<ResetPassword />} />
       <Route path="/form" element={<Formulario />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/gasto/editar/:id" element={<EditarGasto />} />
       <Route path="/addnewgasto" element={<AddNewGasto />} />
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>

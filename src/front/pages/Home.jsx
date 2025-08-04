@@ -13,7 +13,8 @@ export const Home = () => {
       if (!backendUrl)
         throw new Error("VITE_BACKEND_URL is not defined in .env file");
 
-      const response = await fetch(backendUrl + "/api/hello");
+      const cleanBackendUrl = backendUrl.replace(/\/$/, "");
+const response = await fetch(cleanBackendUrl + "/api/hello"); 
       const data = await response.json();
 
       if (response.ok) dispatch({ type: "set_hello", payload: data.message });

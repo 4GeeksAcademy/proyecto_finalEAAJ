@@ -11,7 +11,7 @@ import requests
 api = Blueprint('api', __name__)
 CORS(api)
 
-# Endpoint de registrar al usuario
+
 @api.route("/user/register", methods=['POST'])
 def register():
     body = request.get_json()
@@ -19,7 +19,7 @@ def register():
         new_user = User()
         new_user.username = body["username"]
         new_user.email = body["email"]
-        new_user.set_password(body["password"])  # Usar el método para hashear la contraseña
+        new_user.set_password(body["password"]) 
         new_user.firstname = body["firstname"]
         new_user.lastname = body["lastname"]
         new_user.country = body["country"]
@@ -245,7 +245,7 @@ def register_gasto():
     return jsonify({"msg": "Gasto registrado con éxito", "gasto": new_gasto.serialize()}), 201
 
 # Obtener Gasto por ID
-@api.route("/gasto/<int:gasto_id>", methods=['GET'])
+@api.route("/api/gasto/<int:gasto_id>", methods=['GET'])
 @jwt_required()
 def get_gasto(gasto_id):
     current_user_id = get_jwt_identity()
@@ -265,7 +265,7 @@ def get_all_gastos():
     return jsonify({"gastos": [gasto.serialize() for gasto in gastos]}), 200
 
 # Actualizar Gasto
-@api.route("/gasto/update/<int:gasto_id>", methods=['PUT'])
+@api.route("/api/gasto/update/<int:gasto_id>", methods=['PUT'])
 @jwt_required()
 def update_gasto(gasto_id):
     current_user_id = get_jwt_identity()
@@ -333,13 +333,17 @@ def get_objetivo(objetivo_id):
 
     return jsonify({"objetivo": objetivo.serialize()}), 200
 
-# Obtener todos los Objetivos del usuario
+
+#obtener todos los objetivos (jorge: hice un cambio en el return para que me cogiera los objetivos de la main)
 @api.route("/objetivo", methods=['GET'])
 @jwt_required()
-def get_all_objetivos():
+def get_objetivos():
     current_user_id = get_jwt_identity()
     objetivos = Objetivo.query.filter_by(user_id=current_user_id).all()
-    return jsonify({"objetivos": [objetivo.serialize() for objetivo in objetivos]}), 200
+
+    return jsonify([o.serialize() for o in objetivos]), 200
+
+
 
 # Actualizar Objetivo
 @api.route("/objetivo/update/<int:objetivo_id>", methods=['PUT'])
@@ -363,7 +367,8 @@ def update_objetivo(objetivo_id):
     if 'completado' in body:
         objetivo.completado = body['completado']
 
-        db.session.commit()
+    db.session.commit()
+    
     return jsonify({"msg": "Objetivo actualizado correctamente", "objetivo": objetivo.serialize()}), 200
 
 # Eliminar Objetivo
@@ -371,13 +376,14 @@ def update_objetivo(objetivo_id):
 @jwt_required()
 def delete_objetivo(objetivo_id):
     current_user_id = get_jwt_identity()
-    objetivo = objetivo.query.filter_by(id=objetivo_id, user_id=current_user_id).first()
+    objetivo = Objetivo.query.filter_by(id=objetivo_id, user_id=current_user_id).first()
 
     if not objetivo:
         return jsonify({"msg": "Objetivo no encontrado"}), 404
 
     db.session.delete(objetivo)
     db.session.commit()
+
     return jsonify({"msg": "Objetivo eliminado correctamente"}), 200
 
 

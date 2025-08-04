@@ -68,12 +68,12 @@ export const AddNewGasto = () => {
       return;
     }
 
-    // Datos para el backend (según tu endpoint)
+    // Datos para el backend 
     const gastoData = {
-      user_id: userId,
-      sueldo: parseFloat(cantidad),
-      is_student: false,
-    };
+    concepto: concepto,
+    cantidad: parseFloat(cantidad),
+    emoji: emoji || null,
+};
 
     try {
       const response = await fetch(`${API_BASE_URL}api/gasto/register`, {
@@ -88,7 +88,7 @@ export const AddNewGasto = () => {
       const result = await response.json();
 
       if (response.ok) {
-        // Guardar localmente el gasto para usar en frontend
+        
         const gastosGuardados = JSON.parse(localStorage.getItem("gastos")) || [];
         gastosGuardados.push({
           concepto,
