@@ -14,10 +14,7 @@ export const Main = () => {
     const savedToken = localStorage.getItem("token") || "";
     setToken(savedToken);
   }, []);
-  useEffect(() => {
-    localStorage.setItem("recargarGastos", "true");
-    navigate("/main");
-  }, []);
+ 
 
   // 🔹 Obtener gastos
    useEffect(() => {

@@ -12,6 +12,7 @@ export const Formulario = () => {
   const [pais, setPais] = useState("");
   const [prefijo, setPrefijo] = useState("");
   const [telefono, setTelefono] = useState("");
+  const [perfil, setPerfil] = useState("");
   const navigate = useNavigate();
 
   const calcularAhorro = () => {
@@ -26,7 +27,7 @@ export const Formulario = () => {
     e.preventDefault();
 
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL+"/api/user/register", {
+			const response = await fetch(import.meta.env.VITE_BACKEND_URL+"api/user/register", {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -41,6 +42,7 @@ export const Formulario = () => {
 					phone: prefijo+telefono,
 					sueldo: sueldo, 
 					is_student: situacionBoolean(),
+          perfil: perfil 
 				}),
 			});
 
@@ -52,7 +54,7 @@ export const Formulario = () => {
 				alert("Usuario registrado con éxito ✅");
 				localStorage.setItem('token', data.token); 
 				setTimeout(() => {
-					navigate("/");
+					navigate("/main");
 				}, 1000); 
 			} else if (response.status >= 400) {
 				alert("Error: " + data.msg);
@@ -195,6 +197,12 @@ export const Formulario = () => {
                 Tengo trabajo
               </button>
             </div>
+
+            <select value={perfil} onChange={(e) => setPerfil(e.target.value)}>
+          <option value="">Selecciona un perfil</option>
+          <option value="ahorrador">Ahorrador</option>
+              <option value="inversor">Inversor</option>
+</select>
 
             {/* Campos de sueldo */}
             <div className="mb-4">

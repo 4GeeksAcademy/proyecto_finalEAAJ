@@ -19,7 +19,8 @@ import { Loader } from "./pages/Loader";
 import { Main } from "./pages/Main";
 import { Objetivos } from "./pages/Objetivos";
 import { EditarObjetivo } from "./pages/EditarObjetivo";
-
+import { EditarGasto } from "./pages/EditarGasto";
+import {Inversion} from "./pages/Inversion";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
