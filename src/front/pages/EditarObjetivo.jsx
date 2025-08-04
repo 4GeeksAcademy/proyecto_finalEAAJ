@@ -8,8 +8,15 @@ export const EditarObjetivo = () => {
   const [concepto, setConcepto] = useState("");
   const [cantidad, setCantidad] = useState(0);
   const [fechaLimite, setFechaLimite] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+    const [descripcion, setDescripcion] = useState("");
   const [token, setToken] = useState("");
+
+    useEffect(() => {
+        const savedToken = localStorage.getItem("token") || "";
+        if (!savedToken || savedToken.length < 10) {
+          navigate("/");
+        } 
+      }, [navigate]);
 
   useEffect(() => {
     setToken(localStorage.getItem("token") || "");
