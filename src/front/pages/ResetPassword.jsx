@@ -75,7 +75,7 @@ export const ResetPassword = () => {
         setResetLoading(false);
 
         setTimeout(() => {
-          navigate("/main");
+          navigate("/login");
         }, 500);
       } else {
         setResetMessage(data.msg || "❌ Error al actualizar la contraseña.");

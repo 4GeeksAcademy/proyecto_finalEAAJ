@@ -11,6 +11,15 @@ export const AddNewGasto = () => {
   const [loading, setLoading] = useState(false);
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const savedToken = localStorage.getItem("token") || "";
+      if (!savedToken || savedToken.length < 10) {
+        navigate("/");
+      } 
+    }, [navigate]);
+
   const onEmojiClick = (emojiObject) => {
     setEmoji(emojiObject.emoji);
     setShowPicker(false);
@@ -39,11 +48,12 @@ export const AddNewGasto = () => {
       return;
     }
 
+    // Datos para el backend 
     const gastoData = {
-      concepto: concepto,
-      cantidad: parseFloat(cantidad),
-      emoji: emoji
-    };
+    concepto: concepto,
+    cantidad: parseFloat(cantidad),
+    emoji: emoji || null,
+};
 
     try {
       const response = await fetch(`${API_BASE_URL}api/gasto/register`, {
@@ -58,7 +68,7 @@ export const AddNewGasto = () => {
       const result = await response.json();
 
       if (response.ok) {
-        // Guardar localmente el gasto para usar en frontend
+        
         const gastosGuardados = JSON.parse(localStorage.getItem("gastos")) || [];
         gastosGuardados.push({
           concepto,

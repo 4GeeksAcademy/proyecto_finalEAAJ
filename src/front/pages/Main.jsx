@@ -5,17 +5,131 @@ export const Main = () => {
   const [objetivos, setObjetivos] = useState([]);
   const [sueldo, setSueldo] = useState(0);
   const [ahorro, setAhorro] = useState(0);
+  const [token, setToken] = useState("");
+  const [gastos, setGastos] = useState([]);
+  const [recargarGastos, setRecargarGastos] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const objetivosGuardados = JSON.parse(localStorage.getItem("objetivos")) || [];
-    setObjetivos(objetivosGuardados);
-     const sueldoGuardado = localStorage.getItem("sueldo");
-    const ahorroGuardado = localStorage.getItem("ahorro");
-    handleProfileUser();
-    if (sueldoGuardado) setSueldo(parseFloat(sueldoGuardado));
-    if (ahorroGuardado) setAhorro(parseFloat(ahorroGuardado));
+    const savedToken = localStorage.getItem("token") || "";
+    setToken(savedToken);
   }, []);
+ 
+
+  // 🔹 Obtener gastos
+   useEffect(() => {
+    const fetchGastos = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gasto`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) throw new Error("Error al obtener gastos");
+
+        const data = await res.json();
+        const lista = Array.isArray(data)
+          ? data
+          : Array.isArray(data.gastos)
+          ? data.gastos
+          : [];
+        setGastos(lista);
+      } catch (err) {
+        console.error(err);
+        setGastos([]);
+      }
+    };
+
+    if (token) fetchGastos();
+  }, [token, recargarGastos]);
+
+useEffect(() => {
+    const shouldReload = localStorage.getItem("recargarGastos");
+    if (shouldReload === "true") {
+      setRecargarGastos((prev) => !prev);
+      localStorage.removeItem("recargarGastos");
+    }
+  }, []);
+
+
+  // 🔹 Editar gasto
+  const handleEditarGasto = (id) => {
+    navigate(`/gasto/editar/${id}`);
+  };
+
+  // 🔹 Eliminar gasto
+  const eliminarGasto = async (id) => {
+    if (!window.confirm("¿Seguro que quieres eliminar este gasto?")) return;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/gasto/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al eliminar");
+
+      setGastos((prev) => prev.filter((g) => g.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo eliminar el gasto");
+    }
+  };
+
+  // 🔹 Obtener objetivos
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchObjetivos = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/objetivo`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) throw new Error("Error al obtener objetivos");
+
+        const data = await res.json();
+
+        const objetivosAdaptados = Array.isArray(data)
+          ? data.map((o) => ({
+            id: o.id,
+            concepto: o.titulo,
+            cantidad: o.cantidad_meta,
+            fechaLimite: o.fecha_limite,
+            completado: o.completado || false,
+          }))
+          : [];
+
+        setObjetivos(objetivosAdaptados);
+        localStorage.setItem("objetivos", JSON.stringify(objetivosAdaptados));
+      } catch (err) {
+        console.error("Error cargando objetivos:", err);
+        setObjetivos([]);
+      }
+    };
+
+    fetchObjetivos();
+  }, [token]);
+
+  useEffect(() => {
+    const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
+    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
+    setSueldo(disponibleGuardado + sueldoNetoGuardado);
+
+    const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+
+  setSueldo(disponibleGuardado + sueldoNetoGuardado);
+  setAhorro(ahorroGuardado);
+  }, []);
+  
+useEffect(() => {
+        const savedToken = localStorage.getItem("token") || "";
+        if (!savedToken || savedToken.length < 10) {
+          navigate("/");
+        } 
+      }, [navigate]);
   
 const handleProfileUser = async (e) => {
     e.preventDefault();
@@ -106,26 +220,68 @@ const handleProfileUser = async (e) => {
     return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
   };
 
-  const eliminarObjetivo = (index) => {
-    const nuevosObjetivos = objetivos.filter((_, i) => i !== index);
-    setObjetivos(nuevosObjetivos);
-    localStorage.setItem("objetivos", JSON.stringify(nuevosObjetivos));
+  const totalGastos = Array.isArray(gastos)
+    ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
+    : 0;
+
+
+  const dineroDisponible = sueldo - totalGastos;
+
+  const handleEditarObjetivo = (id) => {
+    navigate(`/objetivos/editar/${id}`);
   };
 
-  const handleEditarObjetivo = (index) => {
-    navigate(`/objetivos/editar/${index}`);
+  const eliminarObjetivo = async (id) => {
+    if (!window.confirm("¿Seguro que quieres eliminar este objetivo?")) return;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al eliminar");
+
+      setObjetivos((prev) => prev.filter((obj) => obj.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo eliminar el objetivo");
+    }
   };
 
-  const marcarComoCompletado = (index) => {
-    const nuevosObjetivos = [...objetivos];
-    nuevosObjetivos[index].completado = !nuevosObjetivos[index].completado; // Alterna el estado
-    setObjetivos(nuevosObjetivos);
-    localStorage.setItem("objetivos", JSON.stringify(nuevosObjetivos));
+  const marcarComoCompletado = async (id, completado) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ completado: !completado }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al actualizar");
+
+      setObjetivos((prev) =>
+        prev.map((obj) =>
+          obj.id === id ? { ...obj, completado: !completado } : obj
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo actualizar el objetivo");
+    }
   };
 
   return (
     <div className="container-fluid p-4">
-      <div className="d-flex justify-content-end mb-4">
+      {/* <div className="d-flex justify-content-end mb-4">
         <button
           className="btn"
           style={{
@@ -137,122 +293,184 @@ const handleProfileUser = async (e) => {
             fontSize: "18px",
           }}
         >
-          P
+          Perfil
         </button>
-      </div>
+      </div> */}
 
+      {/* RESUMEN DINERO */}
       <div className="row mb-4">
         <div className="col-md-6">
-          <div
-            className="card text-center p-3"
-            style={{ backgroundColor: "#b7ff00", border: "none" }}
-          >
+          <div className="card text-center p-3" style={{
+            backgroundColor: dineroDisponible < ahorro ? "#ff4c4c" : "#b7ff00", // rojo si dineroDisponible < ahorro, verde si no
+            border: "none",
+            color: dineroDisponible < ahorro ? "white" : "black", // letras blancas si rojo, negras si verde
+            transition: "background-color 0.3s ease", // transición suave
+          }}>
             <h5>Dinero Total</h5>
-            <p className="display-6">{sueldo}€</p>
+            <p className="display-6">{dineroDisponible}€</p>
           </div>
         </div>
         <div className="col-md-6">
-          <div
-            className="card text-center p-3"
-            style={{ backgroundColor: "#b7ff00", border: "none" }}
-          >
-            <h5>Dinero Ahorrado</h5>
+          <div className="card text-center p-3" style={{ backgroundColor: "#b7ff00", border: "none" }}>
+            <h5>Se debería ahorrar</h5>
             <p className="display-6">{ahorro}€</p>
           </div>
         </div>
       </div>
 
-      <div className="text-center mb-4">
-        <Link to="/objetivos">
-          <button className="btn btn-success">+ Crear objetivo</button>
-        </Link>
+      {/* LISTA DE OBJETIVOS */}
+      <div className="container mt-4">
+        <div className="text-center mt-3">
+          <h3>Lista de Objetivos</h3>
+
+          {objetivos.length === 0 && <p>No hay objetivos aún.</p>}
+
+          <div className="d-flex flex-wrap gap-3 justify-content-center mt-3">
+            {objetivos.map((obj) => (
+              <div
+                key={obj.id}
+                style={{
+                  position: "relative",
+                  width: "120px",
+                  height: "120px",
+                  borderRadius: "50%",
+                  border: "3px solid #7bff00",
+                  backgroundColor: obj.completado ? "#7bff00" : "#ffffff",
+                  color: obj.completado ? "#000000" : "#000000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  padding: "5px",
+                }}
+              >
+                <small>{obj.concepto}</small>
+                <strong>{obj.cantidad}€</strong>
+                <small>{calcularDiasRestantes(obj.fechaLimite)} días</small>
+
+                <button
+                  onClick={() => handleEditarObjetivo(obj.id)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    left: "5px",
+                    background: "transparent",
+                    border: "none",
+                    color: "white",
+                    fontSize: "18px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ✏️
+                </button>
+                <button
+                  onClick={() => eliminarObjetivo(obj.id)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    background: "transparent",
+                    border: "none",
+                    color: "red",
+                    fontSize: "20px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ✖️
+                </button>
+                <button
+                  onClick={() => marcarComoCompletado(obj.id, obj.completado)}
+                  style={{
+                    position: "absolute",
+                    bottom: "5px",
+                    right: "5px",
+                    background: "transparent",
+                    border: "none",
+                    fontSize: "20px",
+                    cursor: "pointer",
+                    color: "limegreen",
+                  }}
+                >
+                  ✅
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+        <div className="text-center mt-4">
+          <Link to="/objetivos">
+            <button className="btn " style={{ backgroundColor: "#b7ff00", color: "black" }}>+ Crear objetivo</button>
+          </Link>
+        </div>
       </div>
 
-      <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
-        {objetivos.map((obj, index) => (
-          <div
-            key={index}
-            style={{
-              position: "relative",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              backgroundColor: obj.completado ? "green" : "#007bff", // ✅ cambia color si está completado
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              textAlign: "center",
-              padding: "5px",
-            }}
-          >
-            <small>{obj.concepto}</small>
-            <strong>{obj.cantidad}€</strong>
-            <small>{calcularDiasRestantes(obj.fechaLimite)} días</small>
+      {/* PANEL DE GASTOS */}
+      <div className="container mt-5">
+        <div className="text-center">
+          <h3>Lista de Gastos</h3>
 
-            {/* Botón editar */}
-            <button
-              onClick={() => handleEditarObjetivo(index)}
-              style={{
-                position: "absolute",
-                top: "5px",
-                left: "5px",
-                backgroundColor: "transparent",
-                border: "none",
-                color: "white",
-                fontSize: "18px",
-                cursor: "pointer",
-              }}
-              title="Editar objetivo"
-            >
-              ✏️
-            </button>
+          {Array.isArray(gastos) && gastos.length > 0 ? (
+            <div className="d-flex flex-wrap gap-3 justify-content-center mt-3">
+              {gastos.map((gasto) => (
+                <div
+                  key={gasto.id}
+                  className="card p-3 shadow"
+                  style={{ width: "220px", backgroundColor: "#f8f9fa", position: "relative" }}
+                >
+                  <h5 className="mb-2">
+                    {gasto.concepto} {gasto.emoji || ""}
+                  </h5>
+                  <p className="fw-bold">{gasto.cantidad} €</p>
 
-            {/* Botón eliminar */}
-            <button
-              onClick={() => eliminarObjetivo(index)}
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                backgroundColor: "transparent",
-                border: "none",
-                color: "red",
-                fontSize: "20px",
-                cursor: "pointer",
-                fontWeight: "bold",
-              }}
-              title="Eliminar objetivo"
-            >
-              ✖️
-            </button>
+                  <button
+                    onClick={() => handleEditarGasto(gasto.id)}
+                    style={{
+                      position: "absolute",
+                      top: "5px",
+                      left: "5px",
+                      background: "transparent",
+                      border: "none",
+                      fontSize: "18px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ✏️
+                  </button>
 
-            {/* ✅ Botón marcar como completado */}
-            <button
-              onClick={() => marcarComoCompletado(index)}
-              style={{
-                position: "absolute",
-                bottom: "5px",
-                right: "5px",
-                backgroundColor: "transparent",
-                border: "none",
-                fontSize: "20px",
-                cursor: "pointer",
-                color: "limegreen",
-              }}
-              title="Marcar como completado"
-            >
-              ✅
-            </button>
-          </div>
-        ))}
-        <div className="text-center mb-4">
-        <Link to="/addnewgasto">
-        <button className="btn btn-warning">➕ Añadir gasto</button>
-        </Link>
+                  <button
+                    onClick={() => eliminarGasto(gasto.id)}
+                    style={{
+                      position: "absolute",
+                      top: "5px",
+                      right: "5px",
+                      background: "transparent",
+                      border: "none",
+                      fontSize: "20px",
+                      color: "red",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ❌
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No hay gastos aún.</p>
+          )}
+        </div>
+
+        <div className="text-center mt-4">
+          <Link to="/addnewgasto">
+            <button className="btn " style={{ backgroundColor: "#b7ff00", color: "black" }}>➕ Añadir gasto</button>
+          </Link>
         </div>
       </div>
     </div>
   );
-};
+}

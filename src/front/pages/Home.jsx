@@ -15,7 +15,8 @@ export const Home = () => {
       if (!backendUrl)
         throw new Error("VITE_BACKEND_URL is not defined in .env file");
 
-      const response = await fetch(backendUrl + "/api/hello");
+      const cleanBackendUrl = backendUrl.replace(/\/$/, "");
+const response = await fetch(cleanBackendUrl + "/api/hello"); 
       const data = await response.json();
 
       if (response.ok) dispatch({ type: "set_hello", payload: data.message });
@@ -97,8 +98,11 @@ export const Home = () => {
       <section className="text-center bg-light p-5 rounded shadow-sm">
         <h2 className="mb-3">Inversión</h2>
         <p className="lead">
-          ¡Próximamente podrás descubrir formas inteligentes de hacer crecer tu dinero!
+          Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
         </p>
+        <Link to="/inversion" className="btn btn-primary mt-3">
+          ¡Quiero que mi dinero crezca!
+        </Link>
       </section>
     </div>
   );
