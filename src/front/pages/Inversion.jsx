@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Accordion, Card, Form, Table, Row, Col, Alert } from "react-bootstrap";
+import { Accordion, Card, Form, Table, Row, Col, Alert, Badge } from "react-bootstrap";
 import CryptoWidget from "../CryptoWidget";
 import {
   ResponsiveContainer,
@@ -34,11 +34,21 @@ export const Inversion = () => {
   }, [location]);
 
   useEffect(() => {
-  const savedToken = localStorage.getItem("token");
-  if (savedToken && savedToken.length > 10) {
-    setToken(savedToken);
-  }
-}, []);
+    const savedToken = localStorage.getItem("token");
+
+    const isValid =
+      typeof savedToken === "string" &&
+      savedToken !== "null" &&
+      savedToken !== "undefined" &&
+      savedToken.trim() !== "" &&
+      savedToken.trim().length > 10;
+
+    if (isValid) {
+      setToken(savedToken);
+    } else {
+      setToken(null);
+    }
+  }, []);
 
   useEffect(() => {
     calculateGrowth();
@@ -72,8 +82,30 @@ export const Inversion = () => {
     });
   };
 
+  console.log("¿Usuario logueado?", token);
+
   return (
+
+
     <div className="container mt-5">
+      <Card className="p-4 mb-5 bg-white">
+        <h3 className="mb-3">🧭 Bienvenido al Espacio de Inversión para Jóvenes</h3>
+        <p className="fs-5">
+          Aquí aprenderás de forma sencilla cómo empezar a invertir, con consejos prácticos,
+          simuladores personalizados y explicaciones claras sobre criptomonedas, acciones
+          y fondos indexados. Ideal si quieres <strong>ahorrar, invertir y ganar autonomía financiera</strong>,
+          aunque partas desde cero.
+        </p>
+        <p className="fs-5 mb-0">
+          <strong>¿Qué encontrarás aquí?</strong>
+          <ul className="fs-5">
+            <li>💡 Consejos clave para empezar con buen pie</li>
+            <li>🧮 Un simulador interactivo de inversión a largo plazo</li>
+            <li>₿ Información útil sobre criptomonedas, acciones y fondos indexados</li>
+            <li>🔐 Acceso a herramientas exclusivas si estás registrado</li>
+          </ul>
+        </p>
+      </Card>
       {/* Parte visible para todo el mundo */}
       <Card className="p-4 mb-5">
         <h4 className="mb-3">📊 Criptomonedas: ¿Oportunidad o riesgo?</h4>
@@ -90,7 +122,7 @@ export const Inversion = () => {
           <li><strong>Automatiza</strong>: Programa transferencias mensuales y olvídate.</li>
           <li><strong>Diversifica</strong>: No pongas todo en cripto (mezcla con fondos indexados).</li>
           <li><strong>Ignora el "FOMO"</strong>: Comprar porque "todo el mundo lo hace" suele acabar mal.</li>
-          <li><strong>Educación > Suerte</strong>: Gana quien aprende, no quien apuesta.</li>
+          <li><strong>La educación supera a la suerte</strong>: Gana quien aprende, no quien apuesta.</li>
         </ul>
       </Card>
 
@@ -153,7 +185,7 @@ export const Inversion = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="year" />
                 <YAxis />
-                <Tooltip 
+                <Tooltip
                   formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
                   labelFormatter={(value) => `Año ${value}`}
                 />
@@ -210,67 +242,235 @@ export const Inversion = () => {
         </Alert>
       )}
 
-      {/* Secciones educativas comunes */}
+      {/* Sección Bitcoin - Versión Mejorada */}
       <div id="bitcoin" className="mb-5">
-        <h3>₿ Bitcoin: ¿La nueva oro digital?</h3>
-        <Alert variant="warning">
-          <strong>Para valientes:</strong> En 2017 bajó un 80%, en 2021 subió un 1,000%. No es para ahorrar, es para especular.
+        <h3 className="d-flex align-items-center">
+          <span className="me-2">₿</span> Bitcoin: El activo más volátil del mundo
+        </h3>
+
+        <Alert variant="warning" className="border-start border-5 border-warning">
+          <div className="d-flex">
+            <div className="me-3">🎢</div>
+            <div>
+              <strong>¿Sabías que...?</strong>
+              <ul className="mb-0 mt-2">
+                <li>En <span className="text-danger">2011</span> Bitcoin perdió el <strong>93%</strong> de su valor en 5 meses</li>
+                <li>En <span className="text-success">2017</span> subió un <strong>1,900%</strong> en un año</li>
+                <li>En <span className="text-danger">2022</span> empresas como Tesla perdieron <strong>$1.5B</strong> en BTC</li>
+              </ul>
+              <div className="mt-2 fw-bold">Regla de oro: <span className="text-info">Máximo 5% de tu portfolio</span></div>
+            </div>
+          </div>
         </Alert>
-        <p>
-          Creada en 2009 por "Satoshi Nakamoto", es la primera criptomoneda. Sin bancos, sin gobiernos, limitada a 21 millones.
-        </p>
+
+        <div className="mt-3">
+          <p>La primera criptomoneda (2009) funciona como:</p>
+          <ul>
+            <li>🛡️ <strong>Antiinflación:</strong> Solo existirán 21 millones (17m ya circulan)</li>
+            <li>🌎 <strong>Sin fronteras:</strong> Transfiere valor a cualquier país en minutos</li>
+            <li>⚡ <strong>Sin intermediarios:</strong> Bancos y gobiernos no pueden congelar tu dinero</li>
+          </ul>
+        </div>
+
         <Accordion>
           <Accordion.Item eventKey="0">
-            <Accordion.Header>📚 ¿Cómo empezar con Bitcoin?</Accordion.Header>
+            <Accordion.Header className="fw-bold">📲 Guía práctica: Primeros pasos</Accordion.Header>
             <Accordion.Body>
-              <strong>Plataformas para comprar:</strong> Binance, Coinbase, Kraken.<br />
-              <strong>Cómo almacenarla:</strong> En un "wallet" (Ledger, Trezor).<br />
-              <strong>Riesgos:</strong> Hackeos, estafas, volatilidad extrema.<br />
-              <strong>Dato curioso:</strong> En 2010, 10,000 BTC valían 2 pizzas. Hoy: +400 millones €.
+              <div className="row">
+                <div className="col-md-6">
+                  <strong>📈 Dónde comprar:</strong>
+                  <div className="mt-2">
+                    <Badge bg="success" className="me-2 mb-2">Binance</Badge>
+                    <Badge bg="primary" className="me-2 mb-2">Coinbase</Badge>
+                    <Badge bg="dark" className="me-2 mb-2">Kraken</Badge>
+                  </div>
+
+                  <div className="mt-3">
+                    <strong>🔐 Wallets seguras:</strong>
+                    <ul className="mt-2">
+                      <li>Ledger Nano X (€149)</li>
+                      <li>Trezor Model T (€189)</li>
+                      <li>Exodus (gratis)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <strong>💣 Riesgos reales:</strong>
+                  <ul>
+                    <li>Exchange hackeado (FTX perdió $8B en 2022)</li>
+                    <li>Olvidar contraseñas (se pierden $10B en BTC)</li>
+                    <li>Estafas (30% de proyectos crypto son fraudes)</li>
+                  </ul>
+                </div>
+              </div>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </div>
 
+      {/* Sección Acciones - Versión Mejorada */}
       <div id="acciones" className="mb-5">
-        <h3>📈 Acciones: Ser dueño de empresas</h3>
-        <p>
-          Comprar acciones de Apple, Tesla o Inditex es como tener un trocito de esa empresa. Si sube su valor, tú ganas.
-        </p>
+        <h3>📈 Acciones: Conviértete en dueño parcial de empresas</h3>
+
+        <Alert variant="primary" className="border-start border-5 border-primary">
+          <div className="d-flex">
+            <div className="me-3">📊</div>
+            <div>
+              <strong>El poder del largo plazo:</strong>
+              <div className="mt-2">
+                <span className="d-block">$10,000 invertidos en...</span>
+                <div className="d-flex flex-wrap mt-2">
+                  <Badge bg="success" className="me-2 mb-2">Amazon (2001): $2,400,000</Badge>
+                  <Badge bg="danger" className="me-2 mb-2">Enron (2001): $0</Badge>
+                  <Badge bg="success" className="me-2 mb-2">Apple (1980): $7,000,000</Badge>
+                  <Badge bg="warning" className="me-2 mb-2">GameStop (2014): $300</Badge>
+                </div>
+              </div>
+              <div className="mt-2 fw-bold">Clave: <span className="text-success">Diversifica + Invierte en lo que entiendas</span></div>
+            </div>
+          </div>
+        </Alert>
+
+        <div className="mt-3">
+          <p>Cuando compras acciones:</p>
+          <ul>
+            <li>📌 <strong>Eres copropietario:</strong> Participas en ganancias (dividendos)</li>
+            <li>📅 <strong>El tiempo es tu aliado:</strong> Mercado sube un 70% de los años</li>
+            <li>💡 <strong>Información = Ventaja:</strong> Analiza balances y tendencias</li>
+          </ul>
+        </div>
+
         <Accordion>
           <Accordion.Item eventKey="1">
-            <Accordion.Header>🚀 ¿Dónde comprar acciones?</Accordion.Header>
+            <Accordion.Header className="fw-bold">🚀 Estrategias para empezar</Accordion.Header>
             <Accordion.Body>
-              <strong>Para principiantes:</strong> eToro, Degiro, MyInvestor.<br />
-              <strong>Estrategia simple:</strong> Comprar y mantener años ("Buy & Hold").<br />
-              <strong>Ejemplo histórico:</strong> 10,000€ en Amazon en 2010 = +1,000,000€ hoy.<br />
-              <strong>Cuidado:</strong> No inviertas en lo que no entiendas (¡las memestocks arruinan!).
+              <div className="row">
+                <div className="col-md-6">
+                  <strong>📱 Apps recomendadas:</strong>
+                  <ul className="mt-2">
+                    <li><span className="text-success">eToro:</span> Copia a inversores expertos</li>
+                    <li><span className="text-primary">Degiro:</span> Comisiones desde €0.50</li>
+                    <li><span className="text-info">Interactive Brokers:</span> Profesional (más complejo)</li>
+                  </ul>
+
+                  <div className="mt-3">
+                    <strong>📚 Libros esenciales:</strong>
+                    <ul>
+                      <li>"El Inversor Inteligente" - Benjamin Graham</li>
+                      <li>"Un paseo aleatorio por Wall Street" - Burton Malkiel</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <strong>⚠️ Errores comunes:</strong>
+                  <ul>
+                    <li>Comprar por hype (memestocks)</li>
+                    <li>Vender por pánico (caídas temporales)</li>
+                    <li>Invertir con dinero prestado</li>
+                    <li>No reinvertir dividendos</li>
+                  </ul>
+                </div>
+              </div>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </div>
 
+      {/* Sección Fondos Indexados - Versión Mejorada */}
       <div id="fondos" className="mb-5">
-        <h3>🌍 Fondos indexados: El "Set & Forget"</h3>
-        <Alert variant="success">
-          <strong>Recomendado por Warren Buffett:</strong> "Invierte en un fondo indexado del S&P 500 y sigue con tu vida".
+        <h3>🌍 Fondos Indexados: La autopista hacia la libertad financiera</h3>
+
+        <Alert variant="success" className="border-start border-5 border-success">
+          <div className="d-flex">
+            <div className="me-3">👑</div>
+            <div>
+              <strong>Warren Buffett lo tiene claro:</strong>
+              <div className="mt-2">
+                "Después de mi muerte, el 90% de mi fortuna irá a un <span className="text-success">fondo indexado del S&P 500</span>.
+                Es la mejor opción para la mayoría de inversores."
+              </div>
+              <div className="mt-2">
+                <small>Buffett apostó 1 millón y ganó: los fondos indexados lo hicieron mejor que los hedge funds en esos 10 años</small>
+              </div>
+            </div>
+          </div>
         </Alert>
-        <p>
-          Un fondo que replica el mercado entero (como el S&P 500). Bajas comisiones, diversificación automática.
-        </p>
+
+        <div className="mt-3">
+          <p>¿Por qué son revolucionarios?</p>
+          <ul>
+            <li>🤖 <strong>Automatización:</strong> Inviertes en 500+ empresas sin esfuerzo</li>
+            <li>💸 <strong>Bajas comisiones:</strong> 0.20% vs 2% de los bancos</li>
+            <li>📈 <strong>Rentabilidad probada:</strong> +10% anual promedio (S&P 500)</li>
+          </ul>
+        </div>
+
         <Accordion>
           <Accordion.Item eventKey="2">
-            <Accordion.Header>🛌 ¿Por qué son perfectos para jóvenes?</Accordion.Header>
+            <Accordion.Header className="fw-bold">🛌 Cómo implementarlo en 3 pasos</Accordion.Header>
             <Accordion.Body>
-              <strong>Ventajas:</strong><br />
-              - No necesitas elegir empresas (inviertes en 500+ a la vez).<br />
-              - Comisiones bajas (0.20% vs. 2% en fondos activos).<br />
-              - Histórico: +8% anual promedio en 50 años.<br /><br />
-              <strong>Dónde comprar:</strong> Indexa Capital, MyInvestor, Vanguard.
+              <div className="row">
+                <div className="col-md-6">
+                  <strong>1️⃣ Elige tu fondo:</strong>
+                  <ul className="mt-2">
+                    <li><span className="text-success">Vanguard S&P 500</span> (IE00B3XXRP09)</li>
+                    <li><span className="text-primary">iShares MSCI World</span> (IE00B4L5Y983)</li>
+                    <li><span className="text-info">Amundi Prime Global</span> (LU2089238204)</li>
+                  </ul>
+
+                  <div className="mt-4">
+                    <strong>2️⃣ Plataformas low-cost:</strong>
+                    <ul>
+                      <li>Indexa Capital (España)</li>
+                      <li>MyInvestor (Vanguard)</li>
+                      <li>Boggleheads (comunidad)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <strong>3️⃣ Estrategia infalible:</strong>
+                  <ol>
+                    <li>Destina un % fijo de tu sueldo (ej. 15%)</li>
+                    <li>Automatiza las compras mensuales</li>
+                    <li>Olvídate durante 20+ años</li>
+                    <li>Revisa solo 1 vez al año</li>
+                  </ol>
+
+                  <div className="alert alert-info mt-3">
+                    <strong>💡 Ejemplo real:</strong> $500/mes durante 30 años al 7% = <span className="text-success">$612,000</span>
+                  </div>
+                </div>
+              </div>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </div>
+      <Card className="p-5 mb-5" style={{ background: "linear-gradient(135deg, #f0f4ff, #e9f7ef)" }}>
+        <h3 className="mb-3">🚀 Da el primer paso hacia tu libertad financiera</h3>
+        <p className="fs-5 text-muted">
+          No hace falta ser un experto. Empieza con pequeñas cantidades, sé constante y deja que el interés compuesto haga su magia.
+        </p>
+
+        <ul className="fs-5 mb-4 text-muted">
+          <li>🪙 Aprende a invertir desde cero</li>
+          <li>📈 Simula tu crecimiento a largo plazo</li>
+          <li>🔍 Explora opciones reales y seguras</li>
+        </ul>
+
+        {!token && (
+          <div className="text-center">
+            <button
+              className="btn btn-primary btn-lg px-4 py-2 rounded-pill shadow-sm"
+              onClick={() => navigate("/login")}
+            >
+              🔐 Inicia sesión para usar el simulador
+            </button>
+          </div>
+        )}
+      </Card>
     </div>
   );
 };
