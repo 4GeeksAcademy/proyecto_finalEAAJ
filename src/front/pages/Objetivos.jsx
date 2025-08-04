@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,12 +16,7 @@ export const Objetivos = () => {
   
   const navigate = useNavigate();
   
-    useEffect(() => {
-        const savedToken = localStorage.getItem("token") || "";
-        if (!savedToken || savedToken.length < 10) {
-          navigate("/");
-        } 
-      }, [navigate]);
+
 
 
 useEffect(() => {
