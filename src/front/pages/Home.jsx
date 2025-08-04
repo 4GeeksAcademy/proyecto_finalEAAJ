@@ -36,7 +36,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
   return (
     <div className="page">
       {/* NAVBAR */}
-      <nav className="navbar navbar-light bg-light px-4 py-3 shadow-sm" style={{ background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",
+      {/* <nav className="navbar navbar-light bg-light px-4 py-3 shadow-sm" style={{ background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",
         backgroundSize: "200%",
         transition: "0.3s linear",
         minHeight: "6.6vh", }}>
@@ -48,7 +48,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
                 alt="Logo"
                 style={{ width: "50%", height: "50%" }}
               />
-              {/* <span role="img" aria-label="logo">💸</span> El icono lo he sustituido por una imagen creada en:"https://zoviz.com/es/slogan-generator". Se puede cambiar en cualquier momento*/}
+              {/* <span role="img" aria-label="logo">💸</span> El icono lo he sustituido por una imagen creada en:"https://zoviz.com/es/slogan-generator". Se puede cambiar en cualquier momento}
             </div>
           </div>
           <div className="navbar-brand mx-auto fw-bold fs-5" style={{ color: "#B7FF00" }}>Mo’money</div>
@@ -58,10 +58,10 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
              {/*Los botones de Login y Register están comentados porque no se han implementado las páginas aún.
              Se pueden descomentar cuando estén listas.
             <button className="btn btn-outline-primary me-2">Login</button>
-            <button className="btn btn-primary">Register</button>*/} 
+            <button className="btn btn-primary">Register</button>} 
           </div>
         </div>
-      </nav>
+      </nav> */}
 
       {/* SECCIÓN CENTRAL: Quiénes somos + Esfera + Qué hacemos */}
       <section className="container my-5">
@@ -95,8 +95,11 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
       <section className="text-center bg-light p-5 rounded shadow-sm">
         <h2 className="mb-3">Inversión</h2>
         <p className="lead">
-          ¡Próximamente podrás descubrir formas inteligentes de hacer crecer tu dinero!
+          Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
         </p>
+        <Link to="/inversion" className="btn btn-primary mt-3">
+          ¡Quiero que mi dinero crezca!
+        </Link>
       </section>
     </div>
   );

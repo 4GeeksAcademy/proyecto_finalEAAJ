@@ -25,50 +25,60 @@ export const Formulario = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL+"api/user/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: usuario,
-          email: email,
-          password: password,
-          firstname: nombre,
-          lastname: apellidos,
-          country: pais,
-          phone: prefijo + telefono,
-          sueldo:parseFloat(sueldo),
-          is_student: situacionBoolean(),
-        }),
-      });
+		try {
+			const response = await fetch(import.meta.env.VITE_BACKEND_URL+"/api/user/register", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					username: usuario,
+					email: email,
+					password: password,
+					firstname: nombre,
+					lastname: apellidos,
+					country: pais,
+					phone: prefijo+telefono,
+					sueldo: sueldo, 
+					is_student: situacionBoolean(),
+				}),
+			});
 
       const data = await response.json();
 
-      if (response.status === 201) {
-        
-        if (situacion === "estudiante") {
-          localStorage.setItem("disponible", sueldo);
-          localStorage.removeItem("sueldoNeto");
-        } else if (situacion === "trabajador") {
-          localStorage.setItem("sueldoNeto", sueldo);
-          localStorage.removeItem("disponible");
-        }
+			if (response.status === 201) {
+				localStorage.setItem("sueldo", sueldo);
+        		localStorage.setItem("ahorro", calcularAhorro());
+				alert("Usuario registrado con éxito ✅");
+				localStorage.setItem('token', data.token); 
+				setTimeout(() => {
+					navigate("/");
+				}, 1000); 
+			} else if (response.status >= 400) {
+				alert("Error: " + data.msg);
+			}
+		} catch (error) {
+			console.error("Error al enviar el formulario:", error);
+			alert("Error al enviar el formulario ❌");
+		}
+	};
+	/* const handleSubmit = async (e) => {
+		e.preventDefault();
 
-        // Guardamos ahorro basado en el valor actual
-        localStorage.setItem("ahorro", calcularAhorro());
-
-        alert("Usuario registrado con éxito ✅");
-        localStorage.setItem("token", data.token);
-
-        setTimeout(() => navigate("/main"), 1000);
-      } else {
-        alert("Error: " + data.msg);
-      }
-    } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-      alert("Error al enviar el formulario ❌");
-    }
-  };
+		try {
+			
+			await axios.post("http://localhost:5000/api/user/register", {
+			username: usuario,
+			email: email,
+			password: password,
+		});
+		alert("Usuario registrado con éxito ✅");
+		navigate("/main");
+		} catch (error) {
+			console.error("Error al enviar el formulario:", error);
+			alert("Error al enviar el formulario ❌");
+		}
+	}; */
 
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#ffffff", minHeight: "80vh" }}>

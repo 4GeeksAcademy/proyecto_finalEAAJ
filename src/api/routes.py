@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, Blueprint
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
-from api.models import db, User, Gasto, Objetivo, Articulo, Link
+from api.models import db, User, Gasto, Objetivo, Articulo, Link#, PostForo
 from api.utils import generate_sitemap, APIException
 import requests
 
@@ -23,6 +23,7 @@ def register():
         new_user.firstname = body["firstname"]
         new_user.lastname = body["lastname"]
         new_user.country = body["country"]
+        new_user.perfil = body["perfil"]
         new_user.phone = body["phone"] 
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
@@ -108,8 +109,8 @@ def update_user():
         user.country = body['country']
     if 'phone' in body:
         user.phone = body['phone']
-    if 'concepto' in body:
-        user.concepto = body['concepto']
+    if 'perfil' in body:
+        user.perfil = body['perfil']
     if 'cantidad' in body:
         user.cantidad = body['cantidad']
     if 'emoji' in body:
@@ -312,6 +313,7 @@ def register_objetivo():
     new_objetivo = Objetivo()
     new_objetivo.titulo = body["titulo"]
     new_objetivo.descripcion = body.get("descripcion")
+    new_objetivo.emoji = body.get("emoji")
     new_objetivo.cantidad_meta = body["cantidad_meta"]
     new_objetivo.fecha_limite = body.get("fecha_limite")
     new_objetivo.user_id = current_user_id
@@ -360,6 +362,8 @@ def update_objetivo(objetivo_id):
         objetivo.titulo = body['titulo']
     if 'descripcion' in body:
         objetivo.descripcion = body['descripcion']
+    if 'emoji' in body:
+        objetivo.emoji = body['emoji']
     if 'cantidad_meta' in body:
         objetivo.cantidad_meta = body['cantidad_meta']
     if 'fecha_limite' in body:
@@ -385,7 +389,7 @@ def delete_objetivo(objetivo_id):
     db.session.commit()
 
     return jsonify({"msg": "Objetivo eliminado correctamente"}), 200
-
+                                                                                                                               
 
 
 #____________________________________________________________________________________
@@ -508,3 +512,63 @@ def delete_link(link_id):
     db.session.commit()
     return jsonify({"msg": "Link eliminado correctamente"}), 200
 
+
+#____________________________________________________________________________________
+
+# Registro de post
+""" @api.route('/foro', methods=['POST'])
+@jwt_required()
+def crear_post():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    post = PostForo(titulo=data['titulo'], contenido=data['contenido'], user_id=user_id)
+    db.session.add(post)
+    db.session.commit()
+    return jsonify({"msg": "Post creado"}), 201
+
+# Obtener post por ID
+@api.route("/foro/<int:id>", methods=['GET'])
+@jwt_required()
+def get_objetivo(id):
+    current_user_id = get_jwt_identity()
+    post = PostForo.query.filter_by(id=id, user_id=current_user_id).first()
+
+    if not objetivo:
+        return jsonify({"msg": "Post no encontrado"}), 404
+
+    return jsonify({"post": post.serialize()}), 200    
+
+# Obtener todos los post del usuario
+@api.route('/foro', methods=['GET'])
+def listar_posts():
+    current_user_id = get_jwt_identity()
+    posts = PostForo.query.filter_by(user_id=current_user_id).all()
+    return jsonify({"posts": [posts.serialize() for p in posts]}), 200
+    
+# Obtener todos los post del foro
+@api.route('/foro', methods=['GET'])
+def listar_posts():
+    posts = PostForo.query.all()
+    return jsonify({"posts": [posts.serialize() for p in posts]}), 200
+
+@api.route('/foro/<int:id>', methods=['PUT'])
+@jwt_required()
+def editar_post(id):
+    post = PostForo.query.get(id)
+    data = request.get_json()
+    if post:
+        post.titulo = data.get('titulo', post.titulo)
+        post.contenido = data.get('contenido', post.contenido)
+        db.session.commit()
+        return jsonify({"msg": "Post actualizado"}), 200
+    return jsonify({"msg": "No encontrado"}), 404
+
+@api.route('/foro/<int:id>', methods=['DELETE'])
+@jwt_required()
+def borrar_post(id):
+    post = PostForo.query.get(id)
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({"msg": "Post eliminado"}), 200
+    return jsonify({"msg": "No encontrado"}), 404 """

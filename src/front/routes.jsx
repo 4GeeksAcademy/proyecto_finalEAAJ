@@ -10,7 +10,6 @@ import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 import { Login } from "./pages/Login";
-import { Footer } from "./components/Footer";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Formulario } from "./pages/Formulario";
@@ -20,14 +19,14 @@ import { Loader } from "./pages/Loader";
 import { Main } from "./pages/Main";
 import { Objetivos } from "./pages/Objetivos";
 import { EditarObjetivo } from "./pages/EditarObjetivo";
-import { EditarGasto } from "./pages/EditarGasto";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
-      <Route path="/"  element={<Home />} />
-      <Route path="/main" element={<Main />} />
-       <Route path="/objetivos" element={<Objetivos />} />
-        <Route path="/objetivos/editar/:id" element={<EditarObjetivo />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/Main" element={<Main />} />
+       <Route path="/Objetivos" element={<Objetivos />} />
+        <Route path="/objetivos/editar/:index" element={<EditarObjetivo />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -36,6 +35,7 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/gasto/editar/:id" element={<EditarGasto />} />
       <Route path="/addnewgasto" element={<AddNewGasto />} />
+      <Route path="/inversion" element={<Inversion />} />
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
   )

@@ -37,8 +37,12 @@ export const ResetPassword = () => {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
-    setToken(savedToken);
-  }, []);
+    if (!savedToken || savedToken.length < 10) {
+      navigate("/login");
+    } else {
+      setToken(savedToken);
+    }
+  }, [navigate]);
 
   const isLongEnough = newPassword.length >= 8;
   const hasLetter = /[a-zA-Z]/.test(newPassword);
@@ -51,7 +55,7 @@ export const ResetPassword = () => {
 
     try {
       const res = await fetch(
-        import.meta.env.VITE_BACKEND_URL+"/api/user/new-password",
+        import.meta.env.VITE_BACKEND_URL + "/api/user/new-password",
         {
           method: "PUT",
           headers: {
