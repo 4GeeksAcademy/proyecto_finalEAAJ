@@ -17,6 +17,13 @@ export const Main = () => {
     if (ahorroGuardado) setAhorro(parseFloat(ahorroGuardado));
   }, []);
   
+useEffect(() => {
+        const savedToken = localStorage.getItem("token") || "";
+        if (!savedToken || savedToken.length < 10) {
+          navigate("/");
+        } 
+      }, [navigate]);
+  
 const handleProfileUser = async (e) => {
     e.preventDefault();
 
@@ -125,7 +132,7 @@ const handleProfileUser = async (e) => {
 
   return (
     <div className="container-fluid p-4">
-      <div className="d-flex justify-content-end mb-4">
+      {/* <div className="d-flex justify-content-end mb-4">
         <button
           className="btn"
           style={{
@@ -139,7 +146,7 @@ const handleProfileUser = async (e) => {
         >
           P
         </button>
-      </div>
+      </div> */}
 
       <div className="row mb-4">
         <div className="col-md-6">

@@ -11,6 +11,15 @@ export const AddNewGasto = () => {
   const [loading, setLoading] = useState(false);
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const savedToken = localStorage.getItem("token") || "";
+      if (!savedToken || savedToken.length < 10) {
+        navigate("/");
+      } 
+    }, [navigate]);
+
   const onEmojiClick = (emojiObject) => {
     setEmoji(emojiObject.emoji);
     setShowPicker(false);

@@ -9,6 +9,13 @@ export const EditarObjetivo = () => {
   const [concepto, setConcepto] = useState("");
   const [cantidad, setCantidad] = useState(0);
   const [fechaLimite, setFechaLimite] = useState("");
+  
+    useEffect(() => {
+        const savedToken = localStorage.getItem("token") || "";
+        if (!savedToken || savedToken.length < 10) {
+          navigate("/");
+        } 
+      }, [navigate]);
 
   useEffect(() => {
     const objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];

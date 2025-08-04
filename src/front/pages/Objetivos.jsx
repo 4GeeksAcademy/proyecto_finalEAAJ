@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
+
 
 
 export const Objetivos = ({ onSubmitObjetivo }) => {
@@ -9,8 +10,16 @@ export const Objetivos = ({ onSubmitObjetivo }) => {
   const [fechaLimite, setFechaLimite] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [emoji, setEmoji] = useState(null);
-  const navigate = useNavigate();
   const inputRef = useRef(null);
+
+  const navigate = useNavigate();
+  
+    useEffect(() => {
+        const savedToken = localStorage.getItem("token") || "";
+        if (!savedToken || savedToken.length < 10) {
+          navigate("/");
+        } 
+      }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
