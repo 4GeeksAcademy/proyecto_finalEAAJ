@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Formulario } from "/src/front/pages/Formulario.jsx";
+
+
 
 const UserPerfil = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [isLoggedOut, setIsLoggedOut] = useState(false);
+   const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   const handleLogout = () => {
   localStorage.removeItem("token");
@@ -63,7 +67,7 @@ const UserPerfil = () => {
             </button>
             <button
               style={buttonStyle}
-              onClick={() => navigate("/formulario")}
+              onClick={() => navigate("/form")}
               onMouseDown={e => e.currentTarget.style.backgroundColor = "#B7FF00"}
               onMouseUp={e => e.currentTarget.style.backgroundColor = "#B7FF00"}
               onMouseLeave={e => e.currentTarget.style.backgroundColor = "#B7FF00"}
@@ -87,6 +91,9 @@ const UserPerfil = () => {
           )}
         </div>
       )}
+      {/* Mostrar formulario debajo */}
+      {mostrarFormulario && <Formulario />}
+
     </div>
   );
 };

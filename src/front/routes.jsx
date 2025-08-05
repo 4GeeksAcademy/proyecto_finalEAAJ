@@ -25,6 +25,7 @@ import {Inversion} from "./pages/Inversion";
 import  Perfil  from "./pages/Perfil";
 
 
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
@@ -40,7 +41,7 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/gasto/editar/:id" element={<EditarGasto />} />
       <Route path="/addnewgasto" element={<AddNewGasto />} />
-      <Route path="/perfil" element={<Perfil />} />
+      <Route path="/Perfil" element={<Perfil />} />
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
   )
