@@ -18,20 +18,59 @@ const blogPosts = [
 
 export const Blog = () => {
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Blog Financiero</h1>
-      <p style={{ color: "#555" }}>
+    <div style={{ padding: "3rem", backgroundColor: "#0a0a0a", minHeight: "100vh", color: "white", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
+      <h1 style={{ fontSize: "3rem", marginBottom: "1rem", color: "#b7ff00" }}>Blog Financiero</h1>
+      <p style={{ fontSize: "1.2rem", marginBottom: "3rem", color: "#ccc" }}>
         Consejos sobre ahorro, inversión y gestión inteligente de tu dinero.
       </p>
-      {blogPosts.map(post => (
-        <div key={post.id} style={{ marginBottom: "2rem", borderBottom: "1px solid #ccc", paddingBottom: "1rem" }}>
-          <h2>{post.title}</h2>
-          <p>{post.summary}</p>
-          <Link to={`/blog/${post.id}`} style={{ color: "#0D6EFD", textDecoration: "underline" }}>
-            Leer más →
-          </Link>
-        </div>
-      ))}
+      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+        {blogPosts.map(post => (
+          <div 
+            key={post.id} 
+            style={{ 
+              backgroundColor: "#121212",
+              borderRadius: "12px", 
+              boxShadow: "0 4px 10px rgba(183, 255, 0, 0.4)",
+              padding: "1.8rem",
+              flex: "1 1 300px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              minHeight: "200px"
+            }}
+          >
+            <div>
+              <h2 style={{ color: "#b7ff00", fontSize: "1.8rem", marginBottom: "1rem" }}>{post.title}</h2>
+              <p style={{ color: "#ddd", fontSize: "1rem", lineHeight: "1.4rem" }}>{post.summary}</p>
+            </div>
+            <Link 
+              to={`/blog/${post.id}`} 
+              style={{ 
+                marginTop: "auto",
+                marginTop: "1.5rem",
+                color: "#b7ff00", 
+                fontWeight: "bold",
+                textDecoration: "none",
+                alignSelf: "flex-start",
+                border: "1.5px solid #b7ff00",
+                borderRadius: "30px",
+                padding: "0.4rem 1.2rem",
+                transition: "background-color 0.3s, color 0.3s"
+              }}
+              onMouseEnter={e => {
+                e.target.style.backgroundColor = "#b7ff00";
+                e.target.style.color = "#000";
+              }}
+              onMouseLeave={e => {
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.color = "#b7ff00";
+              }}
+            >
+              Leer más →
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

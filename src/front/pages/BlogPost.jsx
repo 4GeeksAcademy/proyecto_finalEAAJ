@@ -20,13 +20,36 @@ export const BlogPost = () => {
   const { id } = useParams();
   const post = blogPosts.find(p => p.id === parseInt(id));
 
-  if (!post) return <div>Artículo no encontrado.</div>;
+   if (!post) return <div style={{ padding: "2rem", color: "white", backgroundColor: "#121212" }}>Artículo no encontrado.</div>;
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>{post.title}</h1>
-      <p style={{ whiteSpace: "pre-line" }}>{post.content}</p>
-      <Link to="/blog" style={{ marginTop: "1rem", display: "inline-block", color: "#0D6EFD" }}>
+    <div style={{ padding: "3rem", backgroundColor: "#0a0a0a", minHeight: "100vh", color: "white", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
+      <h1 style={{ color: "#b7ff00", fontSize: "3rem", marginBottom: "1.5rem" }}>{post.title}</h1>
+      <p style={{ whiteSpace: "pre-line", fontSize: "1.2rem", lineHeight: "1.6rem", color: "#ddd" }}>
+        {post.content}
+      </p>
+      <Link 
+        to="/blog" 
+        style={{ 
+          marginTop: "2rem", 
+          display: "inline-block", 
+          color: "#b7ff00", 
+          fontWeight: "bold",
+          textDecoration: "none",
+          border: "1.5px solid #b7ff00",
+          borderRadius: "30px",
+          padding: "0.5rem 1.5rem",
+          transition: "background-color 0.3s, color 0.3s"
+        }}
+        onMouseEnter={e => {
+          e.target.style.backgroundColor = "#b7ff00";
+          e.target.style.color = "#000";
+        }}
+        onMouseLeave={e => {
+          e.target.style.backgroundColor = "transparent";
+          e.target.style.color = "#b7ff00";
+        }}
+      >
         ← Volver al blog
       </Link>
     </div>
