@@ -34,6 +34,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/Main" element={<Main />} />
        <Route path="/Objetivos" element={<Objetivos />} />
+       <Route path="/inversion" element={<Inversion />} />
         <Route path="/objetivos/editar/:id" element={<EditarObjetivo />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />

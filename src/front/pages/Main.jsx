@@ -489,18 +489,18 @@ return (
     maxWidth: "600px",
     padding: "0 3rem"
   }}>
-    <Link to="/inversion#bitcoin" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
+    <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
       <FaBitcoin />
     </Link>
 
-    <Link to="/inversion#acciones" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
+    <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
       <FaChartLine />
     </Link>
   </div>
 
   {/* Fondo debajo, centrado */}
   <div style={{ marginTop: "2rem" }}>
-    <Link to="/inversion#fondos" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
+    <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
       <FaPiggyBank />
     </Link>
   </div>
