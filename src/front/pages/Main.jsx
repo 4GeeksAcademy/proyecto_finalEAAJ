@@ -131,6 +131,8 @@ useEffect(() => {
   setSueldo(disponibleGuardado + sueldoNetoGuardado);
 
   const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+
+  setSueldo(disponibleGuardado + sueldoNetoGuardado);
   setAhorro(ahorroGuardado);
 }, []);
 
