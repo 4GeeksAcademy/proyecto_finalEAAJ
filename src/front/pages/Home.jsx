@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import Sphere from "./Sphere.jsx";
+import { NavbarPublic } from "../components/NavbarPublic";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
@@ -34,6 +35,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
   }, []);
 
   return (
+ 
     <div className="page">
       {/* NAVBAR */}
       {/* <nav className="navbar navbar-light bg-light px-4 py-3 shadow-sm" style={{ background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",

@@ -7,9 +7,13 @@ from flask_cors import CORS
 from api.models import db, User, Gasto, Objetivo, Articulo, Link#, PostForo
 from api.utils import generate_sitemap, APIException
 import requests
+from datetime import datetime
+
 
 api = Blueprint('api', __name__)
 CORS(api)
+
+
 
 
 @api.route("/user/register", methods=['POST'])
@@ -304,25 +308,38 @@ def delete_gasto(gasto_id):
 #____________________________________________________________________________________
 
 # Registro de Objetivo
-@api.route("/objetivo/register", methods=['POST'])
+@api.route("/objetivo/register", methods=["POST"])
 @jwt_required()
 def register_objetivo():
-    current_user_id = get_jwt_identity()
-    body = request.get_json()
+    try:
+        current_user_id = int(get_jwt_identity())
+        data = request.get_json()
+        print("➡️ Recibido en backend:", data)
 
-    new_objetivo = Objetivo()
-    new_objetivo.titulo = body["titulo"]
-    new_objetivo.descripcion = body.get("descripcion")
-    new_objetivo.emoji = body.get("emoji")
-    new_objetivo.cantidad_meta = body["cantidad_meta"]
-    new_objetivo.fecha_limite = body.get("fecha_limite")
-    new_objetivo.user_id = current_user_id
+        fecha_limite_str = data.get("fecha_limite")
+        fecha_limite = datetime.strptime(fecha_limite_str, '%Y-%m-%d') if fecha_limite_str else None
 
-    db.session.add(new_objetivo)
-    db.session.commit()
+        nuevo_objetivo = Objetivo(
+            titulo=data.get("titulo"),
+            descripcion=data.get("descripcion"),
+            emoji=data.get("emoji"),
+            cantidad_meta=data.get("cantidad_meta"),
+            fecha_limite=fecha_limite,
+            frecuencia=data.get("frecuencia"),
+            user_id=current_user_id
+        )
 
-    return jsonify({"msg": "Objetivo registrado con éxito", "objetivo": new_objetivo.serialize()}), 201
+        db.session.add(nuevo_objetivo)
+        db.session.commit()
 
+        print("✅ Objetivo guardado correctamente:", nuevo_objetivo.serialize())
+        return jsonify(nuevo_objetivo.serialize()), 201
+
+    except Exception as e:
+        print("❌ Error al guardar objetivo:", str(e))
+        return jsonify({"msg": "Error al guardar objetivo", "error": str(e)}), 500
+    
+    
 # Obtener Objetivo por ID
 @api.route("/objetivo/<int:objetivo_id>", methods=['GET'])
 @jwt_required()
@@ -337,18 +354,17 @@ def get_objetivo(objetivo_id):
 
 
 #obtener todos los objetivos (jorge: hice un cambio en el return para que me cogiera los objetivos de la main)
-@api.route("/objetivo", methods=['GET'])
+@api.route("/objetivo", methods=["GET"])
 @jwt_required()
 def get_objetivos():
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     objetivos = Objetivo.query.filter_by(user_id=current_user_id).all()
-
     return jsonify([o.serialize() for o in objetivos]), 200
 
 
 
 # Actualizar Objetivo
-@api.route("/objetivo/update/<int:objetivo_id>", methods=['PUT'])
+@api.route("/objetivo/update/<int:objetivo_id>", methods=["PUT"])
 @jwt_required()
 def update_objetivo(objetivo_id):
     current_user_id = get_jwt_identity()
@@ -357,23 +373,25 @@ def update_objetivo(objetivo_id):
     if not objetivo:
         return jsonify({"msg": "Objetivo no encontrado"}), 404
 
-    body = request.get_json()
-    if 'titulo' in body:
-        objetivo.titulo = body['titulo']
-    if 'descripcion' in body:
-        objetivo.descripcion = body['descripcion']
-    if 'emoji' in body:
-        objetivo.emoji = body['emoji']
-    if 'cantidad_meta' in body:
-        objetivo.cantidad_meta = body['cantidad_meta']
-    if 'fecha_limite' in body:
-        objetivo.fecha_limite = body['fecha_limite']
-    if 'completado' in body:
-        objetivo.completado = body['completado']
+    data = request.get_json()
+
+    objetivo.titulo = data.get("titulo", objetivo.titulo)
+    objetivo.cantidad_meta = data.get("cantidad_meta", objetivo.cantidad_meta)
+
+    fecha_limite_str = data.get("fecha_limite")
+    if fecha_limite_str:
+        try:
+            objetivo.fecha_limite = datetime.strptime(fecha_limite_str, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"msg": "Formato de fecha inválido. Usa YYYY-MM-DD."}), 400
+
+    objetivo.descripcion = data.get("descripcion", objetivo.descripcion)
+    objetivo.emoji = data.get("emoji", objetivo.emoji)
+    objetivo.frecuencia = data.get("frecuencia", objetivo.frecuencia)
 
     db.session.commit()
-    
-    return jsonify({"msg": "Objetivo actualizado correctamente", "objetivo": objetivo.serialize()}), 200
+
+    return jsonify({"msg": "Objetivo actualizado"}), 200
 
 # Eliminar Objetivo
 @api.route("/objetivo/delete/<int:objetivo_id>", methods=['DELETE'])

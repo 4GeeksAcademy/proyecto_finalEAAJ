@@ -27,7 +27,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/Main" element={<Main />} />
        <Route path="/Objetivos" element={<Objetivos />} />
-        <Route path="/objetivos/editar/:index" element={<EditarObjetivo />} />
+        <Route path="/objetivos/editar/:id" element={<EditarObjetivo />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />

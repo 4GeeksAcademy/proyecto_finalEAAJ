@@ -71,6 +71,7 @@ class Objetivo(db.Model):
     fecha_limite = db.Column(db.DateTime, nullable=True)
     completado = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    frecuencia = db.Column(db.String(20)) 
 
     def serialize(self):
         return {
@@ -79,7 +80,8 @@ class Objetivo(db.Model):
             "descripcion": self.descripcion,
             "emoji": self.emoji,
             "cantidad_meta": self.cantidad_meta,
-            "fecha_limite": self.fecha_limite,
+            "fecha_limite": self.fecha_limite.strftime('%Y-%m-%d') if self.fecha_limite else None,
+            "frecuencia": self.frecuencia,
             "completado": self.completado
         }
 

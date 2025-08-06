@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -13,39 +14,61 @@ export const Objetivos = () => {
   const [emoji, setEmoji] = useState(null);
   const [token, setToken] = useState("");
   const inputRef = useRef(null);
-  
+  const [frecuencia, setFrecuencia] = useState("diario");
+
   const navigate = useNavigate();
-  
-    useEffect(() => {
-        const savedToken = localStorage.getItem("token") || "";
-        if (!savedToken || savedToken.length < 10) {
-          navigate("/");
-        } 
-      }, [navigate]);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token") || "";
+    if (!savedToken || savedToken.length < 10) {
+      navigate("/");
+    }
+  }, [navigate]);
 
 
-useEffect(() => {
+  useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     setToken(savedToken);
   }, []);
 
+  
+
   const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const nuevoObjetivo = { "titulo":concepto, "cantidad_meta":cantidad, "fecha_limite":fechaLimite, "descripcion":explicacion, "emoji":""};
+  const savedToken = localStorage.getItem("token") || "";
+  if (!savedToken) {
+    alert("Token no disponible. Vuelve a iniciar sesión.");
+    return;
+  }
+
+  const nuevoObjetivo = {
+    titulo: concepto,
+    cantidad_meta: cantidad,
+    fecha_limite: fechaLimite,
+    descripcion: explicacion,
+    emoji: emoji || "",
+    frecuencia: frecuencia,
+  };
 
   try {
-    const res = await fetch(import.meta.env.VITE_BACKEND_URL + "api/objetivo/register", {
-  method: "POST",
-  headers: { 
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}` 
-  },
-  body: JSON.stringify(nuevoObjetivo),
-});
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/objetivo/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${savedToken}`
+      },
+      body: JSON.stringify(nuevoObjetivo),
+    });
 
-    if (!res.ok) throw new Error("Error al guardar objetivo");
-    navigate("/main");
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error("Error del servidor:", errorData);
+      throw new Error("Error al guardar objetivo");
+    }
+
+    localStorage.setItem("recargarObjetivos", "true");
+navigate("/main");
   } catch (err) {
     console.error(err);
     alert("No se pudo guardar el objetivo");
@@ -116,7 +139,7 @@ useEffect(() => {
             max="5000"
             step="50"
             value={cantidad}
-            onChange={(e) => setCantidad(e.target.value)}
+            onChange={(e) => setCantidad(Number(e.target.value))}
           />
         </div>
 
@@ -132,6 +155,20 @@ useEffect(() => {
           />
         </div>
 
+        {/* Frecuencia de ahorro */}
+<div className="mb-3">
+  <label className="form-label">¿Cómo quieres que se calcule tu ahorro?</label>
+  <select
+    className="form-select"
+    value={frecuencia}
+    onChange={(e) => setFrecuencia(e.target.value)}
+    required
+  >
+    <option value="diario">Diariamente</option>
+    <option value="mensual">Mensualmente</option>
+    <option value="anual">Anualmente</option>
+  </select>
+</div>
         {/* ✅ Explicación */}
         <div className="mb-3">
           <label className="form-label">Explicación (opcional)</label>
