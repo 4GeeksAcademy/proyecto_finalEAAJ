@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
@@ -41,7 +42,8 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
       {/* <nav className="navbar navbar-light bg-light px-4 py-3 shadow-sm" style={{ background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",
         backgroundSize: "200%",
         transition: "0.3s linear",
-        minHeight: "6.6vh", }}>
+        minHeight: "6.6vh",
+      }}>
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center">
             <div className="me-2">
@@ -57,7 +59,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
           <div>
             <Link to="/login" className="btn btn-outline-primary me-2">Login</Link>
             <Link to="/form" className="btn btn-primary">Register</Link>
-             {/*Los botones de Login y Register están comentados porque no se han implementado las páginas aún.
+            {/*Los botones de Login y Register están comentados porque no se han implementado las páginas aún.
              Se pueden descomentar cuando estén listas.
             <button className="btn btn-outline-primary me-2">Login</button>
             <button className="btn btn-primary">Register</button>} 
@@ -106,3 +108,8 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
     </div>
   );
 };
+
+
+
+
+

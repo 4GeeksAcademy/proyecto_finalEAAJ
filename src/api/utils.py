@@ -33,6 +33,7 @@ def generate_sitemap(app):
     links_html = "".join(["<li><a href='" + y + "'>" + y + "</a></li>" for y in links])
     return """
         <div style="text-align: center;">
+
         <img style="max-height: 80px" src='https://api.zoviz.com/lfp?b=K2NLr2r0IWQZfbqE&f=btCSiQWhf6m4&d=1'""" 'https://storage.googleapis.com/breathecode/boilerplates/rigo-baby.jpeg' """ />
         <h1>Mo'money welcomes you to your API!!</h1>
         <p>API HOST: <script>document.write('<input style="padding: 5px; width: 300px" type="text" value="'+window.location.href+'" />');</script></p>

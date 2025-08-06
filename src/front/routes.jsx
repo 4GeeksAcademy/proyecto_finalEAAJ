@@ -5,6 +5,7 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
+
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
@@ -20,7 +21,13 @@ import { Main } from "./pages/Main";
 import { Objetivos } from "./pages/Objetivos";
 import { EditarObjetivo } from "./pages/EditarObjetivo";
 import { EditarGasto } from "./pages/EditarGasto";
-import {Inversion} from "./pages/Inversion";
+import { Inversion } from "./pages/Inversion";
+import Perfil from "./pages/Perfil";
+import { Blog } from "./pages/Blog";
+import { BlogPost } from "./pages/BlogPost";
+
+
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
@@ -36,7 +43,9 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/gasto/editar/:id" element={<EditarGasto />} />
       <Route path="/addnewgasto" element={<AddNewGasto />} />
-      <Route path="/inversion" element={<Inversion />} />
+      <Route path="/Perfil" element={<Perfil />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:id" element={<BlogPost />} />
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
   )
