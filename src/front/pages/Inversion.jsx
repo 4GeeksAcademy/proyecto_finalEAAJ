@@ -256,7 +256,7 @@ export const Inversion = () => {
               <ul className="mb-0 mt-2">
                 <li>En <span className="text-danger">2011</span> Bitcoin perdió el <strong>93%</strong> de su valor en 5 meses</li>
                 <li>En <span className="text-success">2017</span> subió un <strong>1,900%</strong> en un año</li>
-                <li>En <span className="text-danger">2022</span> empresas como Tesla perdieron <strong>$1.5B</strong> en BTC</li>
+                <li>En <span className="text-danger">2022</span> empresas como Tesla perdieron <strong>1.38B €</strong> en BTC</li>
               </ul>
               <div className="mt-2 fw-bold">Regla de oro: <span className="text-info">Máximo 5% de tu portfolio</span></div>
             </div>
@@ -298,8 +298,8 @@ export const Inversion = () => {
                 <div className="col-md-6">
                   <strong>💣 Riesgos reales:</strong>
                   <ul>
-                    <li>Exchange hackeado (FTX perdió $8B en 2022)</li>
-                    <li>Olvidar contraseñas (se pierden $10B en BTC)</li>
+                    <li>Exchange hackeado (FTX perdió 7.36B € en 2022)</li>
+                    <li>Olvidar contraseñas (se pierden 9.2B € en BTC)</li>
                     <li>Estafas (30% de proyectos crypto son fraudes)</li>
                   </ul>
                 </div>
@@ -319,12 +319,12 @@ export const Inversion = () => {
             <div>
               <strong>El poder del largo plazo:</strong>
               <div className="mt-2">
-                <span className="d-block">$10,000 invertidos en...</span>
+                <span className="d-block">9,200€ invertidos en...</span>
                 <div className="d-flex flex-wrap mt-2">
-                  <Badge bg="success" className="me-2 mb-2">Amazon (2001): $2,400,000</Badge>
-                  <Badge bg="danger" className="me-2 mb-2">Enron (2001): $0</Badge>
-                  <Badge bg="success" className="me-2 mb-2">Apple (1980): $7,000,000</Badge>
-                  <Badge bg="warning" className="me-2 mb-2">GameStop (2014): $300</Badge>
+                  <Badge bg="success" className="me-2 mb-2">Amazon (2001): 2,208,000€</Badge>
+                  <Badge bg="danger" className="me-2 mb-2">Enron (2001): 0€</Badge>
+                  <Badge bg="success" className="me-2 mb-2">Apple (1980): 6,440,000€ </Badge>
+                  <Badge bg="warning" className="me-2 mb-2">GameStop (2014): 276€</Badge>
                 </div>
               </div>
               <div className="mt-2 fw-bold">Clave: <span className="text-success">Diversifica + Invierte en lo que entiendas</span></div>
@@ -440,7 +440,7 @@ export const Inversion = () => {
                   </ol>
 
                   <div className="alert alert-info mt-3">
-                    <strong>💡 Ejemplo real:</strong> $500/mes durante 30 años al 7% = <span className="text-success">$612,000</span>
+                    <strong>💡 Ejemplo real:</strong> 460€/mes durante 30 años al 7% = <span className="text-success">563.040€</span>
                   </div>
                 </div>
               </div>
