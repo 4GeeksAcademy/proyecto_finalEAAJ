@@ -131,8 +131,6 @@ useEffect(() => {
   setSueldo(disponibleGuardado + sueldoNetoGuardado);
 
   const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
-
-  setSueldo(disponibleGuardado + sueldoNetoGuardado);
   setAhorro(ahorroGuardado);
 }, []);
 
@@ -142,6 +140,8 @@ useEffect(() => {
     navigate("/");
   }
 }, [navigate]);
+
+
 
 const handleProfileUser = async (e) => {
   e.preventDefault();
@@ -244,8 +244,10 @@ const totalGastos = Array.isArray(gastos)
   ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
   : 0;
 
-
 const dineroDisponible = sueldo - totalGastos;
+
+
+
 
 const handleEditarObjetivo = (id) => {
   navigate(`/objetivos/editar/${id}`);

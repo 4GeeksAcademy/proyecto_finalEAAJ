@@ -26,68 +26,51 @@ export const Formulario = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-		try {
+    try {
 			const response = await fetch(import.meta.env.VITE_BACKEND_URL+"api/user/register", {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					username: usuario,
-					email: email,
-					password: password,
-					firstname: nombre,
-					lastname: apellidos,
-					country: pais,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: usuario,
+          email: email,
+          password: password,
+          firstname: nombre,
+          lastname: apellidos,
+          country: pais,
 					phone: prefijo+telefono,
-					sueldo: sueldo, 
-					is_student: situacionBoolean(),
-          perfil: perfil 
-				}),
-			});
+          sueldo: sueldo,
+          is_student: situacionBoolean(),
+          perfil: perfil
+        }),
+      });
 
       const data = await response.json();
 
-			if (response.status === 201) {
-				localStorage.setItem("sueldo", sueldo);
-        		localStorage.setItem("ahorro", calcularAhorro());
-				alert("Usuario registrado con éxito ✅");
+      if (response.status === 201) {
+        localStorage.setItem("sueldo", sueldo);
+        localStorage.setItem("ahorro", calcularAhorro());
+        alert("Usuario registrado con éxito ✅");
 				localStorage.setItem('token', data.token); 
-				setTimeout(() => {
-					navigate("/main");
-				}, 1000); 
-			} else if (response.status >= 400) {
-				alert("Error: " + data.msg);
-			}
-		} catch (error) {
-			console.error("Error al enviar el formulario:", error);
-			alert("Error al enviar el formulario ❌");
-		}
-	};
-	/* const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		try {
-			
-			await axios.post("http://localhost:5000/api/user/register", {
-			username: usuario,
-			email: email,
-			password: password,
-		});
-		alert("Usuario registrado con éxito ✅");
-		navigate("/main");
-		} catch (error) {
-			console.error("Error al enviar el formulario:", error);
-			alert("Error al enviar el formulario ❌");
-		}
-	}; */
+        setTimeout(() => {
+          navigate("/main");
+        }, 1000);
+      } else if (response.status >= 400) {
+        alert("Error: " + data.msg);
+      }
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      alert("Error al enviar el formulario ❌");
+    }
+  };
 
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#ffffff", minHeight: "80vh" }}>
       <form className="w-100" style={{ maxWidth: "600px", margin: "1vh" }} onSubmit={handleSubmit}>
         <div className="text-center"><h1>Formulario</h1></div>
         <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff" }}>
-          
+
           {/* Nombre */}
           <div className="mb-4">
             <label className="form-label">Nombre</label>
@@ -129,13 +112,13 @@ export const Formulario = () => {
 				<option value="Croacia">Croacia</option>
 				<option value="Eslovaquia">Eslovaquia</option>
 				<option value="Eslovenia">Eslovenia</option>
-				<option value="España">España</option>
+              <option value="España">España</option>
 				<option value="Estonia">Estonia</option>
 				<option value="Finlandia">Finlandia</option>
-				<option value="Francia">Francia</option>
+              <option value="Francia">Francia</option>
 				<option value="Grecia">Grecia</option>
 				<option value="Irlanda">Irlanda</option>
-				<option value="Italia">Italia</option>
+              <option value="Italia">Italia</option>
 				<option value="Letonia">Letonia</option>
 				<option value="Lituania">Lituania</option>
 				<option value="Luxemburgo">Luxemburgo</option>
@@ -159,13 +142,13 @@ export const Formulario = () => {
 			<option value="+385">(+385) Croacia</option>
 			<option value="+421">(+421) Eslovaquia</option>
 			<option value="+386">(+386) Eslovenia</option>
-			<option value="+34">(+34) España</option>
+                <option value="+34">(+34) España</option>
 			<option value="+372">(+372) Estonia</option>
 			<option value="+358">(+358) Finlandia</option>
-			<option value="+33">(+33) Francia</option>
+                <option value="+33">(+33) Francia</option>
 			<option value="+30">(+30) Grecia</option>
 			<option value="+353">(+353) Irlanda</option>
-			<option value="+39">(+39) Italia</option>
+                <option value="+39">(+39) Italia</option>
 			<option value="+371">(+371) Letonia</option>
 			<option value="+370">(+370) Lituania</option>
 			<option value="+352">(+352) Luxemburgo</option>
@@ -199,10 +182,10 @@ export const Formulario = () => {
             </div>
 
             <select value={perfil} onChange={(e) => setPerfil(e.target.value)}>
-          <option value="">Selecciona un perfil</option>
-          <option value="ahorrador">Ahorrador</option>
+              <option value="">Selecciona un perfil</option>
+              <option value="ahorrador">Ahorrador</option>
               <option value="inversor">Inversor</option>
-</select>
+            </select>
 
             {/* Campos de sueldo */}
             <div className="mb-4">
