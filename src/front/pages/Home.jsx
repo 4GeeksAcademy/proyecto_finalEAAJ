@@ -1,9 +1,9 @@
-
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import Sphere from "./Sphere.jsx";
 import { NavbarPublic } from "../components/NavbarPublic";
+import Carrusel from "./Carrusel/Carrusel.jsx";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
