@@ -252,7 +252,7 @@ def register_gasto():
     return jsonify({"msg": "Gasto registrado con éxito", "gasto": new_gasto.serialize()}), 201
 
 # Obtener Gasto por ID
-@api.route("/api/gasto/<int:gasto_id>", methods=['GET'])
+@api.route("/gasto/<int:gasto_id>", methods=['GET'])
 @jwt_required()
 def get_gasto(gasto_id):
     current_user_id = get_jwt_identity()
@@ -272,7 +272,7 @@ def get_all_gastos():
     return jsonify({"gastos": [gasto.serialize() for gasto in gastos]}), 200
 
 # Actualizar Gasto
-@api.route("/api/gasto/update/<int:gasto_id>", methods=['PUT'])
+@api.route("/gasto/update/<int:gasto_id>", methods=['PUT'])
 @jwt_required()
 def update_gasto(gasto_id):
     current_user_id = get_jwt_identity()
