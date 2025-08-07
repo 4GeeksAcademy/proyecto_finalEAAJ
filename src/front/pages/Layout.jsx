@@ -8,20 +8,26 @@ import { useLocation } from "react-router-dom";
 
 
 export const Layout = () => {
-    const location = useLocation();
-    const rutaActual = location.pathname;
+  const location = useLocation();
+  const rutaActual = location.pathname;
 
-    // Define qué rutas son públicas
-    const rutasPublicas = ["/", "/login", "/form","/inversion"];
+  const rutasPublicas = ["/", "/login", "/form", "/inversion"];
+  const esPublica = rutasPublicas.includes(rutaActual);
 
-    // Verifica si estás en una ruta pública
-    const esPublica = rutasPublicas.includes(rutaActual);
+  return (
+    <div className="app">
+      <ScrollToTop />
+      
+      {/* Navbar */}
+      {esPublica ? <NavbarPublic /> : <NavbarPrivate />}
 
-    return (
-        <ScrollToTop>
-            {esPublica ? <NavbarPublic /> : <NavbarPrivate />}
-            <Outlet />
-            <Footer />
-        </ScrollToTop>
-    );
+      {/* Contenido principal */}
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
 };

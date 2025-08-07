@@ -15,6 +15,7 @@ export const EditarObjetivo = () => {
   const [token, setToken] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const inputRef = useRef(null);
+  const [mensaje, setMensaje] = useState(""); 
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -107,10 +108,39 @@ export const EditarObjetivo = () => {
       alert("No se pudo editar el objetivo");
     }
   };
+  const containerStyle = {
+    maxWidth: "480px",
+    margin: "40px auto",
+    padding: "25px 30px",
+    border: "2px solid #7bff00",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(123, 255, 0, 0.3)",
+    backgroundColor: "#fff",
+  };
+
+  const baseBtnStyle = {
+    backgroundColor: "#7bff00",
+    border: "none",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "6px",
+    boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
+  };
+
+  const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
+
+  const handleMouseEnter = () =>
+    setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
+  const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
+
+  
 
   return (
-    <div className="container mt-4" style={{ maxWidth: "400px" }}>
-      <h5>Editar objetivo de ahorro</h5>
+    <div style={containerStyle}>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Editar objetivo</h1>
       <form onSubmit={handleSubmit}>
         {/* Concepto */}
         <div className="mb-3">
@@ -156,7 +186,7 @@ export const EditarObjetivo = () => {
           />
         </div>
 
-        {/* Fecha */}
+        {/* Fecha límite */}
         <div className="mb-3">
           <label className="form-label">Fecha límite</label>
           <input
@@ -168,7 +198,7 @@ export const EditarObjetivo = () => {
           />
         </div>
 
-        {/* Frecuencia de ahorro */}
+        {/* Frecuencia */}
         <div className="mb-3">
           <label className="form-label">¿Cómo quieres que se calcule tu ahorro?</label>
           <select
@@ -195,9 +225,20 @@ export const EditarObjetivo = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary w-100">
-          Guardar Cambios
+        <button
+          type="submit"
+          style={btnStyle}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          Guardar cambios
         </button>
+
+        {mensaje && (
+          <div className="text-center mt-3">
+            <p>{mensaje}</p>
+          </div>
+        )}
       </form>
     </div>
   );

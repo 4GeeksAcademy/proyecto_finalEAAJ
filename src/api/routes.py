@@ -11,9 +11,10 @@ import requests
 from datetime import datetime
 
 
+
 api = Blueprint('api', __name__)
 CORS(api)
-
+CORS(api, resources={r"/api/*": {"origins": "*"}})
 
 
 

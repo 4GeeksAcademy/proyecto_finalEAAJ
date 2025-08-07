@@ -5,7 +5,7 @@ export const NavbarPublic = () => {
     <nav
       className="navbar navbar-light bg-light px-4 py-3 shadow-sm"
       style={{
-        background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",
+        background: "linear-gradient(to left,  #f4ffc4, #b7ff00, #f4ffc4)",
         backgroundSize: "200%",
         transition: "0.3s linear",
         minHeight: "6.6vh",
@@ -24,8 +24,8 @@ export const NavbarPublic = () => {
           </div>
         </div>
         <div>
-          <Link to="/login" className="btn btn-outline-primary me-2">Login</Link>
-          <Link to="/form" className="btn btn-primary">Register</Link>
+          <Link to="/login" className="btn  me-2" style={{backgroundColor:"#7bff00"}}>Login</Link>
+          <Link to="/form" className="btn " style={{backgroundColor:"#7bff00"}}>Register</Link>
         </div>
       </div>
     </nav>

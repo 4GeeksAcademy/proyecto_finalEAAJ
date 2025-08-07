@@ -36,80 +36,51 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
   }, []);
 
   return (
- 
-    <div className="page">
-      {/* NAVBAR */}
-      {/* <nav className="navbar navbar-light bg-light px-4 py-3 shadow-sm" style={{ background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",
-        backgroundSize: "200%",
-        transition: "0.3s linear",
-        minHeight: "6.6vh",
-      }}>
-        <div className="container-fluid d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center">
-            <div className="me-2">
-              <img
-                src="https://api.zoviz.com/lfp?b=K2NLr2r0IWQZfbqE&f=btCSiQWhf6m4&d=1"
-                alt="Logo"
-                style={{ width: "50%", height: "50%" }}
-              />
-              {/* <span role="img" aria-label="logo">💸</span> El icono lo he sustituido por una imagen creada en:"https://zoviz.com/es/slogan-generator". Se puede cambiar en cualquier momento}
-            </div>
-          </div>
-          <div className="navbar-brand mx-auto fw-bold fs-5" style={{ color: "#B7FF00" }}>Mo’money</div>
-          <div>
-            <Link to="/login" className="btn btn-outline-primary me-2">Login</Link>
-            <Link to="/form" className="btn btn-primary">Register</Link>
-            {/*Los botones de Login y Register están comentados porque no se han implementado las páginas aún.
-             Se pueden descomentar cuando estén listas.
-            <button className="btn btn-outline-primary me-2">Login</button>
-            <button className="btn btn-primary">Register</button>} 
-          </div>
-        </div>
-      </nav> */}
-
-      {/* SECCIÓN CENTRAL: Quiénes somos + Esfera + Qué hacemos */}
-      <section className="container my-5">
-        <div className="row align-items-center text-center text-md-start">
-          {/* QUIÉNES SOMOS */}
-          <div className="col-md-4 mb-4 mb-md-0">
-            <h2 className="mb-3">¿Quiénes somos?</h2>
-            <p className="lead">
-              Somos un equipo joven comprometido con ayudar a otros jóvenes a gestionar su dinero,
-              ahorrar, invertir y alcanzar sus metas financieras con herramientas digitales sencillas.
-            </p>
-          </div>
-
-          {/* ESFERA */}
-          <div className="col-md-4 d-flex justify-content-center mb-4 mb-md-0">
-            <Sphere />
-          </div>
-
-          {/* QUÉ HACEMOS */}
-          <div className="col-md-4">
-            <h2 className="mb-3">¿Qué hacemos?</h2>
-            <p className="lead">
-              Ofrecemos una plataforma con funciones para planificar tus gastos, visualizar tu ahorro,
-              explorar oportunidades de inversión y conectarte con una comunidad de jóvenes como tú.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* SECCIÓN INVERSIÓN */}
-      <section className="text-center bg-light p-5 rounded shadow-sm">
-        <h2 className="mb-3">Inversión</h2>
+ <div className="page" style={{
+  paddingBotton:"90px",
+  marginTop: '80px' }}>
+  {/* SECCIÓN CENTRAL: Quiénes somos + Esfera + Qué hacemos */}
+  <section className="container my-5">
+    <div className="row align-items-center text-center text-md-center justify-content-center">
+      {/* QUIÉNES SOMOS */}
+      <div className="col-md-4 mb-4 mb-md-0">
+        <h2 className="mb-3">¿Quiénes somos?</h2>
         <p className="lead">
-          Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
+          Somos un equipo joven comprometido con ayudar a otros jóvenes a gestionar su dinero,
+          ahorrar, invertir y alcanzar sus metas financieras con herramientas digitales sencillas.
         </p>
-        <Link to="/inversion" className="btn btn-inversion mt-3">
-          ¡Quiero que mi dinero crezca!
-        </Link>
-      </section>
+      </div>
 
-      <div className="col-12 d-flex justify-content-center mb-4">
-            <Carrusel />
+      {/* ESFERA */}
+      <div className="col-md-4 d-flex justify-content-center mb-4 mb-md-0">
+        <Sphere />
+      </div>
+
+      {/* QUÉ HACEMOS */}
+      <div className="col-md-4">
+        <h2 className="mb-3">¿Qué hacemos?</h2>
+        <p className="lead">
+          Ofrecemos una plataforma con funciones para planificar tus gastos, visualizar tu ahorro,
+          explorar oportunidades de inversión y conectarte con una comunidad de jóvenes como tú.
+        </p>
       </div>
     </div>
+  </section>
+
+  {/* SECCIÓN INVERSIÓN */}
+  <section className="text-center  p-5  mt-5 mx-auto" style={{ maxWidth: '600px' }}>
+    <h2 className="mb-3">Inversión</h2>
+    <p className="lead">
+      Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
+    </p>
+    <Link to="/inversion" className="btn" style={{ backgroundColor: "#7bff00" }}>
+      ¡Quiero que mi dinero crezca!
+    </Link>
+  </section>
+  <div className="col-12 d-flex justify-content-center mb-4">
+            <Carrusel />
+      </div>
+</div>
   );
 };
 

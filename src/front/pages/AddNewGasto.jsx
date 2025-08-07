@@ -48,7 +48,7 @@ export const AddNewGasto = () => {
       return;
     }
 
-    // Datos para el backend 
+    
     const gastoData = {
     concepto: concepto,
     cantidad: parseFloat(cantidad),
