@@ -1,9 +1,9 @@
-
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import Sphere from "./Sphere.jsx";
 import { NavbarPublic } from "../components/NavbarPublic";
+import Carrusel from "./Carrusel/Carrusel.jsx";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
@@ -101,10 +101,14 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
         <p className="lead">
           Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
         </p>
-        <Link to="/inversion" className="btn btn-primary mt-3">
+        <Link to="/inversion" className="btn btn-inversion mt-3">
           ¡Quiero que mi dinero crezca!
         </Link>
       </section>
+
+      <div className="col-12 d-flex justify-content-center mb-4">
+            <Carrusel />
+      </div>
     </div>
   );
 };
