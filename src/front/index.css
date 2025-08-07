@@ -216,3 +216,9 @@ body {
   z-index: 999;
   top: 50px;
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}

@@ -1,43 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import EmojiPicker from "emoji-picker-react";
 
 export const EditarGasto = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [gasto, setGasto] = useState({ concepto: "", cantidad: "", emoji: "" });
   const [token, setToken] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token") || "";
-    setToken(storedToken);
 
-    const fetchGasto = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gasto/${id}`, {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        });
+ useEffect(() => {
+  const storedToken = localStorage.getItem("token") || "";
+  setToken(storedToken);
 
-        if (!res.ok) throw new Error("Error al cargar gasto");
+  const fetchGasto = async () => {
+    try {
+      const url = `${import.meta.env.VITE_BACKEND_URL}api/gasto/${id}`;
+      console.log("URL de fetch:", url);
 
-        const data = await res.json();
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
 
-        
-        setGasto({
-          concepto: data.gasto.concepto || "",
-          cantidad: data.gasto.cantidad || "",
-          emoji: data.gasto.emoji || "",
-        });
-      } catch (err) {
-        console.error(err);
-        alert("No se pudo cargar el gasto.");
-        navigate("/main");
-      }
-    };
+      console.log("Respuesta:", res);
 
-    if (storedToken) fetchGasto();
-  }, [id, navigate]);
+      if (!res.ok) throw new Error("Error al cargar gasto");
+
+      const data = await res.json();
+      console.log("Gasto recibido:", data);
+
+      setGasto({
+        concepto: data.gasto.concepto || "",
+        cantidad: data.gasto.cantidad || "",
+        emoji: data.gasto.emoji || "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo cargar el gasto.");
+      navigate("/main");
+    }
+  };
+
+  if (storedToken) fetchGasto();
+}, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,6 +79,11 @@ export const EditarGasto = () => {
     }
   };
 
+  const onEmojiClick = (emojiObject) => {
+  setGasto((prev) => ({ ...prev, emoji: emojiObject.emoji }));
+  setShowPicker(false);
+};
+
   return (
     <div className="container mt-5">
       <h2>Editar Gasto</h2>
@@ -99,17 +112,23 @@ export const EditarGasto = () => {
           />
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Emoji</label>
-          <input
-            type="text"
-            className="form-control"
-            name="emoji"
-            value={gasto.emoji}
-            onChange={handleChange}
-          />
-        </div>
-
+        <div className="mb-3 position-relative">
+  <label className="form-label">Emoji</label>
+  <div className="d-flex align-items-center gap-3">
+    <button
+      type="button"
+      className="btn btn-outline-secondary"
+      onClick={() => setShowPicker(!showPicker)}
+    >
+      {gasto.emoji || "😀"}
+    </button>
+    {showPicker && (
+      <div style={{ position: "absolute", zIndex: 100 }}>
+        <EmojiPicker onEmojiClick={onEmojiClick} />
+      </div>
+    )}
+  </div>
+</div>
         <button type="submit" className="btn btn-success">
           Guardar Cambios
         </button>
