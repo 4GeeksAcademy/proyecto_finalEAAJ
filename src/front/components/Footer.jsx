@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 import React from "react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -118,6 +119,17 @@ export default function Footer() {
   const frases = [
 
     //(cambiar frases)
+=======
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export  const Footer =()=> {
+  const frases = [
+
+
+
+>>>>>>> develop
 
     "Ahorra hoy para invertir mañana 💰",
     "La constancia vence al interés compuesto 📈",
@@ -135,19 +147,32 @@ export default function Footer() {
   }, []);
 
   const variants = {
+<<<<<<< HEAD
     initial: { y: 40, opacity: 0 },
     animate: { y: 0, opacity: 1 },
     exit: { y: -40, opacity: 0 }
+=======
+    initial: { y: 40, opacity: 0 }, 
+    animate: { y: 0, opacity: 1 },   
+    exit: { y: -40, opacity: 0 }     
+>>>>>>> develop
   };
 
   return (
     <footer
       className="w-full p-4 text-center overflow-hidden"
       style={{
+<<<<<<< HEAD
         backgroundColor: "#b7ff00",
         color: "black",
         borderTop: "2px solid #b7ff00",
         height: "60px" // fija altura para evitar saltos
+=======
+        background: "linear-gradient(to left,   #f4ffc4, #b7ff00, #f4ffc4)",
+        color: "black",
+        borderTop: "2px solid #b7ff00",
+        height: "80px" 
+>>>>>>> develop
       }}
     >
       <AnimatePresence mode="wait">
