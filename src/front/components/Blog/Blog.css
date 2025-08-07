@@ -1,0 +1,109 @@
+/* Blog.css */
+
+body {
+  background-color: #FFFF;
+  color: #000;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+.topbar {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.topbar h1 {
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.topbar h1 span {
+  color: #888;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu li {
+  margin: 1rem 0;
+}
+
+.menu a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  color: #fff;
+}
+
+.content {
+  padding: 2rem 1rem;
+}
+
+.blog-post {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
+}
+
+.blog-post h2 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.blog-post .meta {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.blog-post .body {
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.comments {
+  margin-top: 2rem;
+}
+
+.comment {
+  border-top: 1px solid #333;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.comment .author {
+  font-weight: bold;
+  color: #ccc;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  background-color: #222;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+form button {
+  background-color: #444;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+}
+
+form button:hover {
+  background-color: #666;
+  cursor: pointer;
+}
+
+footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
