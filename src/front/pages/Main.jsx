@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 
-import { Button } from "react-bootstrap";
+import { Button } from "react-bootstrap"; 
 
 export const Main = () => {
   const [objetivos, setObjetivos] = useState([]);
@@ -504,7 +504,7 @@ return (
       <FaPiggyBank />
     </Link>
   </div>
-</div>
+</div> 
 
 
   </div>
