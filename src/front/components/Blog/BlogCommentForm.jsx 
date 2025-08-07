@@ -1,0 +1,30 @@
+import React, { useState } from 'react';
+
+export const BlogCommentForm = ({ onSubmit }) => {
+  const [comment, setComment] = useState({ body: '', author: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(comment);
+    setComment({ body: '', author: '' });
+  };
+
+  return (
+    <form className="comment-form" onSubmit={handleSubmit}>
+      <h4>Add Comment</h4>
+      <textarea
+        value={comment.body}
+        onChange={(e) => setComment({...comment, body: e.target.value})}
+        required
+      />
+      <input
+        type="text"
+        value={comment.author}
+        onChange={(e) => setComment({...comment, author: e.target.value})}
+        placeholder="Your name"
+        required
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};

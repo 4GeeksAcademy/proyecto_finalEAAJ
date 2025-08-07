@@ -1,0 +1,25 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BlogHeader } from '../components/blog';
+import { BlogNewPostForm } from '../components/blog/BlogNewPostForm';
+import { useBlog } from '../hooks/useBlog';
+
+export const NewPostPage = () => {
+  const navigate = useNavigate();
+  const { addPost } = useBlog();
+
+  const handleSubmit = (newPost) => {
+    addPost(newPost);
+    navigate('/blog');
+  };
+
+  return (
+    <div className="darkside-theme">
+      <BlogHeader />
+      
+      <div className="content">
+        <BlogNewPostForm onSubmit={handleSubmit} />
+      </div>
+    </div>
+  );
+};

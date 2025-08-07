@@ -1,0 +1,39 @@
+import React from 'react';
+import { BlogHeader, BlogMenu, BlogPostCard } from '../components/blog';
+import { useBlog } from '../hooks/useBlog';
+
+export const BlogPage = () => {
+  const { posts, selectedTab, menuOpen, setSelectedTab, setMenuOpen } = useBlog();
+
+  return (
+    <div className="darkside-theme">
+      <BlogHeader 
+        onSelectTab={setSelectedTab} 
+        onToggleMenu={() => setMenuOpen(!menuOpen)} 
+      />
+      
+      <BlogMenu isOpen={menuOpen} onSelectTab={setSelectedTab} />
+      
+      <div className="content row">
+        <aside className="hidden-xs hidden-sm col-md-2">
+          <p>Darkside is a black & white photo gallery blog built with React.</p>
+        </aside>
+
+        <div className="col-md-10">
+          {selectedTab === 'blog' && (
+            <div className="post-grid">
+              {posts.map((post, index) => (
+                <BlogPostCard 
+                  key={post.id} 
+                  post={post} 
+                  index={index}
+                  onSelect={() => setSelectedTab(index)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

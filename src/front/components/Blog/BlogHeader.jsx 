@@ -1,0 +1,21 @@
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+
+export const BlogHeader = ({ onSelectTab, onToggleMenu }) => (
+  <div className="row topbar">
+    <div className="col-xs-6">
+      <h1 onClick={() => onSelectTab('blog')}>
+        DARK<span>SIDE</span><br/>THEME
+      </h1>
+    </div>
+    <div className="col-xs-6">
+      <nav className="text-right">
+        <button className="menu-toggle" onClick={onToggleMenu}>
+          <span className="hidden-xs">MENU</span> 
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+      </nav>
+    </div>
+  </div>
+);

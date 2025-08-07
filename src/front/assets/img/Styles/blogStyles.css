@@ -1,0 +1,102 @@
+/* Estilos específicos para componentes del blog */
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.post-card {
+  position: relative;
+  height: 400px;
+  cursor: pointer;
+  overflow: hidden;
+  border: 5px solid white;
+}
+
+.post-card-inner {
+  position: relative;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.post-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.post-card h3 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.post-card p {
+  color: #ddd;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.post-meta {
+  display: flex;
+  gap: 15px;
+  position: relative;
+}
+
+.post-meta span {
+  color: white;
+}
+
+/* Estilos para el formulario de comentarios */
+.comment-form {
+  margin-top: 30px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  min-height: 100px;
+}
+
+/* Estilos para la lista de comentarios */
+.comments-list {
+  margin-top: 40px;
+}
+
+.comment-item {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-item cite {
+  font-style: normal;
+  display: block;
+  margin-top: 10px;
+  color: #666;
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+  .post-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .post-card {
+    height: 300px;
+  }
+}

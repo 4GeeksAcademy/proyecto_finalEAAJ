@@ -6,13 +6,29 @@ const blogPosts = [
     id: 1,
     title: "Cómo empezar a ahorrar",
     summary: "Guía básica para comenzar tu camino al ahorro inteligente.",
+    image: "https://source.unsplash.com/featured/?saving,money",
     content: "Contenido completo sobre cómo ahorrar...\n\nPaso 1: Establece metas claras...\nPaso 2: Crea un presupuesto..."
   },
   {
     id: 2,
     title: "Inversiones para principiantes",
     summary: "Introducción al mundo de las inversiones financieras.",
+    image: "https://source.unsplash.com/featured/?investment,finance",
     content: "Contenido completo sobre inversiones...\n\n1. Fondos indexados\n2. Acciones\n3. Bonos..."
+  },
+  {
+    id: 3,
+    title: "Errores comunes al manejar tu dinero",
+    summary: "Evita estos errores típicos al administrar tus finanzas personales.",
+    image: "https://source.unsplash.com/featured/?money,mistakes",
+    content: "Contenido sobre errores comunes como gastar más de lo que ganas..."
+  },
+  {
+    id: 4,
+    title: "¿Qué es el interés compuesto?",
+    summary: "Aprende cómo el interés compuesto puede ayudarte a multiplicar tu dinero.",
+    image: "https://source.unsplash.com/featured/?compound,interest",
+    content: "El interés compuesto es una herramienta poderosa..."
   }
 ];
 

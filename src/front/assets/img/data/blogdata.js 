@@ -1,0 +1,23 @@
+export const blogPosts = [
+  {
+    id: 1,
+    title: "Vader",
+    body: [
+      "Lorem ipsum dolor sit amet...",
+      "Numquam nobis nam voluptas...",
+      // ... párrafos restantes
+    ],
+    author: "Baron Watts",
+    comments: [
+      {
+        body: "Lorem ipsum dolor sit amet...",
+        author: "rupertpumpkin82",
+        createdOn: 1408547127216
+      }
+    ],
+    likes: 0,
+    image: "http://cdn.bgr.com/2015/08/darth-vader.jpg",
+    createdOn: 1408547127216
+  },
+  // ... otros posts
+];

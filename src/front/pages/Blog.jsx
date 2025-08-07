@@ -6,13 +6,15 @@ const blogPosts = [
     id: 1,
     title: "Cómo empezar a ahorrar",
     summary: "Guía básica para comenzar tu camino al ahorro inteligente.",
-    content: "Contenido completo sobre cómo ahorrar...\n\nPaso 1: Establece metas claras...\nPaso 2: Crea un presupuesto..."
+    content: "Contenido completo sobre cómo ahorrar...\n\nPaso 1: Establece metas claras...\nPaso 2: Crea un presupuesto...",
+    image: "https://images.unsplash.com/photo-1605902711622-cfb43c4437e1?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 2,
     title: "Inversiones para principiantes",
     summary: "Introducción al mundo de las inversiones financieras.",
-    content: "Contenido completo sobre inversiones...\n\n1. Fondos indexados\n2. Acciones\n3. Bonos..."
+    content: "Contenido completo sobre inversiones...\n\n1. Fondos indexados\n2. Acciones\n3. Bonos...",
+    image: "https://images.unsplash.com/photo-1569025690938-a00729c9e1f9?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
@@ -25,11 +27,11 @@ export const Blog = () => {
       </p>
       <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
         {blogPosts.map(post => (
-          <div 
-            key={post.id} 
-            style={{ 
-              backgroundColor: "#121212",
-              borderRadius: "12px", 
+          <div
+            key={post.id}
+            style={{
+              backgroundColor: "Grey",
+              borderRadius: "12px",
               boxShadow: "0 4px 10px rgba(183, 255, 0, 0.4)",
               padding: "1.8rem",
               flex: "1 1 300px",
@@ -39,16 +41,28 @@ export const Blog = () => {
               minHeight: "200px"
             }}
           >
+            {/* Imagen del post */}
+            <img
+              src={post.image}
+              alt={post.title}
+              style={{
+                width: "100%",
+                height: "180px",
+                objectFit: "cover",
+                borderRadius: "8px",
+                marginBottom: "1rem"
+              }}
+            />
             <div>
               <h2 style={{ color: "#b7ff00", fontSize: "1.8rem", marginBottom: "1rem" }}>{post.title}</h2>
               <p style={{ color: "#ddd", fontSize: "1rem", lineHeight: "1.4rem" }}>{post.summary}</p>
             </div>
-            <Link 
-              to={`/blog/${post.id}`} 
-              style={{ 
+            <Link
+              to={`/blog/${post.id}`}
+              style={{
                 marginTop: "auto",
                 marginTop: "1.5rem",
-                color: "#b7ff00", 
+                color: "#b7ff00",
                 fontWeight: "bold",
                 textDecoration: "none",
                 alignSelf: "flex-start",

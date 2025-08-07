@@ -1,0 +1,36 @@
+/* Mantengo todos tus estilos originales del Darkside Theme */
+.darkside-theme {
+  font: 300 1em/1.4 "Ubuntu", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.topbar h1 {
+  cursor: pointer;
+  font-size: 4em;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  font-weight: bold;
+}
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.post-card {
+  cursor: pointer;
+  height: 400px;
+}
+
+.post-card-inner {
+  padding: 150px 40px;
+  color: white;
+  position: relative;
+  border: 5px solid white;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ... otros estilos originales ... */
