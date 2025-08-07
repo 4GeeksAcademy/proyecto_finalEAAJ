@@ -27,7 +27,7 @@ export const Formulario = () => {
     e.preventDefault();
 
     try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL+"api/user/register", {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "api/user/register", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export const Formulario = () => {
           firstname: nombre,
           lastname: apellidos,
           country: pais,
-					phone: prefijo+telefono,
+          phone: prefijo + telefono,
           sueldo: sueldo,
           is_student: situacionBoolean(),
           perfil: perfil
@@ -52,7 +52,7 @@ export const Formulario = () => {
         localStorage.setItem("sueldo", sueldo);
         localStorage.setItem("ahorro", calcularAhorro());
         alert("Usuario registrado con éxito ✅");
-				localStorage.setItem('token', data.token); 
+        localStorage.setItem('token', data.token);
         setTimeout(() => {
           navigate("/main");
         }, 1000);
@@ -105,26 +105,26 @@ export const Formulario = () => {
           <div className="mb-4">
             <select className="form-select mb-4" value={pais} onChange={(e) => setPais(e.target.value)} required>
               <option disabled selected>¿Dónde vives?</option>
-				<option value="Alemania">Alemania</option>
-				<option value="Austria">Austria</option>
-				<option value="Bélgica">Bélgica</option>
-				<option value="Chipre">Chipre</option>
-				<option value="Croacia">Croacia</option>
-				<option value="Eslovaquia">Eslovaquia</option>
-				<option value="Eslovenia">Eslovenia</option>
+              <option value="Alemania">Alemania</option>
+              <option value="Austria">Austria</option>
+              <option value="Bélgica">Bélgica</option>
+              <option value="Chipre">Chipre</option>
+              <option value="Croacia">Croacia</option>
+              <option value="Eslovaquia">Eslovaquia</option>
+              <option value="Eslovenia">Eslovenia</option>
               <option value="España">España</option>
-				<option value="Estonia">Estonia</option>
-				<option value="Finlandia">Finlandia</option>
+              <option value="Estonia">Estonia</option>
+              <option value="Finlandia">Finlandia</option>
               <option value="Francia">Francia</option>
-				<option value="Grecia">Grecia</option>
-				<option value="Irlanda">Irlanda</option>
+              <option value="Grecia">Grecia</option>
+              <option value="Irlanda">Irlanda</option>
               <option value="Italia">Italia</option>
-				<option value="Letonia">Letonia</option>
-				<option value="Lituania">Lituania</option>
-				<option value="Luxemburgo">Luxemburgo</option>
-				<option value="Malta">Malta</option>
-				<option value="Países Bajos">Países Bajos</option>
-				<option value="Portugal">Portugal</option>
+              <option value="Letonia">Letonia</option>
+              <option value="Lituania">Lituania</option>
+              <option value="Luxemburgo">Luxemburgo</option>
+              <option value="Malta">Malta</option>
+              <option value="Países Bajos">Países Bajos</option>
+              <option value="Portugal">Portugal</option>
             </select>
           </div>
 
@@ -135,26 +135,26 @@ export const Formulario = () => {
               <select className="form-select text-secondary" value={prefijo} style={{ width: '30%' }} onChange={(e) => setPrefijo(e.target.value)} required>
                 <option value="" disabled selected>+</option>
                 <option disabled selected>Selecciona tu prefijo</option>
-			<option value="+49">(+49) Alemania</option>
-			<option value="+43">(+43) Austria</option>
-			<option value="+32">(+32) Bélgica</option>
-			<option value="+357">(+357) Chipre</option>
-			<option value="+385">(+385) Croacia</option>
-			<option value="+421">(+421) Eslovaquia</option>
-			<option value="+386">(+386) Eslovenia</option>
+                <option value="+49">(+49) Alemania</option>
+                <option value="+43">(+43) Austria</option>
+                <option value="+32">(+32) Bélgica</option>
+                <option value="+357">(+357) Chipre</option>
+                <option value="+385">(+385) Croacia</option>
+                <option value="+421">(+421) Eslovaquia</option>
+                <option value="+386">(+386) Eslovenia</option>
                 <option value="+34">(+34) España</option>
-			<option value="+372">(+372) Estonia</option>
-			<option value="+358">(+358) Finlandia</option>
+                <option value="+372">(+372) Estonia</option>
+                <option value="+358">(+358) Finlandia</option>
                 <option value="+33">(+33) Francia</option>
-			<option value="+30">(+30) Grecia</option>
-			<option value="+353">(+353) Irlanda</option>
+                <option value="+30">(+30) Grecia</option>
+                <option value="+353">(+353) Irlanda</option>
                 <option value="+39">(+39) Italia</option>
-			<option value="+371">(+371) Letonia</option>
-			<option value="+370">(+370) Lituania</option>
-			<option value="+352">(+352) Luxemburgo</option>
-			<option value="+356">(+356) Malta</option>
-			<option value="+31">(+31) Países Bajos</option>
-			<option value="+351">(+351) Portugal</option>
+                <option value="+371">(+371) Letonia</option>
+                <option value="+370">(+370) Lituania</option>
+                <option value="+352">(+352) Luxemburgo</option>
+                <option value="+356">(+356) Malta</option>
+                <option value="+31">(+31) Países Bajos</option>
+                <option value="+351">(+351) Portugal</option>
               </select>
               <input type="tel" className="form-control" required onChange={(e) => setTelefono(e.target.value)} />
             </div>

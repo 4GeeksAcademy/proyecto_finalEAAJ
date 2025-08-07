@@ -26,15 +26,15 @@ export const NavbarPrivate = () => {
     <nav
       className="navbar navbar-light bg-light px-4 py-3 shadow-sm"
       style={{
-        background: "linear-gradient(to left, #22b455, #1dd1a1, #22b455)",
+        background: "linear-gradient(to left,  #f4ffc4, #b7ff00, #f4ffc4)",
         backgroundSize: "200%",
         transition: "0.3s linear",
         minHeight: "6.6vh",
       }}
     >
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        <Link to="/main" className="navbar-brand fw-bold fs-4 text-white">
-          Mo’money
+        <Link to="/main" className="navbar-brand fw-bold fs-4 text-black" >
+          Mo’Money
         </Link>
 
         <div className="position-relative" ref={dropdownRef}>

@@ -15,7 +15,7 @@ export const Layout = () => {
   const esPublica = rutasPublicas.includes(rutaActual);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="app">
       <ScrollToTop />
       
       {/* Navbar */}
