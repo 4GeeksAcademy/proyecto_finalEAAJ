@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { ProfilePic } from "./ProfilePic"; // 👈 Importamos el componente
+import "./ProfilePic.css"; // 👈 Importamos los estilos
 
 export const NavbarPrivate = () => {
   const navigate = useNavigate();
@@ -11,7 +13,6 @@ export const NavbarPrivate = () => {
     navigate("/");
   };
 
-  // Cerrar el menú si se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -33,22 +34,27 @@ export const NavbarPrivate = () => {
       }}
     >
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        <Link to="/main" className="navbar-brand fw-bold fs-4 text-black" >
+        <Link to="/main" className="navbar-brand fw-bold fs-4 text-black">
           Mo’Money
         </Link>
 
         <div className="position-relative" ref={dropdownRef}>
-          {/* Botón con imagen de perfil */}
+          {/* Botón de imagen de perfil personalizada */}
           <button
             className="btn btn-outline-light rounded-circle p-0"
             onClick={() => setDropdownOpen(!isDropdownOpen)}
-            style={{ width: "60px", height: "60px", overflow: "hidden" }}
+            style={{
+              width: "60px",
+              height: "60px",
+              overflow: "hidden",
+              padding: 0,
+              border: "none",
+              background: "none",
+            }}
           >
-            <img
-              src="https://i.pravatar.cc/300" // Puedes reemplazar esta URL por la de la imagen de perfil real
-              alt="Perfil"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
+            <div style={{ width: "60px", height: "60px", position: "relative" }}>
+              <ProfilePic compact={true} />
+            </div>
           </button>
 
           {/* Menú desplegable */}
