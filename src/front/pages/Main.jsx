@@ -537,8 +537,40 @@ export const Main = () => {
           </div>
 
         </div>
-      </div> 
+      </div>
 
     </div>
+<<<<<<< HEAD
+       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
+  {/* Fila superior: Bitcoin a la izquierda, Acciones a la derecha */}
+  <div style={{ 
+    display: "flex", 
+    justifyContent: "space-between", 
+    width: "100%", 
+    maxWidth: "600px",
+    padding: "0 3rem"
+  }}>
+    <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
+      <FaBitcoin />
+    </Link>
+
+    <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
+      <FaChartLine />
+    </Link>
+  </div>
+
+  {/* Fondo debajo, centrado */}
+  <div style={{ marginTop: "2rem" }}>
+    <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00" }}>
+      <FaPiggyBank />
+    </Link>
+  </div>
+</div> 
+
+
+  </div>
+);
+=======
   );
+>>>>>>> develop
 }
