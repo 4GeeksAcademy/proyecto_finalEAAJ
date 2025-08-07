@@ -36,7 +36,9 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
   }, []);
 
   return (
- <div className="page" style={{ marginTop: '90px' }}>
+ <div className="page" style={{
+  paddingBotton:"90px",
+  marginTop: '80px' }}>
   {/* SECCIÓN CENTRAL: Quiénes somos + Esfera + Qué hacemos */}
   <section className="container my-5">
     <div className="row align-items-center text-center text-md-center justify-content-center">
@@ -75,6 +77,9 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
       ¡Quiero que mi dinero crezca!
     </Link>
   </section>
+  <div className="col-12 d-flex justify-content-center mb-4">
+            <Carrusel />
+      </div>
 </div>
   );
 };
