@@ -241,35 +241,3 @@ footer {
   padding: 20px;
   text-align: center;
 }
-
-.btn-inversion {
-  background-color: #b7ff00;
-  color: #000;
-  border: none;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
-  font-weight: 600;
-  box-shadow: 0 3px 6px rgba(183, 255, 0, 0.4);
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.25rem;
-  width: auto;
-  display: inline-block;
-  text-align: center;
-  text-decoration: none;
-}
-
-.btn-inversion:hover:not(:disabled) {
-  background-color: #d4ff50;
-  cursor: pointer;
-}
-
-.btn-inversion:disabled {
-  background-color: #a5d300;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.btn-inversion:focus {
-  outline: none;
-  box-shadow: 0 0 8px 3px #b7ff00;
-}
