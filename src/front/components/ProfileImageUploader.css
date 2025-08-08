@@ -1,9 +1,9 @@
 .profile-pic {
+  color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  color: transparent;
   transition: all 0.3s ease;
 }
 
@@ -43,13 +43,4 @@
   display: inline-flex;
   padding: 0.2em;
   height: 2em;
-}
-
-/* Optional: Center page background like original body */
-body {
-  height: 100vh;
-  background-color: rgb(25, 24, 21);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

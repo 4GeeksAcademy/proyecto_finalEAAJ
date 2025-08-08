@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ProfileImageUploader } from "../components/ProfileImageUploader";
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState({
@@ -8,15 +9,20 @@ const Perfil = () => {
     email: "Email",
   });
 
+  const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
+
   useEffect(() => {
-    
     const storedUser = localStorage.getItem("user");
+    const storedPhoto = localStorage.getItem("fotoPerfil");
     const token = localStorage.getItem("token");
+
+    if (storedPhoto) {
+      setFotoPerfil(storedPhoto);
+    }
 
     if (storedUser) {
       setUsuario(JSON.parse(storedUser));
     } else if (token) {
-      
       fetch("https://stunning-doodle-g47p9q545xx7f9rv-3001.app.github.dev/api/profile", {
         method: "GET",
         headers: {
@@ -25,9 +31,7 @@ const Perfil = () => {
         },
       })
         .then(res => {
-          if (!res.ok) {
-            throw new Error("No se pudo obtener la información del usuario");
-          }
+          if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
           return res.json();
         })
         .then(data => {
@@ -38,22 +42,23 @@ const Perfil = () => {
             email: data.email,
           };
           setUsuario(userData);
-          localStorage.setItem("user", JSON.stringify(userData)); // Guardamos en localStorage
+          localStorage.setItem("user", JSON.stringify(userData));
         })
-        .catch(err => {
-          console.error("Error al cargar el perfil:", err);
-        });
-    } else {
-      console.error("Token no encontrado. El usuario no ha iniciado sesión.");
+        .catch(err => console.error("Error al cargar el perfil:", err));
     }
   }, []);
 
-  
   const handleChange = (e) => {
     setUsuario({
       ...usuario,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleGuardar = () => {
+    localStorage.setItem("user", JSON.stringify(usuario));
+    localStorage.setItem("fotoPerfil", fotoPerfil);
+    alert("Cambios guardados localmente ✅");
   };
 
   const inputStyle = {
@@ -68,31 +73,21 @@ const Perfil = () => {
     color: "#333",
   };
 
-  const handleGuardar = () => {
-    
-    localStorage.setItem("user", JSON.stringify(usuario));
-    alert("Cambios guardados localmente ✅");
-  };
-
   return (
-    <div style={{
-      maxWidth: "350px",
-      margin: "20px auto",
-      padding: "20px",
-      borderRadius: "12px",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-      textAlign: "center",
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    }}>
-      <div style={{ marginBottom: "10px" }}>
-        <img
-          src="/user-profile.png"
-          alt="Foto de perfil"
-          style={{ borderRadius: "50%", marginBottom: "8px", width: "120px", height: "120px", objectFit: "cover" }}
-        />
-        <div style={{ fontSize: "14px", color: "#555", marginBottom: "12px" }}>
-          añadir foto
-        </div>
+    <div
+      style={{
+        maxWidth: "350px",
+        margin: "20px auto",
+        padding: "20px",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        textAlign: "center",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      }}
+    >
+      {/* Imagen de perfil con carga */}
+      <div style={{ marginBottom: "20px" }}>
+        <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} />
       </div>
 
       <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} />
@@ -100,18 +95,21 @@ const Perfil = () => {
       <input type="text" name="apellido" value={usuario.apellido} onChange={handleChange} style={inputStyle} />
       <input type="email" name="email" value={usuario.email} onChange={handleChange} style={inputStyle} />
 
-      <button onClick={handleGuardar} style={{
-        backgroundColor: "#B7FF00",
-        border: "none",
-        padding: "10px",
-        width: "100%",
-        marginTop: "15px",
-        fontWeight: "bold",
-        borderRadius: "6px",
-        boxShadow: "0 2px 4px #FBFFE4",
-        cursor: "pointer",
-        transition: "background-color 0.3s ease",
-      }}>
+      <button
+        onClick={handleGuardar}
+        style={{
+          backgroundColor: "#B7FF00",
+          border: "none",
+          padding: "10px",
+          width: "100%",
+          marginTop: "15px",
+          fontWeight: "bold",
+          borderRadius: "6px",
+          boxShadow: "0 2px 4px #FBFFE4",
+          cursor: "pointer",
+          transition: "background-color 0.3s ease",
+        }}
+      >
         Guardar Cambios
       </button>
     </div>

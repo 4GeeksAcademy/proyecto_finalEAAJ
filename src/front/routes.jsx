@@ -25,6 +25,8 @@ import { Inversion } from "./pages/Inversion";
 import Perfil from "./pages/Perfil";
 import BlogPage from './pages/BlogPage';
 import { NavbarPrivate } from './components/NavbarPrivate';
+import ParallaxScroll from './components/Blog/ParallaxScroll';
+
 
 
 
@@ -47,6 +49,7 @@ export const router = createBrowserRouter(
       <Route path="/Perfil" element={<Perfil />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/navbarprivate" element={<NavbarPrivate />} />
+      <Route path="/scroll-demo" element={<ParallaxScroll />} />
       
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
