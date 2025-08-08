@@ -15,7 +15,7 @@ export const EditarObjetivo = () => {
   const [token, setToken] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const inputRef = useRef(null);
-  const [mensaje, setMensaje] = useState(""); 
+  const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -102,12 +102,18 @@ export const EditarObjetivo = () => {
       if (!res.ok) throw new Error("Error al editar objetivo");
 
       localStorage.setItem("recargarObjetivos", "true");
-      navigate("/main");
+
+      setMensaje(`✅ Objetivo "${titulo}" editado correctamente.`);
+
+      setTimeout(() => {
+        navigate("/main");
+      }, 1500);
     } catch (err) {
       console.error(err);
       alert("No se pudo editar el objetivo");
     }
   };
+
   const containerStyle = {
     maxWidth: "480px",
     margin: "40px auto",
@@ -135,8 +141,6 @@ export const EditarObjetivo = () => {
   const handleMouseEnter = () =>
     setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
-
-  
 
   return (
     <div style={containerStyle}>
@@ -183,6 +187,15 @@ export const EditarObjetivo = () => {
             step="50"
             value={cantidad}
             onChange={(e) => setCantidad(Number(e.target.value))}
+            style={{
+              outline: "none",
+              boxShadow: "none",
+              WebkitAppearance: "none",
+              background: "#7bff00",
+              height: "6px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
           />
         </div>
 
@@ -225,6 +238,7 @@ export const EditarObjetivo = () => {
           />
         </div>
 
+        {/* Botón */}
         <button
           type="submit"
           style={btnStyle}
@@ -234,6 +248,7 @@ export const EditarObjetivo = () => {
           Guardar cambios
         </button>
 
+        {/* Mensaje de éxito */}
         {mensaje && (
           <div className="text-center mt-3">
             <p>{mensaje}</p>

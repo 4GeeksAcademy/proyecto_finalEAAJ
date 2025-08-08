@@ -1,6 +1,35 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const PasswordValidation = ({ password }) => {
+  if (!password) return null;
+
+  const isLongEnough = password.length >= 8;
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasUppercase = /[A-Z]/.test(password);
+
+  return (
+    <div className="password-validation mt-2">
+      <p className="password-validation-title">Tu contraseña debe incluir:</p>
+      <ul className="password-validation-list ps-3">
+        <li className={isLongEnough ? "text-success" : "text-danger"}>
+          {isLongEnough ? "✅" : "❌"} Al menos 8 caracteres
+        </li>
+        <li className={hasLetter ? "text-success" : "text-danger"}>
+          {hasLetter ? "✅" : "❌"} Letras (a-z)
+        </li>
+        <li className={hasUppercase ? "text-success" : "text-danger"}>
+          {hasUppercase ? "✅" : "❌"} Una letra mayúscula (A-Z)
+        </li>
+        <li className={hasNumber ? "text-success" : "text-danger"}>
+          {hasNumber ? "✅" : "❌"} Un número (0-9)
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 export const Formulario = () => {
   const [situacion, setSituacion] = useState(null);
   const [sueldo, setSueldo] = useState("");
@@ -67,12 +96,12 @@ export const Formulario = () => {
 
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#ffffff", minHeight: "80vh" }}>
-      <form className="w-100" style={{ maxWidth: "600px", margin: "1vh" }} onSubmit={handleSubmit}>
+      <form className="w-100" style={{ maxWidth: "600px", margin: "1vh", borderRadius: "8px", padding: "0px" }} onSubmit={handleSubmit}>
         <div className="text-center"><h1>Formulario</h1></div>
-        <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff" }}>
+        <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff",border: "3px solid #b7ff00", borderRadius: "8px", padding: "20px"}}>
 
           {/* Nombre */}
-          <div className="mb-4">
+          <div className="mb-4" >
             <label className="form-label">Nombre</label>
             <input type="text" className="form-control" value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </div>
@@ -99,6 +128,7 @@ export const Formulario = () => {
           <div className="mb-3">
             <label className="form-label">Contraseña</label>
             <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <PasswordValidation password={password} />
           </div>
 
           {/* País */}
@@ -181,14 +211,9 @@ export const Formulario = () => {
               </button>
             </div>
 
-            <select value={perfil} onChange={(e) => setPerfil(e.target.value)}>
-              <option value="">Selecciona un perfil</option>
-              <option value="ahorrador">Ahorrador</option>
-              <option value="inversor">Inversor</option>
-            </select>
-
+            
             {/* Campos de sueldo */}
-            <div className="mb-4">
+            <div className="mb- pt-3">
               <label className="form-label">¿Cuánto dispones al mes?</label>
               <input type="number" className="form-control" placeholder="€"
                 disabled={situacion !== "estudiante"} onChange={(e) => setSueldo(e.target.value)} />
