@@ -538,9 +538,6 @@ export const Main = () => {
 
         </div>
       </div>
-
-    </div>
-<<<<<<< HEAD
        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
   {/* Fila superior: Bitcoin a la izquierda, Acciones a la derecha */}
   <div style={{ 
@@ -566,11 +563,6 @@ export const Main = () => {
     </Link>
   </div>
 </div> 
-
-
-  </div>
-);
-=======
+</div>
   );
->>>>>>> develop
 }
