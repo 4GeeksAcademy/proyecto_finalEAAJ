@@ -49,7 +49,7 @@ export const Login = () => {
         <div
             style={{
                 backgroundColor: "white",
-                color: "#000000",
+                color: "#000",
                 height: "93.36vh",
                 display: "flex",
                 justifyContent: "center",
@@ -82,6 +82,7 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
+                            color:"#000",
                             borderRadius: "4px",
                         }}
                     />
@@ -99,6 +100,7 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
+                            color:"#000",
                             borderRadius: "4px",
                         }}
                     />
