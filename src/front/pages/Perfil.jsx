@@ -1,12 +1,23 @@
 import React from "react";
 
 
+import { useState } from "react";
+
 const Perfil = () => {
   const usuario = {
     username: "Username",
     nombre: "nombre",
     apellido: "apellido",
     email: "email",
+  };
+
+  const [imageSrc, setImageSrc] = useState("/user-profile.png");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageSrc(URL.createObjectURL(file));
+    }
   };
 
   const inputStyle = {
@@ -21,58 +32,63 @@ const Perfil = () => {
     color: "grey",
   };
 
-  const buttonStyle = {
-    backgroundColor: "#B7FF00",
-    border: "none",
-    padding: "10px",
-    width: "100%",
-    marginTop: "15px",
-    fontWeight: "bold",
-    borderRadius: "6px",
-    boxShadow: "0 2px 4px #FBFFE4",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease",
-  };
-
-  const handleMouseDown = (e) => {
-    e.currentTarget.style.backgroundColor = "#D4FF50";
-  };
-  const handleMouseUpOrLeave = (e) => {
-    e.currentTarget.style.backgroundColor = "#B7FF00";
-  };
-
-  const handleBorrarUsuario = () => {
-    // Acción para borrar usuario (ejemplo)
-    alert("Usuario borrado");
-  };
-
   return (
-    <div style={{
-      maxWidth: "350px",
-      margin: "20px auto",
-      padding: "20px",
-      borderRadius: "12px",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-      textAlign: "center",
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    }}>
-      <div style={{ marginBottom: "10px" }}>
+    <div
+      style={{
+        maxWidth: "350px",
+        margin: "20px auto",
+        padding: "20px",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        textAlign: "center",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      }}
+    >
+      <div style={{ marginBottom: "10px", position: "relative" }}>
         <img
-          src="/user-profile.png"
+          src={imageSrc}
           alt="Foto de perfil"
-          style={{ borderRadius: "50%", marginBottom: "8px", width: "120px", height: "120px", objectFit: "cover" }}
+          style={{
+            borderRadius: "50%",
+            marginBottom: "8px",
+            width: "120px",
+            height: "120px",
+            objectFit: "cover",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
         />
-        <div style={{ fontSize: "14px", color: "#555", marginBottom: "12px" }}>
-          añadir foto
-        </div>
+        <label
+          htmlFor="file-upload"
+          style={{
+            display: "inline-block",
+            padding: "6px 12px",
+            cursor: "pointer",
+            color: "black",
+            fontWeight: "600",
+            border: "2px solid #7bff00",
+            borderRadius: "6px",
+            userSelect: "none",
+            fontSize: "14px",
+            marginTop: "6px",
+          }}
+        >
+          Cambiar foto
+        </label>
+        <input
+          id="file-upload"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
       </div>
 
       <input type="text" value={`@${usuario.username}`} readOnly style={inputStyle} />
       <input type="text" value={usuario.nombre} readOnly style={inputStyle} />
       <input type="text" value={usuario.apellido} readOnly style={inputStyle} />
       <input type="email" value={usuario.email} readOnly style={inputStyle} />
-
-
     </div>
   );
 };

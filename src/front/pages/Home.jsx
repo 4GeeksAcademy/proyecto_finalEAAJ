@@ -37,8 +37,9 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
 
   return (
  <div className="page" style={{
-  paddingBotton:"90px",
-  marginTop: '80px' }}>
+  
+  marginTop: '80px',
+  marginBottom: 0 }}>
   {/* SECCIÓN CENTRAL: Quiénes somos + Esfera + Qué hacemos */}
   <section className="container my-5">
     <div className="row align-items-center text-center text-md-center justify-content-center">
@@ -68,7 +69,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
   </section>
 
   {/* SECCIÓN INVERSIÓN */}
-  <section className="text-center  p-5  mt-5 mx-auto" style={{ maxWidth: '600px' }}>
+  <section className="text-center  p-5  mt-5 mx-auto" style={{ maxWidth: '600px',paddingBottom: 0 }}>
     <h2 className="mb-3">Inversión</h2>
     <p className="lead">
       Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
@@ -77,7 +78,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
       ¡Quiero que mi dinero crezca!
     </Link>
   </section>
-  <div className="col-12 d-flex justify-content-center mb-4">
+  <div className="col-12 d-flex justify-content-center " style={{ marginBottom: 0, paddingBottom: 0 }}>
             <Carrusel />
       </div>
 </div>

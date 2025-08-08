@@ -105,85 +105,104 @@ export const EditarGasto = () => {
       setLoading(false);
     }
   };
+const containerStyle = {
+  maxWidth: "480px",
+  margin: "40px auto",
+  padding: "25px 30px",
+  border: "2px solid #7bff00",
+  borderRadius: "12px",
+  boxShadow: "0 4px 12px rgba(123, 255, 0, 0.3)",
+  backgroundColor: "#fff",
+};
 
-  return (
-    <div className="addgasto-container"> 
-      <form className="addgasto-form-wrapper" onSubmit={handleSubmit}>
-        <div className="addgasto-title">
-          <h1>Editar gasto</h1>
-        </div>
+const baseBtnStyle = {
+  backgroundColor: "#7bff00",
+  border: "none",
+  fontWeight: "600",
+  cursor: "pointer",
+  transition: "background-color 0.3s ease",
+  padding: "10px",
+  width: "100%",
+  borderRadius: "6px",
+  boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
+};
 
-        <div className="addgasto-form-content">
-          {/* INPUT CONCEPTO */}
-          <div className="mb-4">
-            <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
-            <input
-              type="text"
-              id="concepto"
-              name="concepto"
-              className="form-control"
-              value={gasto.concepto}
-              onChange={handleChange}
-              placeholder="Ej. Comida, transporte..."
-              required
-            />
-          </div>
+const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
 
-          {/* INPUT CANTIDAD */}
-          <div className="mb-4">
-            <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
-            <input
-              type="number"
-              id="cantidad"
-              name="cantidad"
-              className="form-control"
-              value={gasto.cantidad}
-              onChange={handleChange}
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              required
-            />
-          </div>
+const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
+const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-          {/* EMOJI PICKER */}
-          <div className="mb-4 position-relative">
-            <label className="form-label">Emoji (opcional)</label>
-            <div className="d-flex align-items-center gap-3">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPicker(!showPicker)}
-              >
-                {gasto.emoji || "😀"}
-              </button>
-              {showPicker && (
-                <div className="addgasto-emoji-picker-wrapper" style={{ position: "absolute", zIndex: 100 }}>
-                  <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
-              )}
-            </div>
-          </div>
+return (
+  <div style={containerStyle}>
+    <form onSubmit={handleSubmit}>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Editar gasto</h1>
 
-          {/* BOTÓN */}
-          <div className="mb-3 d-flex justify-content-center">
-            <button
-              type="submit"
-              className="btn btn-primary addgasto-btn-guardar"
-              disabled={loading}
-            >
-              {loading ? "Guardando..." : "Guardar cambios"}
-            </button>
-          </div>
+      <div className="mb-4">
+        <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
+        <input
+          type="text"
+          id="concepto"
+          name="concepto"
+          className="form-control"
+          value={gasto.concepto}
+          onChange={handleChange}
+          placeholder="Ej. Comida, transporte..."
+          required
+        />
+      </div>
 
-          {/* MENSAJE */}
-          {mensaje && (
-            <div className="text-center mt-3">
-              <p>{mensaje}</p>
+      <div className="mb-4">
+        <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
+        <input
+          type="number"
+          id="cantidad"
+          name="cantidad"
+          className="form-control"
+          value={gasto.cantidad}
+          onChange={handleChange}
+          placeholder="0.00"
+          step="0.01"
+          min="0"
+          required
+        />
+      </div>
+
+      <div className="mb-4 position-relative">
+        <label className="form-label">Emoji (opcional)</label>
+        <div className="d-flex align-items-center gap-3">
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => setShowPicker(!showPicker)}
+            style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
+          >
+            {gasto.emoji || "😀"}
+          </button>
+          {showPicker && (
+            <div style={{ position: "absolute", zIndex: 100 }}>
+              <EmojiPicker onEmojiClick={onEmojiClick} />
             </div>
           )}
         </div>
-      </form>
-    </div>
-  );
+      </div>
+
+      <button
+        type="submit"
+        style={btnStyle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        disabled={loading}
+      >
+        {loading ? "Guardando..." : "Guardar cambios"}
+      </button>
+
+      {mensaje && (
+        <div className="text-center mt-3">
+          <p>{mensaje}</p>
+        </div>
+      )}
+    </form>
+  </div>
+);
+
 };

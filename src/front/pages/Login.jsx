@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const [identificador, setIdentificador] = useState("");
     /* const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Email:", email);
@@ -23,12 +23,12 @@ export const Login = () => {
         /* console.log("Email:", email);
         console.log("Password:", password); */
         try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL+'/api/user/login', {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ identificador, password }),
             });
 
             const data = await response.json();
@@ -39,7 +39,7 @@ export const Login = () => {
                 navigate("/main");//window.location.href = '/'; // Redirigimos a la página principal
             } else if (response.status >= 400) {
                 // Si la respuesta es 401, mostramos el mensaje
-                setMessage("⛔ "+ data.msg);
+                setMessage("⛔ " + data.msg);
                 setShowMessage(true);
                 setTimeout(() => {
                     setShowMessage(false);
@@ -54,32 +54,38 @@ export const Login = () => {
             style={{
                 backgroundColor: "white",
                 color: "#000000",
-                height: "93.36vh",
+                minHeight: "calc(100vh - alturaNavbar - alturaFooter)", 
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "flex-start", 
+                paddingTop: "2rem", 
+                paddingBottom: "2rem",
             }}
         >
             <form
                 onSubmit={handleLogin}
-                style={{
-                    border: "2px solid #B7FF00",
-                    padding: "2rem",
-                    borderRadius: "10px",
-                    minWidth: "300px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
+                
+    style={{
+      border: "2px solid #B7FF00",
+      padding: "2rem",
+      borderRadius: "10px",
+      minWidth: "300px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "1rem",
+      marginTop:"8rem"
+      
+      
                 }}
             >
                 <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Iniciar Sesión</h2>
 
                 <div>
-                    <label>Email:</label><br />
+                    <label>Usuario o Email:</label><br />
                     <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        value={identificador}
+                        onChange={(e) => setIdentificador(e.target.value)}
                         required
                         style={{
                             width: "100%",
@@ -109,52 +115,56 @@ export const Login = () => {
                 </div>
                 <div>{/* Te he añadido un enlace para recuperar la contraseña en caso de que la hayas olvidado. Y queria ver como quedaba. Alexis */}
                     <p style={{ color: "#95cf00ff" }}>
-                    ¿Olvidaste tu contraseña? <Link to="/forgotpassword" style={{ color: "#95cf00ff", 
-                    textDecoration: "underline", ":hover": { color: "#B7FF00" } }}>Recuperar</Link></p>
+                        ¿Olvidaste tu contraseña? <Link to="/forgotpassword" style={{
+                            color: "#95cf00ff",
+                            textDecoration: "underline", ":hover": { color: "#B7FF00" }
+                        }}>Recuperar</Link></p>
                     <p style={{ color: "#95cf00ff" }}>
-                    ¿Todavía no tienes un usuario? <Link to="/form" style={{ color: "#95cf00ff", 
-                    textDecoration: "underline", ":hover": { color: "#B7FF00" } }}>Logeate</Link></p>
+                        ¿Todavía no tienes un usuario? <Link to="/form" style={{
+                            color: "#95cf00ff",
+                            textDecoration: "underline", ":hover": { color: "#B7FF00" }
+                        }}>Logeate</Link></p>
                 </div>
                 <button
-                type="submit"
-                onMouseDown={() => setIsPressed(true)}
-                onMouseUp={() => setIsPressed(false)}
-                onMouseLeave={() => setIsPressed(false)}
-                style={{
-                backgroundColor: "#B7FF00",
-                color: "#000",
-                padding: "10px",
-                border: "none",
-                borderRadius: "4px",
-                fontWeight: "bold",
-                cursor: "pointer",
+                    type="submit"
+                    onMouseDown={() => setIsPressed(true)}
+                    onMouseUp={() => setIsPressed(false)}
+                    onMouseLeave={() => setIsPressed(false)}
+                    style={{
+                        backgroundColor: "#B7FF00",
+                        color: "#000",
+                        padding: "10px",
+                        border: "none",
+                        borderRadius: "4px",
+                        fontWeight: "bold",
+                        cursor: "pointer",
                     }}
                 >
-                Iniciar Sesión
-            </button>
-        </form>
-        {showMessage && (
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: "20vh",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    backgroundColor: "#f8d7da",
-                    color: "#721c24",
-                    padding: "2.5vh 5vh",
-                    borderRadius: "5px",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                }}
-            >
-                {message}
-            </div>
-        )}
-        {showMessage && (
-        <div style={{ marginTop: '20px', color: 'red' }}>
-          
-        </div>
-      )}
+                    Iniciar Sesión
+                </button>
+            </form>
+            {showMessage && (
+                <div
+                    style={{
+                        position: "fixed",
+                        bottom: "20vh",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        backgroundColor: "#f8d7da",
+                        color: "#721c24",
+                        padding: "2.5vh 5vh",
+                        borderRadius: "5px",
+                        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                    }}
+                >
+                    {message}
+                </div>
+            )}
+            {showMessage && (
+                <div style={{ marginTop: '20px', color: 'red' }}>
+
+                </div>
+            )}
         </div >
     );
 };

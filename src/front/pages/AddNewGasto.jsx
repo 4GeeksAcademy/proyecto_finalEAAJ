@@ -14,11 +14,11 @@ export const AddNewGasto = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      const savedToken = localStorage.getItem("token") || "";
-      if (!savedToken || savedToken.length < 10) {
-        navigate("/");
-      } 
-    }, [navigate]);
+    const savedToken = localStorage.getItem("token") || "";
+    if (!savedToken || savedToken.length < 10) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const onEmojiClick = (emojiObject) => {
     setEmoji(emojiObject.emoji);
@@ -48,12 +48,11 @@ export const AddNewGasto = () => {
       return;
     }
 
-    
     const gastoData = {
-    concepto: concepto,
-    cantidad: parseFloat(cantidad),
-    emoji: emoji || null,
-};
+      concepto: concepto,
+      cantidad: parseFloat(cantidad),
+      emoji: emoji || null,
+    };
 
     try {
       const response = await fetch(`${API_BASE_URL}api/gasto/register`, {
@@ -68,7 +67,6 @@ export const AddNewGasto = () => {
       const result = await response.json();
 
       if (response.ok) {
-        
         const gastosGuardados = JSON.parse(localStorage.getItem("gastos")) || [];
         gastosGuardados.push({
           concepto,
@@ -78,11 +76,7 @@ export const AddNewGasto = () => {
         });
         localStorage.setItem("gastos", JSON.stringify(gastosGuardados));
         setMensaje(`✅ Gasto guardado: ${concepto} ${emoji} - ${cantidad}€`);
-    setTimeout(() => {
-      navigate("/main"); 
-    }, 1000);
-
-        setMensaje(`✅ Gasto guardado: ${concepto} ${emoji} - ${cantidad}€`);
+        setTimeout(() => navigate("/main"), 1000);
         setConcepto("");
         setCantidad("");
         setEmoji("");
@@ -97,81 +91,103 @@ export const AddNewGasto = () => {
     }
   };
 
+  // === Estilos ===
+  const containerStyle = {
+    maxWidth: "480px",
+    margin: "40px auto",
+    padding: "25px 30px",
+    border: "2px solid #7bff00",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(123, 255, 0, 0.3)",
+    backgroundColor: "#fff",
+  };
+
+  const baseBtnStyle = {
+    backgroundColor: "#7bff00",
+    border: "none",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "6px",
+    boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
+  };
+
+  const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
+
+  const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
+  const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
+
   return (
-    <div className="addgasto-container">
-      <form className="addgasto-form-wrapper" onSubmit={handleSubmit}>
-        <div className="addgasto-title">
-          <h1>¡Añade otro gasto!</h1>
+    <div style={containerStyle}>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Añadir nuevo gasto</h1>
+      <form onSubmit={handleSubmit}>
+        {/* Concepto */}
+        <div className="mb-3">
+          <label className="form-label">Concepto del gasto</label>
+          <input
+            type="text"
+            className="form-control"
+            value={concepto}
+            onChange={(e) => setConcepto(e.target.value)}
+            placeholder="Ej. Café, Transporte..."
+            required
+          />
         </div>
 
-        <div className="addgasto-form-content">
-          {/* INPUT CONCEPTO */}
-          <div className="mb-4">
-            <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
-            <input
-              type="text"
-              id="concepto"
-              className="form-control"
-              value={concepto}
-              onChange={(e) => setConcepto(e.target.value)}
-              placeholder="Ej. Comida, transporte..."
-              required
-            />
-          </div>
+        {/* Cantidad */}
+        <div className="mb-3">
+          <label className="form-label">Cantidad (€)</label>
+          <input
+            type="number"
+            className="form-control"
+            value={cantidad}
+            onChange={(e) => setCantidad(e.target.value)}
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            required
+          />
+        </div>
 
-          {/* INPUT CANTIDAD */}
-          <div className="mb-4">
-            <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
-            <input
-              type="number"
-              id="cantidad"
-              className="form-control"
-              value={cantidad}
-              onChange={(e) => setCantidad(e.target.value)}
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              required
-            />
-          </div>
-
-          {/* EMOJI PICKER */}
-          <div className="mb-4 position-relative">
-            <label className="form-label">Emoji (opcional)</label>
-            <div className="d-flex align-items-center gap-3">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPicker(!showPicker)}
-              >
-                {emoji || "😀"}
-              </button>
-              {showPicker && (
-                <div className="addgasto-emoji-picker-wrapper">
-                  <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* BOTÓN */}
-          <div className="mb-3 d-flex justify-content-center">
+        {/* Emoji */}
+        <div className="mb-3 position-relative">
+          <label className="form-label">Emoji (opcional)</label>
+          <div className="d-flex align-items-center gap-3">
             <button
-              type="submit"
-              className="btn btn-primary addgasto-btn-guardar"
-              disabled={loading}
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPicker(!showPicker)}
+              style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
             >
-              {loading ? "Guardando..." : "Guardar gasto"}
+              {emoji || "😀"}
             </button>
+            {showPicker && (
+              <div style={{ position: "absolute", zIndex: 1000 }}>
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
           </div>
-
-          {/* MENSAJE */}
-          {mensaje && (
-            <div className="text-center mt-3">
-              <p>{mensaje}</p>
-            </div>
-          )}
         </div>
+
+        {/* Botón */}
+        <button
+          type="submit"
+          style={btnStyle}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          disabled={loading}
+        >
+          {loading ? "Guardando..." : "Guardar Gasto"}
+        </button>
+
+        {/* Mensaje */}
+        {mensaje && (
+          <div className="text-center mt-3">
+            <p>{mensaje}</p>
+          </div>
+        )}
       </form>
     </div>
   );

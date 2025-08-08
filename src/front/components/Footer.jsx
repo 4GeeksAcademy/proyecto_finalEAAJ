@@ -34,10 +34,12 @@ export  const Footer =()=> {
     <footer
       className="w-full p-4 text-center overflow-hidden"
       style={{
-        background: "linear-gradient(to left,   #f4ffc4, #b7ff00, #f4ffc4)",
-        color: "black",
-        borderTop: "2px solid #b7ff00",
-        height: "80px" 
+    background: "linear-gradient(to left, #f4ffc4, #b7ff00, #f4ffc4)",
+    color: "black",
+    borderTop: "2px solid #b7ff00",
+    height: "80px",
+    paddingTop: "4px",
+    paddingBottom: "4px",
       }}
     >
       <AnimatePresence mode="wait">
