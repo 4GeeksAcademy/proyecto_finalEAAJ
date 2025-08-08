@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 
-import { Button } from "react-bootstrap"; 
+import { Button } from "react-bootstrap";
+import { HashLink } from "react-router-hash-link";
+
 
 export const Main = () => {
   const [objetivos, setObjetivos] = useState([]);
@@ -508,32 +510,32 @@ export const Main = () => {
           marginTop: "2rem"
         }}>
           <div style={{ textAlign: "center" }}>
-            <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#bitcoin" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
               <FaBitcoin />
               <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
                 Criptomonedas
               </div>
-            </Link>
+            </HashLink>
           </div>
 
           {/* Fondos */}
           <div style={{ textAlign: "center" }}>
-            <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#fondos" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
               <FaChartLine />
               <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
                 Fondos
               </div>
-            </Link>
+            </HashLink>
           </div>
 
           {/* Acciones */}
           <div style={{ textAlign: "center" }}>
-            <Link to="/inversion" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#acciones" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
               <FaPiggyBank />
               <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
                 Acciones
               </div>
-            </Link>
+            </HashLink>
           </div>
 
         </div>
