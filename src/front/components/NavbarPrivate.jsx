@@ -3,21 +3,34 @@ import { useState, useRef, useEffect } from "react";
 
 export const NavbarPrivate = () => {
   const navigate = useNavigate();
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef();
+  const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [isLogoDropdownOpen, setLogoDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef();
+  const logoDropdownRef = useRef();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
-  // Cerrar el menú si se hace clic fuera
+  // Cerrar ambos menús si se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(e.target)
+      ) {
+        setProfileDropdownOpen(false);
+      }
+
+      if (
+        logoDropdownRef.current &&
+        !logoDropdownRef.current.contains(e.target)
+      ) {
+        setLogoDropdownOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -33,36 +46,61 @@ export const NavbarPrivate = () => {
       }}
     >
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        <Link to="/main" className="navbar-brand fw-bold fs-4 text-black" >
-          Mo’Money
-        </Link>
+        {/* Logo Mo'Money como dropdown */}
+        <div className="position-relative" ref={logoDropdownRef}>
+          <div
+            className="navbar-brand fw-bold fs-4 text-black"
+            style={{ cursor: "pointer" }}
+            onClick={() => setLogoDropdownOpen(!isLogoDropdownOpen)}
+          >
+            Mo’Money ⌄
+          </div>
 
-        <div className="position-relative" ref={dropdownRef}>
-          {/* Botón con imagen de perfil */}
+          {isLogoDropdownOpen && (
+            <div
+              className="dropdown-menu show mt-2"
+              style={{ position: "absolute", top: "100%", left: 0 }}
+            >
+              <Link className="dropdown-item" to="/main" onClick={() => setLogoDropdownOpen(false)}>
+                Main
+              </Link>
+              <Link className="dropdown-item" to="/objetivos" onClick={() => setLogoDropdownOpen(false)}>
+                Añadir Objetivos
+              </Link>
+              <Link className="dropdown-item" to="/addnewgasto" onClick={() => setLogoDropdownOpen(false)}>
+                Añadir Gastos
+              </Link>
+              <Link className="dropdown-item" to="/inversion" onClick={() => setLogoDropdownOpen(false)}>
+                Invertir
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Perfil a la derecha */}
+        <div className="position-relative" ref={profileDropdownRef}Cuckyynala33_
+        >
           <button
             className="btn btn-outline-light rounded-circle p-0"
-            onClick={() => setDropdownOpen(!isDropdownOpen)}
+            onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
             style={{ width: "60px", height: "60px", overflow: "hidden" }}
           >
             <img
-              src="https://i.pravatar.cc/300" // Puedes reemplazar esta URL por la de la imagen de perfil real
+              src="https://i.pravatar.cc/300"
               alt="Perfil"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </button>
 
-          {/* Menú desplegable */}
-          {isDropdownOpen && (
+          {isProfileDropdownOpen && (
             <div
               className="dropdown-menu dropdown-menu-end show mt-2"
               style={{ position: "absolute", right: 0 }}
             >
-              <Link className="dropdown-item" to="/perfil">
+              <Link className="dropdown-item" to="/perfil" onClick={() => setProfileDropdownOpen(false)}>
                 Perfil
               </Link>
-              <Link className="dropdown-item" to="/editar-formulario">
-                Editar Formulario
-              </Link>
+             
               <button className="dropdown-item text-danger" onClick={handleLogout}>
                 Cerrar Sesión
               </button>

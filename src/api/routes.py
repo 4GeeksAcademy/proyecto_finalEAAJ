@@ -70,19 +70,16 @@ def register():
 def login():
     body = request.get_json()
     try:
-        if 'username' in body:
-            login_user = body['username']
-        if 'email' in body:
-            login_user = body['email']
+        login_user = body.get("identificador")
         password = body.get("password")
-        user = User.query.filter((User.username == login_user) | (
-            User.email == login_user)).first()
+
+        user = User.query.filter((User.username == login_user) | (User.email == login_user)).first()
 
         if user and user.check_password(password):
             access_token = create_access_token(identity=str(user.id))
             return jsonify({"token": access_token}), 200
-    except:
-        print("Something went wrong")
+    except Exception as e:
+        print("Something went wrong:", e)
     return jsonify({"msg": "username/email o contraseña equivocados"}), 401
 
 # Con el Token devolver el usuario

@@ -1,26 +1,25 @@
-import { Outlet } from "react-router-dom/dist"
-import ScrollToTop from "../components/ScrollToTop"
-
-import {Footer} from "../components/Footer"
-import { NavbarPrivate } from "../components/NavbarPrivate";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { NavbarPublic } from "../components/NavbarPublic";
-import { useLocation } from "react-router-dom";
-
-
-
+import { NavbarPrivate } from "../components/NavbarPrivate";
+import { Footer } from "../components/Footer";
+import { ScrollToTop } from "../components/ScrollToTop";
+ 
 export const Layout = () => {
   const location = useLocation();
-  const rutaActual = location.pathname;
+  const [tieneToken, setTieneToken] = useState(null);
 
-  const rutasPublicas = ["/", "/login", "/form", "/inversion"];
-  const esPublica = rutasPublicas.includes(rutaActual);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setTieneToken(Boolean(token) && token.length > 10);
+  }, [location]);
 
   return (
     <div className="app">
       <ScrollToTop />
-      
+
       {/* Navbar */}
-      {esPublica ? <NavbarPublic /> : <NavbarPrivate />}
+      {tieneToken === null ? null : tieneToken ? <NavbarPrivate /> : <NavbarPublic />}
 
       {/* Contenido principal */}
       <main className="flex-grow">

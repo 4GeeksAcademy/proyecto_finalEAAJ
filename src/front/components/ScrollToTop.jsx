@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 // otherwise it would remain in the position of the previous view. 
 // Investigate more about this React behavior :D 
 
-const ScrollToTop = ({ location, children }) => {
+export const ScrollToTop = ({ location, children }) => {
     const prevLocation = useRef(location);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const ScrollToTop = ({ location, children }) => {
     return children;
 };
 
-export default ScrollToTop;
+
 
 ScrollToTop.propTypes = {
     location: PropTypes.object,
