@@ -181,14 +181,38 @@ export const Formulario = () => {
               </button>
             </div>
 
-            <select value={perfil} onChange={(e) => setPerfil(e.target.value)}>
-              <option value="">Selecciona un perfil</option>
-              <option value="ahorrador">Ahorrador</option>
-              <option value="inversor">Inversor</option>
-            </select>
+            <div className="d-flex justify-content-center gap-3">
+    <button
+      type="button"
+      onClick={() => setPerfil("ahorrador")}
+      style={{
+        backgroundColor: perfil === "ahorrador" ? "#b7ff00" : "white",
+        color: "black",
+        border: "2px solid #b7ff00",
+        padding: "8px 16px",
+        borderRadius: "4px"
+      }}
+    >
+      Ahorrador
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setPerfil("inversor")}
+      style={{
+        backgroundColor: perfil === "inversor" ? "#b7ff00" : "white",
+        color: "black",
+        border: "2px solid #b7ff00",
+        padding: "8px 16px",
+        borderRadius: "4px"
+      }}
+    >
+      Inversor
+    </button>
+  </div>
 
             {/* Campos de sueldo */}
-            <div className="mb-4">
+            <div className="mb- pt-3">
               <label className="form-label">¿Cuánto dispones al mes?</label>
               <input type="number" className="form-control" placeholder="€"
                 disabled={situacion !== "estudiante"} onChange={(e) => setSueldo(e.target.value)} />

@@ -118,7 +118,7 @@ export const Objetivos = () => {
 
   return (
     <div style={containerStyle}>
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Crear objetivo de ahorro</h1>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Añadir nuevo objetivo</h1>
       <form onSubmit={handleSubmit}>
         {/* Concepto */}
         <div className="mb-3">

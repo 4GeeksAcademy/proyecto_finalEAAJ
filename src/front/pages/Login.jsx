@@ -13,11 +13,12 @@ export const Login = () => {
         e.preventDefault();
         try {
             const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/login', {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ identificador, password }),
             });
 
             const data = await response.json();
@@ -50,32 +51,38 @@ export const Login = () => {
             style={{
                 backgroundColor: "white",
                 color: "#000000",
-                height: "93.36vh",
+                minHeight: "calc(100vh - alturaNavbar - alturaFooter)", 
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "flex-start", 
+                paddingTop: "2rem", 
+                paddingBottom: "2rem",
             }}
         >
             <form
                 onSubmit={handleLogin}
-                style={{
-                    border: "2px solid #B7FF00",
-                    padding: "2rem",
-                    borderRadius: "10px",
-                    minWidth: "300px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
+                
+    style={{
+      border: "2px solid #B7FF00",
+      padding: "2rem",
+      borderRadius: "10px",
+      minWidth: "300px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "1rem",
+      marginTop:"8rem"
+      
+      
                 }}
             >
                 <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Iniciar Sesión</h2>
 
                 <div>
-                    <label>Email:</label><br />
+                    <label>Usuario o Email:</label><br />
                     <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        value={identificador}
+                        onChange={(e) => setIdentificador(e.target.value)}
                         required
                         style={{
                             width: "100%",
