@@ -4,6 +4,8 @@ import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 import { HashLink } from "react-router-hash-link";
 
 import { Button } from "react-bootstrap";
+import { HashLink } from "react-router-hash-link";
+
 
 export const Main = () => {
   const [objetivos, setObjetivos] = useState([]);
