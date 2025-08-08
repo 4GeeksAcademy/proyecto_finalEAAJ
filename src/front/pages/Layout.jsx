@@ -10,17 +10,15 @@ import { useLocation } from "react-router-dom";
 
 export const Layout = () => {
   const location = useLocation();
-  const rutaActual = location.pathname;
-
-  const rutasPublicas = ["/", "/login", "/form", "/inversion"];
-  const esPublica = rutasPublicas.includes(rutaActual);
+  const token = localStorage.getItem("token");
+  const isAuthenticated = token && token !== "null" && token !== "undefined";
 
   return (
     <div className="app">
       <ScrollToTop />
       
-      {/* Navbar */}
-      {esPublica ? <NavbarPublic /> : <NavbarPrivate />}
+      {/* Navbar condicional */}
+      {isAuthenticated ? <NavbarPrivate /> : <NavbarPublic />}
 
       {/* Contenido principal */}
       <main className="flex-grow">
