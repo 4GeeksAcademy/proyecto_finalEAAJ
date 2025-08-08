@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
 
 export const AddNewGasto = () => {
   const [concepto, setConcepto] = useState("");
@@ -10,25 +11,50 @@ export const AddNewGasto = () => {
   const [mensaje, setMensaje] = useState("");
   const [loading, setLoading] = useState(false);
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+  const appRef = useRef(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-      const savedToken = localStorage.getItem("token") || "";
-      if (!savedToken || savedToken.length < 10) {
-        navigate("/");
-      } 
-    }, [navigate]);
+    const savedToken = localStorage.getItem("token") || "";
+    if (!savedToken || savedToken.length < 10) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const onEmojiClick = (emojiObject) => {
     setEmoji(emojiObject.emoji);
     setShowPicker(false);
   };
 
+  const createMoneyAnimation = () => {
+    const bill = document.createElement('div');
+    bill.className = 'money-bill';
+    bill.textContent = '💵'; // Puedes usar '💶' para euros
+    
+    // Posición inicial aleatoria en la parte superior
+    const startX = Math.random() * window.innerWidth;
+    bill.style.left = `${startX}px`;
+    bill.style.top = '-50px';
+    bill.style.position = 'fixed';
+    bill.style.zIndex = '1000';
+    
+    document.body.appendChild(bill);
+
+    gsap.to(bill, {
+      y: window.innerHeight + 100,
+      rotation: gsap.utils.random(-180, 180),
+      duration: gsap.utils.random(2, 4),
+      ease: "power1.in",
+      onComplete: () => bill.remove()
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    // Validaciones
     if (!concepto.trim()) {
       alert("El concepto es obligatorio");
       setLoading(false);
@@ -41,6 +67,11 @@ export const AddNewGasto = () => {
       return;
     }
 
+    // Animación de billetes (5 billetes)
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createMoneyAnimation, i * 200);
+    }
+
     const token = localStorage.getItem("token");
     if (!token) {
       alert("No hay token. Inicia sesión.");
@@ -48,12 +79,11 @@ export const AddNewGasto = () => {
       return;
     }
 
-    
     const gastoData = {
-    concepto: concepto,
-    cantidad: parseFloat(cantidad),
-    emoji: emoji || null,
-};
+      concepto: concepto,
+      cantidad: parseFloat(cantidad),
+      emoji: emoji || null,
+    };
 
     try {
       const response = await fetch(`${API_BASE_URL}api/gasto/register`, {
@@ -68,7 +98,11 @@ export const AddNewGasto = () => {
       const result = await response.json();
 
       if (response.ok) {
-        
+        // Animación adicional al guardar con éxito
+        for (let i = 0; i < 3; i++) {
+          setTimeout(createMoneyAnimation, i * 300);
+        }
+
         const gastosGuardados = JSON.parse(localStorage.getItem("gastos")) || [];
         gastosGuardados.push({
           concepto,
@@ -77,15 +111,11 @@ export const AddNewGasto = () => {
           fecha: new Date().toISOString(),
         });
         localStorage.setItem("gastos", JSON.stringify(gastosGuardados));
+        
         setMensaje(`✅ Gasto guardado: ${concepto} ${emoji} - ${cantidad}€`);
-    setTimeout(() => {
-      navigate("/main"); 
-    }, 1000);
-
-        setMensaje(`✅ Gasto guardado: ${concepto} ${emoji} - ${cantidad}€`);
-        setConcepto("");
-        setCantidad("");
-        setEmoji("");
+        setTimeout(() => {
+          navigate("/main"); 
+        }, 1500);
       } else {
         setMensaje("❌ Error: " + (result.msg || "No se pudo guardar el gasto"));
       }
@@ -98,7 +128,7 @@ export const AddNewGasto = () => {
   };
 
   return (
-    <div className="addgasto-container">
+    <div className="addgasto-container" ref={appRef}>
       <form className="addgasto-form-wrapper" onSubmit={handleSubmit}>
         <div className="addgasto-title">
           <h1>¡Añade otro gasto!</h1>
@@ -161,9 +191,34 @@ export const AddNewGasto = () => {
               className="btn btn-primary addgasto-btn-guardar"
               disabled={loading}
             >
-              {loading ? "Guardando..." : "Guardar gasto"}
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2"></span>
+                  Guardando...
+                </>
+              ) : "Guardar gasto"}
             </button>
           </div>
+
+          {/* ESTILOS PARA LOS BILLETES */}
+          <style>
+            {`
+              .money-bill {
+                width: 40px;
+                height: 40px;
+                background: #8BC34A;
+                color: white;
+                font-size: 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                pointer-events: none;
+                user-select: none;
+              }
+            `}
+          </style>
 
           {/* MENSAJE */}
           {mensaje && (
