@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
-    const [email, setEmail] = useState("");
+    const [identificador, setIdentificador] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState('');
     const [showMessage, setShowMessage] = useState(false);
@@ -12,7 +11,6 @@ export const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/login', {
             const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/login', {
                 method: 'POST',
                 headers: {
@@ -29,20 +27,16 @@ export const Login = () => {
                     localStorage.setItem('user', JSON.stringify(data.user));
                 }
                 navigate("/main");
-            } else if (response.status >= 400) {
-                setMessage("⛔ " + data.msg);
+            } else {
+                setMessage("⛔ " + (data.msg || "Error al iniciar sesión."));
                 setShowMessage(true);
-                setTimeout(() => {
-                    setShowMessage(false);
-                }, 10000);
+                setTimeout(() => setShowMessage(false), 10000);
             }
         } catch (error) {
             console.error('Error:', error);
             setMessage("⛔ Error al iniciar sesión, intenta de nuevo.");
             setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 10000);
+            setTimeout(() => setShowMessage(false), 10000);
         }
     };
 
@@ -51,28 +45,26 @@ export const Login = () => {
             style={{
                 backgroundColor: "white",
                 color: "#000000",
-                minHeight: "calc(100vh - alturaNavbar - alturaFooter)", 
+                minHeight: "100vh", // Usamos altura total de la pantalla
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "flex-start", 
-                paddingTop: "2rem", 
+                alignItems: "flex-start",
+                paddingTop: "8rem", // Bajar el recuadro
                 paddingBottom: "2rem",
             }}
         >
             <form
                 onSubmit={handleLogin}
-                
-    style={{
-      border: "2px solid #B7FF00",
-      padding: "2rem",
-      borderRadius: "10px",
-      minWidth: "300px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "1rem",
-      marginTop:"8rem"
-      
-      
+                style={{
+                    border: "2px solid #B7FF00",
+                    padding: "2rem",
+                    borderRadius: "10px",
+                    minWidth: "300px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                    backgroundColor: "white",
+                    boxShadow: "0 0 15px rgba(0,0,0,0.1)",
                 }}
             >
                 <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Iniciar Sesión</h2>
@@ -112,16 +104,16 @@ export const Login = () => {
                 </div>
 
                 <div>
-                    <p style={{ color: "#95cf00ff" }}>
+                    <p style={{ color: "black" }}>
                         ¿Olvidaste tu contraseña?{" "}
                         <Link to="/forgotpassword" style={{ color: "#95cf00ff", textDecoration: "underline" }}>
                             Recuperar
                         </Link>
                     </p>
-                    <p style={{ color: "#95cf00ff" }}>
+                    <p style={{ color: "black" }}>
                         ¿Todavía no tienes un usuario?{" "}
                         <Link to="/form" style={{ color: "#95cf00ff", textDecoration: "underline" }}>
-                            Logeate
+                            Regístrate
                         </Link>
                     </p>
                 </div>
@@ -154,6 +146,7 @@ export const Login = () => {
                         padding: "2.5vh 5vh",
                         borderRadius: "5px",
                         boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                        zIndex: 1000,
                     }}
                 >
                     {message}

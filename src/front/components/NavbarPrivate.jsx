@@ -100,9 +100,7 @@ export const NavbarPrivate = () => {
               <Link className="dropdown-item" to="/perfil" onClick={() => setProfileDropdownOpen(false)}>
                 Perfil
               </Link>
-              <Link className="dropdown-item" to="/editar-formulario" onClick={() => setProfileDropdownOpen(false)}>
-                Editar Formulario
-              </Link>
+             
               <button className="dropdown-item text-danger" onClick={handleLogout}>
                 Cerrar Sesión
               </button>

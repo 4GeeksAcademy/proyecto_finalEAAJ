@@ -58,9 +58,13 @@ export const Objetivos = () => {
         throw new Error("Error al guardar objetivo");
       }
 
-      setMensaje("Objetivo guardado correctamente.");
+      setMensaje(`✅ Objetivo "${concepto}" guardado correctamente.`);
       localStorage.setItem("recargarObjetivos", "true");
-      navigate("/main");
+
+      // Espera un poco antes de redirigir para mostrar el mensaje
+      setTimeout(() => {
+        navigate("/main");
+      }, 1500);
 
     } catch (err) {
       console.error(err);
@@ -159,6 +163,15 @@ export const Objetivos = () => {
             step="50"
             value={cantidad}
             onChange={(e) => setCantidad(Number(e.target.value))}
+            style={{
+              outline: "none",
+              boxShadow: "none",
+              WebkitAppearance: "none",
+              background: "#7bff00",
+              height: "6px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
           />
         </div>
 
@@ -213,8 +226,11 @@ export const Objetivos = () => {
 
         {/* Mensaje */}
         {mensaje && (
-          <div className="text-center mt-3">
-            <p>{mensaje}</p>
+          <div
+            className="text-center mt-3"
+
+          >
+            {mensaje}
           </div>
         )}
       </form>
