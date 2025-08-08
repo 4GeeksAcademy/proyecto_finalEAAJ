@@ -114,12 +114,12 @@ export const Login = () => {
                     />
                 </div>
                 <div>{/* Te he añadido un enlace para recuperar la contraseña en caso de que la hayas olvidado. Y queria ver como quedaba. Alexis */}
-                    <p style={{ color: "#95cf00ff" }}>
+                    <p style={{ color: "#0d0e0cff" }}>
                         ¿Olvidaste tu contraseña? <Link to="/forgotpassword" style={{
                             color: "#95cf00ff",
                             textDecoration: "underline", ":hover": { color: "#B7FF00" }
                         }}>Recuperar</Link></p>
-                    <p style={{ color: "#95cf00ff" }}>
+                    <p style={{ color: "#0d0e0cff" }}>
                         ¿Todavía no tienes un usuario? <Link to="/form" style={{
                             color: "#95cf00ff",
                             textDecoration: "underline", ":hover": { color: "#B7FF00" }

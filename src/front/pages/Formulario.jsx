@@ -67,12 +67,12 @@ export const Formulario = () => {
 
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#ffffff", minHeight: "80vh" }}>
-      <form className="w-100" style={{ maxWidth: "600px", margin: "1vh" }} onSubmit={handleSubmit}>
+      <form className="w-100" style={{ maxWidth: "600px", margin: "1vh", borderRadius: "8px", padding: "0px" }} onSubmit={handleSubmit}>
         <div className="text-center"><h1>Formulario</h1></div>
-        <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff" }}>
+        <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff",border: "3px solid #b7ff00", borderRadius: "8px", padding: "20px"}}>
 
           {/* Nombre */}
-          <div className="mb-4">
+          <div className="mb-4" >
             <label className="form-label">Nombre</label>
             <input type="text" className="form-control" value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </div>
@@ -181,36 +181,7 @@ export const Formulario = () => {
               </button>
             </div>
 
-            <div className="d-flex justify-content-center gap-3">
-    <button
-      type="button"
-      onClick={() => setPerfil("ahorrador")}
-      style={{
-        backgroundColor: perfil === "ahorrador" ? "#b7ff00" : "white",
-        color: "black",
-        border: "2px solid #b7ff00",
-        padding: "8px 16px",
-        borderRadius: "4px"
-      }}
-    >
-      Ahorrador
-    </button>
-
-    <button
-      type="button"
-      onClick={() => setPerfil("inversor")}
-      style={{
-        backgroundColor: perfil === "inversor" ? "#b7ff00" : "white",
-        color: "black",
-        border: "2px solid #b7ff00",
-        padding: "8px 16px",
-        borderRadius: "4px"
-      }}
-    >
-      Inversor
-    </button>
-  </div>
-
+            
             {/* Campos de sueldo */}
             <div className="mb- pt-3">
               <label className="form-label">¿Cuánto dispones al mes?</label>
