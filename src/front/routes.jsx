@@ -23,8 +23,10 @@ import { EditarObjetivo } from "./pages/EditarObjetivo";
 import { EditarGasto } from "./pages/EditarGasto";
 import { Inversion } from "./pages/Inversion";
 import Perfil from "./pages/Perfil";
-import { Blog } from "./pages/Blog";
-import { BlogPost } from "./pages/BlogPost";
+import BlogPage from './pages/BlogPage';
+import { NavbarPrivate } from './components/NavbarPrivate';
+import ParallaxScroll from './components/Blog/ParallaxScroll';
+
 
 
 
@@ -45,8 +47,10 @@ export const router = createBrowserRouter(
       <Route path="/gasto/editar/:id" element={<EditarGasto />} />
       <Route path="/addnewgasto" element={<AddNewGasto />} />
       <Route path="/Perfil" element={<Perfil />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:id" element={<BlogPost />} />
+      <Route path="/blog" element={<BlogPage />} />
+      <Route path="/navbarprivate" element={<NavbarPrivate />} />
+      <Route path="/scroll-demo" element={<ParallaxScroll />} />
+      
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
   )
