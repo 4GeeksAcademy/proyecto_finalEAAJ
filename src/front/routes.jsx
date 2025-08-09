@@ -8,8 +8,6 @@ import {
 
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
-import { Single } from "./pages/Single";
-import { Demo } from "./pages/Demo";
 import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
@@ -35,11 +33,9 @@ export const router = createBrowserRouter(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
       <Route path="/" element={<Home />} />
       <Route path="/Main" element={<Main />} />
-       <Route path="/Objetivos" element={<Objetivos />} />
-       <Route path="/inversion" element={<Inversion />} />
-        <Route path="/objetivos/editar/:id" element={<EditarObjetivo />} />
-      <Route path="/single/:theId" element={<Single />} />
-      <Route path="/demo" element={<Demo />} />
+      <Route path="/Objetivos" element={<Objetivos />} />
+      <Route path="/inversion" element={<Inversion />} />
+      <Route path="/objetivos/editar/:id" element={<EditarObjetivo />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/resetpassword" element={<ResetPassword />} />
       <Route path="/form" element={<Formulario />} />

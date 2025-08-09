@@ -44,7 +44,7 @@ export const Login = () => {
         <div
             style={{
                 backgroundColor: "white",
-                color: "#000000",
+                color: "#000",
                 minHeight: "100vh", // Usamos altura total de la pantalla
                 display: "flex",
                 justifyContent: "center",
@@ -81,6 +81,7 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
+                            color:"#000",
                             borderRadius: "4px",
                         }}
                     />
@@ -98,6 +99,7 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
+                            color:"#000",
                             borderRadius: "4px",
                         }}
                     />
