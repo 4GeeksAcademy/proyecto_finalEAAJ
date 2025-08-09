@@ -5,7 +5,6 @@ import { HashLink } from "react-router-hash-link";
 import { Button } from "react-bootstrap";
 
 
-
 export const Main = () => {
   const [objetivos, setObjetivos] = useState([]);
   const [sueldo, setSueldo] = useState(0);
@@ -540,7 +539,8 @@ export const Main = () => {
 
         </div>
       </div>
-
-    </div>
+       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
+  </div>
+</div>
   );
 }

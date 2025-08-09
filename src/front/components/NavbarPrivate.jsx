@@ -40,7 +40,7 @@ export const NavbarPrivate = () => {
       className="navbar navbar-light bg-light px-4 py-3 shadow-sm"
       style={{
         background: "linear-gradient(to left,  #f4ffc4, #b7ff00, #f4ffc4)",
-        backgroundSize: "200%",
+        backgroundSize: "100%",
         transition: "0.3s linear",
         minHeight: "6.6vh",
       }}
@@ -49,11 +49,15 @@ export const NavbarPrivate = () => {
         {/* Logo Mo'Money como dropdown */}
         <div className="position-relative" ref={logoDropdownRef}>
           <div
-            className="navbar-brand fw-bold fs-4 text-black"
-            style={{ cursor: "pointer" }}
+            className="navbar-brand fw-bold text-white"
+            style={{ cursor: "pointer", fontSize: "2.5vh" }}
             onClick={() => setLogoDropdownOpen(!isLogoDropdownOpen)}
-          >
-            Mo’Money ⌄
+          ><img
+                src="/Mo-moneyIcon2.webp"
+                alt="Logo"
+                style={{ width: "6vh", height: "6vh" }}
+              />
+            Mo’money ⌄
           </div>
 
           {isLogoDropdownOpen && (
