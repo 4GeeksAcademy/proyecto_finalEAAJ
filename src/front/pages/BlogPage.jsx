@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BlogPostDetail from '../components/Blog/BlogPostDetail';
 import AddNewPost from '../components/Blog/AddNewPost';
+import BlogPostPage from '../components/Blog/BlogPostPage';
 import ParallaxScroll from '../components/Blog/ParallaxScroll';
 import { Footer } from '../components/Footer';
 import '../components/Blog/Blog.css';
-import initialPostsData from '../assets/img/our_data.js';
+import '../components/Blog/ParallaxScroll.css';
+import initialPostsData from "../assets/img/BlogPosts.js";
+
 
 function BlogPage() {
   const [posts, setPosts] = useState(initialPostsData);
