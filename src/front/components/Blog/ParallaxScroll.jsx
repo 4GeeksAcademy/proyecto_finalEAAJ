@@ -120,7 +120,7 @@ const ParallaxScroll = ({ posts, onPostSelect }) => {
 
       // 🌀 Animación de entrada inicial
       gsap.from(window, {
-        duration: 1.4,
+        duration: 1.5,
         scrollTo: gsap.getProperty(scrollDistRef.current, "height") / 3,
         ease: "power2.in"
       });
