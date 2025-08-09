@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
@@ -16,6 +17,8 @@ export const EditarObjetivo = () => {
   const [showPicker, setShowPicker] = useState(false);
   const inputRef = useRef(null);
   const [mensaje, setMensaje] = useState("");
+
+  const [mostrarContenido, setMostrarContenido] = useState(false); // 👈 nuevo estado
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -45,6 +48,11 @@ export const EditarObjetivo = () => {
         setDescripcion(obj.descripcion || "");
         setEmoji(obj.emoji || "");
         setFrecuencia(obj.frecuencia || "diario");
+
+        // ⏳ Espera breve antes de mostrar el contenido
+        setTimeout(() => {
+          setMostrarContenido(true);
+        }, 200); // 200 ms
       } catch (err) {
         console.error(err);
         navigate("/main");
@@ -64,7 +72,10 @@ export const EditarObjetivo = () => {
         titulo.substring(0, start) + emojiChar + titulo.substring(end);
       setTitulo(newText);
       setTimeout(() => {
-        input.setSelectionRange(start + emojiChar.length, start + emojiChar.length);
+        input.setSelectionRange(
+          start + emojiChar.length,
+          start + emojiChar.length
+        );
         input.focus();
       }, 0);
     } else {
@@ -141,6 +152,11 @@ export const EditarObjetivo = () => {
   const handleMouseEnter = () =>
     setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
+
+  // ⛔ No mostrar nada hasta que se cumpla la espera
+  if (!mostrarContenido) {
+    return null;
+  }
 
   return (
     <div style={containerStyle}>

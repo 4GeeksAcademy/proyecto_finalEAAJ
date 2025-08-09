@@ -14,6 +14,7 @@ export const Main = () => {
   const [recargarGastos, setRecargarGastos] = useState(false);
   const [recargarObjetivos, setRecargarObjetivos] = useState(false);
   const navigate = useNavigate();
+  const [mostrarContenido, setMostrarContenido] = useState(false);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -303,6 +304,19 @@ export const Main = () => {
       alert("No se pudo actualizar el objetivo");
     }
   };
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setMostrarContenido(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!mostrarContenido) {
+   
+    return null; 
+  }
 
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: "white" }}>

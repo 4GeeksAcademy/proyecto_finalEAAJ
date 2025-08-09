@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
 
@@ -11,47 +11,53 @@ export const EditarGasto = () => {
   const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const errorShownRef = useRef(false);
+  const [mostrarContenido, setMostrarContenido] = useState(false); // 👈 nuevo estado
 
   useEffect(() => {
-  const storedToken = localStorage.getItem("token") || "";
-  setToken(storedToken);
+    const storedToken = localStorage.getItem("token") || "";
+    setToken(storedToken);
 
-  if (!storedToken) return;
+    if (!storedToken) return;
 
-  const fetchGasto = async () => {
-    try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}api/gasto/${id}`;
-      const res = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-      });
+    const fetchGasto = async () => {
+      try {
+        const url = `${import.meta.env.VITE_BACKEND_URL}api/gasto/${id}`;
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
 
-      if (!res.ok) {
-        const errorMsg = await res.text();
-        console.error("Respuesta de error:", errorMsg);
-        throw new Error("Error al cargar gasto");
+        if (!res.ok) {
+          const errorMsg = await res.text();
+          console.error("Respuesta de error:", errorMsg);
+          throw new Error("Error al cargar gasto");
+        }
+
+        const data = await res.json();
+
+        setGasto({
+          concepto: data.gasto.concepto || "",
+          cantidad: data.gasto.cantidad || "",
+          emoji: data.gasto.emoji || "",
+        });
+
+        // ⏳ Pequeña espera para mostrar todo junto
+        setTimeout(() => {
+          setMostrarContenido(true);
+        }, 200);
+      } catch (err) {
+        console.error("Fallo al cargar el gasto:", err.message);
+        if (!errorShownRef.current) {
+          alert("No se pudo cargar el gasto.");
+          errorShownRef.current = true;
+          navigate("/main");
+        }
       }
+    };
 
-      const data = await res.json();
-
-      setGasto({
-        concepto: data.gasto.concepto || "",
-        cantidad: data.gasto.cantidad || "",
-        emoji: data.gasto.emoji || "",
-      });
-    } catch (err) {
-      console.error("Fallo al cargar el gasto:", err.message);
-      if (!errorShownRef.current) {
-  alert("No se pudo cargar el gasto.");
-  errorShownRef.current = true;
-  navigate("/main");
-}
-    }
-  };
-
-  fetchGasto();
-}, [id]);
+    fetchGasto();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,104 +111,106 @@ export const EditarGasto = () => {
       setLoading(false);
     }
   };
-const containerStyle = {
-  maxWidth: "480px",
-  margin: "40px auto",
-  padding: "25px 30px",
-  border: "2px solid #7bff00",
-  borderRadius: "12px",
-  boxShadow: "0 4px 12px rgba(123, 255, 0, 0.3)",
-  backgroundColor: "#fff",
-};
 
-const baseBtnStyle = {
-  backgroundColor: "#7bff00",
-  border: "none",
-  fontWeight: "600",
-  cursor: "pointer",
-  transition: "background-color 0.3s ease",
-  padding: "10px",
-  width: "100%",
-  borderRadius: "6px",
-  boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
-};
+  const containerStyle = {
+    maxWidth: "480px",
+    margin: "40px auto",
+    padding: "25px 30px",
+    border: "2px solid #7bff00",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(123, 255, 0, 0.3)",
+    backgroundColor: "#fff",
+  };
 
-const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
+  const baseBtnStyle = {
+    backgroundColor: "#7bff00",
+    border: "none",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "6px",
+    boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
+  };
 
-const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
-const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
+  const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
 
-return (
-  <div style={containerStyle}>
-    <form onSubmit={handleSubmit}>
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Editar gasto</h1>
+  const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
+  const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-      <div className="mb-4">
-        <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
-        <input
-          type="text"
-          id="concepto"
-          name="concepto"
-          className="form-control"
-          value={gasto.concepto}
-          onChange={handleChange}
-          placeholder="Ej. Comida, transporte..."
-          required
-        />
-      </div>
+  if (!mostrarContenido) return null; // ⛔ No renderiza nada hasta que pasen los 200ms
 
-      <div className="mb-4">
-        <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
-        <input
-          type="number"
-          id="cantidad"
-          name="cantidad"
-          className="form-control"
-          value={gasto.cantidad}
-          onChange={handleChange}
-          placeholder="0.00"
-          step="0.01"
-          min="0"
-          required
-        />
-      </div>
+  return (
+    <div style={containerStyle}>
+      <form onSubmit={handleSubmit}>
+        <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Editar gasto</h1>
 
-      <div className="mb-4 position-relative">
-        <label className="form-label">Emoji (opcional)</label>
-        <div className="d-flex align-items-center gap-3">
-          <button
-            type="button"
-            className="btn btn-outline-secondary"
-            onClick={() => setShowPicker(!showPicker)}
-            style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
-          >
-            {gasto.emoji || "😀"}
-          </button>
-          {showPicker && (
-            <div style={{ position: "absolute", zIndex: 100 }}>
-              <EmojiPicker onEmojiClick={onEmojiClick} />
-            </div>
-          )}
+        <div className="mb-4">
+          <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
+          <input
+            type="text"
+            id="concepto"
+            name="concepto"
+            className="form-control"
+            value={gasto.concepto}
+            onChange={handleChange}
+            placeholder="Ej. Comida, transporte..."
+            required
+          />
         </div>
-      </div>
 
-      <button
-        type="submit"
-        style={btnStyle}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        disabled={loading}
-      >
-        {loading ? "Guardando..." : "Guardar cambios"}
-      </button>
-
-      {mensaje && (
-        <div className="text-center mt-3">
-          <p>{mensaje}</p>
+        <div className="mb-4">
+          <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
+          <input
+            type="number"
+            id="cantidad"
+            name="cantidad"
+            className="form-control"
+            value={gasto.cantidad}
+            onChange={handleChange}
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            required
+          />
         </div>
-      )}
-    </form>
-  </div>
-);
 
+        <div className="mb-4 position-relative">
+          <label className="form-label">Emoji (opcional)</label>
+          <div className="d-flex align-items-center gap-3">
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPicker(!showPicker)}
+              style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
+            >
+              {gasto.emoji || "😀"}
+            </button>
+            {showPicker && (
+              <div style={{ position: "absolute", zIndex: 100 }}>
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          style={btnStyle}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          disabled={loading}
+        >
+          {loading ? "Guardando..." : "Guardar cambios"}
+        </button>
+
+        {mensaje && (
+          <div className="text-center mt-3">
+            <p>{mensaje}</p>
+          </div>
+        )}
+      </form>
+    </div>
+  );
 };
