@@ -23,7 +23,7 @@ const Sphere = () => {
     { size: 20, top: 140, left: 140, z: 150, border: true },
   ];
   return (
-    <div className="sphere" style={{background: `no-repeat center url(${"Mo-moneyIcon-Al-ro22.png"})`, /* width: "100vh", height: "100vh",  */}}>{/* Se puede cambiar la imagen de fondo de la esfera por cualquier otra imagen que se desee. Alexis */}
+    <div className="sphere" style={{background: `no-repeat center url(${"Mo-moneyIcon290.webp"})`, /* width: "100vh", height: "100vh",  */}}>{/* Se puede cambiar la imagen de fondo de la esfera por cualquier otra imagen que se desee. Alexis */}
       {meridians}
       {latitudes.map((lat, i) => (
         <div

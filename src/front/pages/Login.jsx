@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
-    const [email, setEmail] = useState("");
+    const [identificador, setIdentificador] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState('');
     const [showMessage, setShowMessage] = useState(false);
@@ -17,7 +16,7 @@ export const Login = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ identificador, password }),
             });
 
             const data = await response.json();
@@ -28,20 +27,16 @@ export const Login = () => {
                     localStorage.setItem('user', JSON.stringify(data.user));
                 }
                 navigate("/main");
-            } else if (response.status >= 400) {
-                setMessage("⛔ " + data.msg);
+            } else {
+                setMessage("⛔ " + (data.msg || "Error al iniciar sesión."));
                 setShowMessage(true);
-                setTimeout(() => {
-                    setShowMessage(false);
-                }, 10000);
+                setTimeout(() => setShowMessage(false), 10000);
             }
         } catch (error) {
             console.error('Error:', error);
             setMessage("⛔ Error al iniciar sesión, intenta de nuevo.");
             setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 10000);
+            setTimeout(() => setShowMessage(false), 10000);
         }
     };
 
@@ -49,11 +44,13 @@ export const Login = () => {
         <div
             style={{
                 backgroundColor: "white",
-                color: "#000000",
-                height: "93.36vh",
+                color: "#000",
+                minHeight: "100vh", // Usamos altura total de la pantalla
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "flex-start",
+                paddingTop: "8rem", // Bajar el recuadro
+                paddingBottom: "2rem",
             }}
         >
             <form
@@ -66,22 +63,25 @@ export const Login = () => {
                     display: "flex",
                     flexDirection: "column",
                     gap: "1rem",
+                    backgroundColor: "white",
+                    boxShadow: "0 0 15px rgba(0,0,0,0.1)",
                 }}
             >
                 <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Iniciar Sesión</h2>
 
                 <div>
-                    <label>Email:</label><br />
+                    <label>Usuario o Email:</label><br />
                     <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        value={identificador}
+                        onChange={(e) => setIdentificador(e.target.value)}
                         required
                         style={{
                             width: "100%",
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
+                            color:"#000",
                             borderRadius: "4px",
                         }}
                     />
@@ -99,22 +99,23 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
+                            color:"#000",
                             borderRadius: "4px",
                         }}
                     />
                 </div>
 
                 <div>
-                    <p style={{ color: "#95cf00ff" }}>
+                    <p style={{ color: "black" }}>
                         ¿Olvidaste tu contraseña?{" "}
                         <Link to="/forgotpassword" style={{ color: "#95cf00ff", textDecoration: "underline" }}>
                             Recuperar
                         </Link>
                     </p>
-                    <p style={{ color: "#95cf00ff" }}>
+                    <p style={{ color: "black" }}>
                         ¿Todavía no tienes un usuario?{" "}
                         <Link to="/form" style={{ color: "#95cf00ff", textDecoration: "underline" }}>
-                            Logeate
+                            Regístrate
                         </Link>
                     </p>
                 </div>
@@ -147,6 +148,7 @@ export const Login = () => {
                         padding: "2.5vh 5vh",
                         borderRadius: "5px",
                         boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                        zIndex: 1000,
                     }}
                 >
                     {message}

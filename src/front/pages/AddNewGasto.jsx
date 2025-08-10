@@ -21,6 +21,11 @@ export const AddNewGasto = () => {
       navigate("/");
     }
   }, [navigate]);
+    const savedToken = localStorage.getItem("token") || "";
+    if (!savedToken || savedToken.length < 10) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const onEmojiClick = (emojiObject) => {
     setEmoji(emojiObject.emoji);
@@ -84,6 +89,10 @@ export const AddNewGasto = () => {
       cantidad: parseFloat(cantidad),
       emoji: emoji || null,
     };
+      concepto: concepto,
+      cantidad: parseFloat(cantidad),
+      emoji: emoji || null,
+    };
 
     try {
       const response = await fetch(`${API_BASE_URL}api/gasto/register`, {
@@ -127,6 +136,34 @@ export const AddNewGasto = () => {
     }
   };
 
+  // === Estilos ===
+  const containerStyle = {
+    maxWidth: "480px",
+    margin: "40px auto",
+    padding: "25px 30px",
+    border: "2px solid #7bff00",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(123, 255, 0, 0.3)",
+    backgroundColor: "#fff",
+  };
+
+  const baseBtnStyle = {
+    backgroundColor: "#7bff00",
+    border: "none",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "6px",
+    boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
+  };
+
+  const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
+
+  const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
+  const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
+
   return (
     <div className="addgasto-container" ref={appRef}>
       <form className="addgasto-form-wrapper" onSubmit={handleSubmit}>
@@ -149,40 +186,40 @@ export const AddNewGasto = () => {
             />
           </div>
 
-          {/* INPUT CANTIDAD */}
-          <div className="mb-4">
-            <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
-            <input
-              type="number"
-              id="cantidad"
-              className="form-control"
-              value={cantidad}
-              onChange={(e) => setCantidad(e.target.value)}
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              required
-            />
-          </div>
+        {/* Cantidad */}
+        <div className="mb-3">
+          <label className="form-label">Cantidad (€)</label>
+          <input
+            type="number"
+            className="form-control"
+            value={cantidad}
+            onChange={(e) => setCantidad(e.target.value)}
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            required
+          />
+        </div>
 
-          {/* EMOJI PICKER */}
-          <div className="mb-4 position-relative">
-            <label className="form-label">Emoji (opcional)</label>
-            <div className="d-flex align-items-center gap-3">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPicker(!showPicker)}
-              >
-                {emoji || "😀"}
-              </button>
-              {showPicker && (
-                <div className="addgasto-emoji-picker-wrapper">
-                  <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
-              )}
-            </div>
+        {/* Emoji */}
+        <div className="mb-3 position-relative">
+          <label className="form-label">Emoji (opcional)</label>
+          <div className="d-flex align-items-center gap-3">
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPicker(!showPicker)}
+              style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
+            >
+              {emoji || "😀"}
+            </button>
+            {showPicker && (
+              <div style={{ position: "absolute", zIndex: 1000 }}>
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
           </div>
+        </div>
 
           {/* BOTÓN */}
           <div className="mb-3 d-flex justify-content-center">
@@ -220,13 +257,12 @@ export const AddNewGasto = () => {
             `}
           </style>
 
-          {/* MENSAJE */}
-          {mensaje && (
-            <div className="text-center mt-3">
-              <p>{mensaje}</p>
-            </div>
-          )}
-        </div>
+        {/* Mensaje */}
+        {mensaje && (
+          <div className="text-center mt-3">
+            <p>{mensaje}</p>
+          </div>
+        )}
       </form>
     </div>
   );

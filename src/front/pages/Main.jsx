@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
-
-import { Button } from "react-bootstrap";
 import { HashLink } from "react-router-hash-link";
+import { Button } from "react-bootstrap";
 
 
 export const Main = () => {
@@ -540,7 +539,8 @@ export const Main = () => {
 
         </div>
       </div>
-
-    </div>
+       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
+  </div>
+</div>
   );
 }
