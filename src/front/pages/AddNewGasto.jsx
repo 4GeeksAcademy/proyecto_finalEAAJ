@@ -21,11 +21,6 @@ export const AddNewGasto = () => {
       navigate("/");
     }
   }, [navigate]);
-    const savedToken = localStorage.getItem("token") || "";
-    if (!savedToken || savedToken.length < 10) {
-      navigate("/");
-    }
-  }, [navigate]);
 
   const onEmojiClick = (emojiObject) => {
     setEmoji(emojiObject.emoji);
@@ -33,17 +28,17 @@ export const AddNewGasto = () => {
   };
 
   const createMoneyAnimation = () => {
-    const bill = document.createElement('div');
-    bill.className = 'money-bill';
-    bill.textContent = '💵'; // Puedes usar '💶' para euros
-    
+    const bill = document.createElement("div");
+    bill.className = "money-bill";
+    bill.textContent = "💵"; // Puedes usar '💶' para euros
+
     // Posición inicial aleatoria en la parte superior
     const startX = Math.random() * window.innerWidth;
     bill.style.left = `${startX}px`;
-    bill.style.top = '-50px';
-    bill.style.position = 'fixed';
-    bill.style.zIndex = '1000';
-    
+    bill.style.top = "-50px";
+    bill.style.position = "fixed";
+    bill.style.zIndex = "1000";
+
     document.body.appendChild(bill);
 
     gsap.to(bill, {
@@ -51,7 +46,7 @@ export const AddNewGasto = () => {
       rotation: gsap.utils.random(-180, 180),
       duration: gsap.utils.random(2, 4),
       ease: "power1.in",
-      onComplete: () => bill.remove()
+      onComplete: () => bill.remove(),
     });
   };
 
@@ -83,12 +78,7 @@ export const AddNewGasto = () => {
       setLoading(false);
       return;
     }
-
     const gastoData = {
-      concepto: concepto,
-      cantidad: parseFloat(cantidad),
-      emoji: emoji || null,
-    };
       concepto: concepto,
       cantidad: parseFloat(cantidad),
       emoji: emoji || null,
@@ -120,10 +110,10 @@ export const AddNewGasto = () => {
           fecha: new Date().toISOString(),
         });
         localStorage.setItem("gastos", JSON.stringify(gastosGuardados));
-        
+
         setMensaje(`✅ Gasto guardado: ${concepto} ${emoji} - ${cantidad}€`);
         setTimeout(() => {
-          navigate("/main"); 
+          navigate("/main");
         }, 1500);
       } else {
         setMensaje("❌ Error: " + (result.msg || "No se pudo guardar el gasto"));
@@ -166,7 +156,7 @@ export const AddNewGasto = () => {
 
   return (
     <div className="addgasto-container" ref={appRef}>
-      <form className="addgasto-form-wrapper" onSubmit={handleSubmit}>
+      <form className="addgasto-form-wrapper" onSubmit={handleSubmit} style={containerStyle}>
         <div className="addgasto-title">
           <h1>¡Añade otro gasto!</h1>
         </div>
@@ -174,7 +164,9 @@ export const AddNewGasto = () => {
         <div className="addgasto-form-content">
           {/* INPUT CONCEPTO */}
           <div className="mb-4">
-            <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
+            <label htmlFor="concepto" className="form-label">
+              Concepto del gasto
+            </label>
             <input
               type="text"
               id="concepto"
@@ -186,40 +178,40 @@ export const AddNewGasto = () => {
             />
           </div>
 
-        {/* Cantidad */}
-        <div className="mb-3">
-          <label className="form-label">Cantidad (€)</label>
-          <input
-            type="number"
-            className="form-control"
-            value={cantidad}
-            onChange={(e) => setCantidad(e.target.value)}
-            placeholder="0.00"
-            step="0.01"
-            min="0"
-            required
-          />
-        </div>
-
-        {/* Emoji */}
-        <div className="mb-3 position-relative">
-          <label className="form-label">Emoji (opcional)</label>
-          <div className="d-flex align-items-center gap-3">
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => setShowPicker(!showPicker)}
-              style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
-            >
-              {emoji || "😀"}
-            </button>
-            {showPicker && (
-              <div style={{ position: "absolute", zIndex: 1000 }}>
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            )}
+          {/* Cantidad */}
+          <div className="mb-3">
+            <label className="form-label">Cantidad (€)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={cantidad}
+              onChange={(e) => setCantidad(e.target.value)}
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              required
+            />
           </div>
-        </div>
+
+          {/* Emoji */}
+          <div className="mb-3 position-relative">
+            <label className="form-label">Emoji (opcional)</label>
+            <div className="d-flex align-items-center gap-3">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPicker(!showPicker)}
+                style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
+              >
+                {emoji || "😀"}
+              </button>
+              {showPicker && (
+                <div style={{ position: "absolute", zIndex: 1000 }}>
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* BOTÓN */}
           <div className="mb-3 d-flex justify-content-center">
@@ -227,13 +219,18 @@ export const AddNewGasto = () => {
               type="submit"
               className="btn btn-primary addgasto-btn-guardar"
               disabled={loading}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              style={btnStyle}
             >
               {loading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2"></span>
                   Guardando...
                 </>
-              ) : "Guardar gasto"}
+              ) : (
+                "Guardar gasto"
+              )}
             </button>
           </div>
 
@@ -257,12 +254,13 @@ export const AddNewGasto = () => {
             `}
           </style>
 
-        {/* Mensaje */}
-        {mensaje && (
-          <div className="text-center mt-3">
-            <p>{mensaje}</p>
-          </div>
-        )}
+          {/* Mensaje */}
+          {mensaje && (
+            <div className="text-center mt-3">
+              <p>{mensaje}</p>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );
