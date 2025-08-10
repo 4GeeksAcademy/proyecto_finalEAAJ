@@ -9,7 +9,6 @@ import '../components/Blog/Blog.css';
 import '../components/Blog/ParallaxScroll.css';
 import initialPostsData from "../assets/img/BlogPosts.js";
 
-
 function BlogPage() {
   const [posts, setPosts] = useState(initialPostsData);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -80,7 +79,8 @@ function BlogPage() {
           </div>
           <ParallaxScroll 
             posts={posts} 
-            onPostSelect={setSelectedIndex}
+            onPostSelect={setSelectedIndex} 
+            onAddNewPostClick={() => setShowAddForm(true)}  // <--- Aquí el cambio
           />
           <Footer />
         </>

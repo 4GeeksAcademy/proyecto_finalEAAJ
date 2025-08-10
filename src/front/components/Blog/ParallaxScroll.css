@@ -1,22 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
 
 :root {
-  --primary-bg: radial-gradient(circle at center, #222, #000);
-  --detail-bg: rgba(17, 17, 17, 0.95);
-  --text-color: #fff;
-  --scrollbar-thumb: #666;
-  --scrollbar-track: #111;
-  --img-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  --img-box-shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.6);
+  --primary-bg: #f8f8f8;
+  --detail-bg: rgba(248, 248, 248, 0.98);
+  --text-color: #333;
+  --scrollbar-thumb: #ccc;
+  --scrollbar-track: #f1f1f1;
+  --img-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  --img-box-shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.15);
   --transition-speed: 0.4s;
   --card-width: 280px;
   --card-height: 380px;
   --top-offset: 120px;
   --grid-gap: 40px;
   --sidebar-active-color: #4a90e2;
-  --footer-bg: rgba(10, 10, 10, 0.9);
+  --footer-bg: rgba(255, 255, 255, 0.9);
   --footer-height: 80px;
   --footer-height-mobile: 60px;
+  --sidebar-bg: rgba(255, 255, 255, 0.9);
+  --sidebar-hover-bg: rgba(245, 245, 245, 0.9);
+  --load-more-bg: rgba(255, 255, 255, 0.9);
 }
 
 * {
@@ -30,7 +33,7 @@ body, html {
   height: 100%;
   font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
-  background: #000;
+  background: var(--primary-bg);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
@@ -38,7 +41,7 @@ body, html {
   padding-bottom: var(--footer-height);
 }
 
-/* Contenedor principal con barra lateral */
+/* Contenedor principal */
 .parallax-container {
   position: relative;
   width: 100%;
@@ -48,7 +51,7 @@ body, html {
   justify-content: center;
 }
 
-/* Barra lateral de navegación */
+/* Nueva barra lateral mejorada */
 .sidebar {
   position: fixed;
   left: 20px;
@@ -57,12 +60,17 @@ body, html {
   z-index: 50;
   height: auto;
   transition: all 0.3s ease;
+  background: var(--sidebar-bg);
+  border-radius: 16px;
+  padding: 15px 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
 }
 
 .sidebar-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .sidebar-item {
@@ -71,26 +79,26 @@ body, html {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 5px;
-  opacity: 0.6;
+  padding: 8px 12px;
+  border-radius: 8px;
   transition: all 0.3s ease;
 }
 
 .sidebar-item:hover {
-  opacity: 0.9;
+  background: var(--sidebar-hover-bg);
 }
 
 .sidebar-item.active {
-  opacity: 1;
+  background: rgba(74, 144, 226, 0.1);
 }
 
 .sidebar-dot {
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: white;
-  margin-right: 10px;
+  background: #999;
+  margin-right: 12px;
   transition: all 0.3s ease;
 }
 
@@ -100,17 +108,38 @@ body, html {
 }
 
 .sidebar-label {
-  color: white;
-  font-size: 14px;
-  opacity: 0;
-  transform: translateX(-10px);
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.9;
   transition: all 0.3s ease;
 }
 
-.sidebar:hover .sidebar-label,
-.sidebar-item.active .sidebar-label {
-  opacity: 1;
-  transform: translateX(0);
+.sidebar-footer {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-scroll-down {
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-color);
+}
+
+.sidebar-scroll-down:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(3px);
 }
 
 /* Contenedor de la app principal */
@@ -131,7 +160,7 @@ body, html {
   position: relative;
   width: 100%;
   max-width: 1400px;
-  min-height: 300vh; /* Más altura para permitir scroll */
+  min-height: 300vh;
   padding: var(--top-offset) var(--grid-gap) var(--grid-gap);
   perspective: 1000px;
   display: grid;
@@ -156,6 +185,7 @@ body, html {
   border-radius: 12px;
   box-shadow: var(--img-box-shadow);
   backface-visibility: hidden;
+  background: white;
 }
 
 .imgBox.active {
@@ -210,6 +240,8 @@ body, html {
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 #detailTxt {
@@ -221,6 +253,38 @@ body, html {
   line-height: 1.6;
   padding: 0 20px;
   opacity: 0.9;
+}
+
+/* Botón para cargar más */
+.load-more {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.load-more-button {
+  background: var(--load-more-bg);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  color: var(--text-color);
+}
+
+.load-more-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.load-more-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /* Cursor personalizado */
@@ -265,7 +329,7 @@ footer {
   align-items: center;
   z-index: 10;
   backdrop-filter: blur(5px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   transform: translateY(100%);
   animation: slideUp 0.8s ease-out 0.5s forwards;
 }
@@ -323,7 +387,7 @@ footer {
   width: 100%;
 }
 
-/* Animaciones del footer */
+/* Animaciones */
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
@@ -351,7 +415,7 @@ footer {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #888;
+  background: #aaa;
 }
 
 /* Responsividad */
@@ -365,6 +429,7 @@ footer {
 
   .sidebar {
     left: 10px;
+    padding: 12px 8px;
   }
 }
 
@@ -394,10 +459,15 @@ footer {
   .sidebar {
     left: 5px;
     transform: translateY(-50%) scale(0.9);
+    padding: 10px 6px;
   }
 
   .sidebar-label {
     display: none;
+  }
+
+  .sidebar-dot {
+    margin-right: 0;
   }
 
   footer {
@@ -447,6 +517,11 @@ footer {
 
   .sidebar {
     display: none;
+  }
+
+  .load-more-button {
+    padding: 10px 20px;
+    font-size: 14px;
   }
 
   .footer-links {

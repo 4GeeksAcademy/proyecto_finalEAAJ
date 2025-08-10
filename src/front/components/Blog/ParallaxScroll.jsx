@@ -3,9 +3,105 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import './ParallaxScroll.css';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+const Navbar = ({ onAddNewPostClick }) => {
+  const [isLogoDropdownOpen, setLogoDropdownOpen] = useState(false);
+  const logoDropdownRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (logoDropdownRef.current && !logoDropdownRef.current.contains(e.target)) {
+        setLogoDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <nav
+      className="navbar navbar-light bg-light px-4 py-3 shadow-sm"
+      style={{
+        background: "linear-gradient(to left, #f4ffc4, #b7ff00, #f4ffc4)",
+        backgroundSize: "100%",
+        transition: "0.3s linear",
+        minHeight: "6.6vh",
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000
+      }}
+    >
+      <div className="container-fluid d-flex justify-content-between align-items-center">
+        {/* Logo Mo'Money dropdown */}
+        <div className="position-relative" ref={logoDropdownRef}>
+          <div
+            className="navbar-brand fw-bold text-white"
+            style={{ cursor: "pointer", fontSize: "2.5vh" }}
+            onClick={() => setLogoDropdownOpen(!isLogoDropdownOpen)}
+          >
+            <img
+              src="/Mo-moneyIcon2.webp"
+              alt="Logo"
+              style={{ width: "6vh", height: "6vh" }}
+            />
+            Mo'money ⌄
+          </div>
+
+          {isLogoDropdownOpen && (
+            <div
+              className="dropdown-menu show mt-2"
+              style={{ position: "absolute", top: "100%", left: 0 }}
+            >
+              <Link className="dropdown-item" to="/main" onClick={() => setLogoDropdownOpen(false)}>
+                Main
+              </Link>
+              <Link className="dropdown-item" to="/objetivos" onClick={() => setLogoDropdownOpen(false)}>
+                Añadir Objetivos
+              </Link>
+              <Link className="dropdown-item" to="/addnewgasto" onClick={() => setLogoDropdownOpen(false)}>
+                Añadir Gastos
+              </Link>
+              <Link className="dropdown-item" to="/inversion" onClick={() => setLogoDropdownOpen(false)}>
+                Invertir
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Botón + Añadir Posts verde oscuro (solo símbolo +) */}
+        <button
+          onClick={onAddNewPostClick}
+          className="btn"
+          style={{
+            backgroundColor: '#004d00',
+            color: 'white',
+            fontWeight: '700',
+            fontSize: '1.8vh',
+            padding: '0.3rem 0.7rem',
+            borderRadius: '0.3rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: 'none',
+            width: '2.8rem',
+            height: '2.8rem',
+            lineHeight: 1
+          }}
+          aria-label="Añadir Posts"
+        >
+          <span style={{ fontSize: '1.8rem', lineHeight: 1, userSelect: 'none' }}>+</span>
+        </button>
+      </div>
+    </nav>
+  );
+};
 
 const Footer = () => {
   const frases = [
@@ -25,9 +121,9 @@ const Footer = () => {
   }, []);
 
   const variants = {
-    initial: { y: 40, opacity: 0 }, 
-    animate: { y: 0, opacity: 1 },   
-    exit: { y: -40, opacity: 0 }     
+    initial: { y: 40, opacity: 0 },
+    animate: { y: 0, opacity: 1 },
+    exit: { y: -40, opacity: 0 }
   };
 
   return (
@@ -40,6 +136,7 @@ const Footer = () => {
         height: "80px",
         paddingTop: "4px",
         paddingBottom: "4px",
+        position: 'relative'
       }}
     >
       <AnimatePresence mode="wait">
@@ -59,55 +156,46 @@ const Footer = () => {
   );
 };
 
-const ParallaxScroll = ({ posts = [], onPostSelect }) => {
-  const appRef = useRef(null);
+const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostClick }) => {
   const imgGroupRef = useRef(null);
   const cursorRef = useRef(null);
   const cursorCircleRef = useRef(null);
-  const cursorCloseRef = useRef(null);
-  const detailRef = useRef(null);
-  const detailImgRef = useRef(null);
-  const detailTxtRef = useRef(null);
-  const sidebarRef = useRef(null);
-  const [activeSection, setActiveSection] = useState(0);
+  const loadMoreRef = useRef(null);
 
-  // Configuración inicial de los posts
+  const [activeSection, setActiveSection] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadedPosts, setLoadedPosts] = useState(posts);
+
+  // Nueva opción para elegir entre scroll infinito o botón
+  const [useLoadMoreButton, setUseLoadMoreButton] = useState(true); // true = botón, false = scroll infinito
+
+  // Inicializar posts y animaciones
   const initPosts = useCallback(() => {
-    if (!imgGroupRef.current || posts.length === 0) return;
+    if (!imgGroupRef.current || loadedPosts.length === 0) return;
 
     imgGroupRef.current.innerHTML = '';
 
-    // Calculamos el número de columnas basado en el ancho disponible
-    const cardWidth = 280;
-    const containerWidth = imgGroupRef.current.offsetWidth;
-    const gap = 40;
-    const cols = Math.max(1, Math.floor((containerWidth + gap) / (cardWidth + gap)));
+    const postsPerSection = Math.max(3, Math.floor(loadedPosts.length / 3));
 
-    // Creamos secciones para el scroll
-    const sections = [];
-    const postsPerSection = Math.max(3, Math.floor(posts.length / 3));
-
-    posts.forEach((post, i) => {
+    loadedPosts.forEach((post, i) => {
       const box = document.createElement('div');
       box.className = 'imgBox';
       box.dataset.index = i;
       box.dataset.section = Math.floor(i / postsPerSection);
-      
+
       const img = document.createElement('img');
       img.src = post.image || 'https://placehold.co/600x400';
       img.alt = `${post.title} - ${post.body?.join(' ').substring(0, 50)}...`;
-      
+
       box.appendChild(img);
       imgGroupRef.current.appendChild(box);
 
-      // Estado inicial para animación
       gsap.set(box, {
         opacity: 0,
         scale: 0.95,
         y: 30
       });
 
-      // Animación de entrada
       ScrollTrigger.create({
         trigger: box,
         start: "top 80%",
@@ -123,26 +211,25 @@ const ParallaxScroll = ({ posts = [], onPostSelect }) => {
         }
       });
 
-      // Eventos de interacción
       box.addEventListener('mouseenter', () => {
         gsap.to(cursorCircleRef.current, { attr: { r: 30, 'stroke-width': 4 }, duration: 0.2 });
-        gsap.to(box, { scale: 1.05, z: 30, duration: 0.3 });
+        gsap.to(box, { scale: 1.05, zIndex: 30, duration: 0.3 });
       });
 
       box.addEventListener('mouseleave', () => {
-        gsap.to(box, { scale: 1, z: 0, duration: 0.3 });
+        gsap.to(box, { scale: 1, zIndex: 0, duration: 0.3 });
       });
 
       box.addEventListener('click', () => onPostSelect(i));
     });
 
-    // Configurar secciones para el scroll
+    // ScrollTrigger para secciones
     const sectionElements = document.querySelectorAll('[data-section]');
     const sectionPositions = Array.from(new Set(Array.from(sectionElements).map(el => el.dataset.section)));
 
     sectionPositions.forEach((section, index) => {
       const firstInSection = document.querySelector(`[data-section="${section}"]`);
-      
+
       ScrollTrigger.create({
         trigger: firstInSection,
         start: "top center",
@@ -151,16 +238,41 @@ const ParallaxScroll = ({ posts = [], onPostSelect }) => {
         onEnterBack: () => setActiveSection(index)
       });
     });
-  }, [posts, onPostSelect]);
 
-  // Efecto parallax
-  const setupParallax = useCallback(() => {
+  }, [loadedPosts, onPostSelect]);
+
+  // Cargar más posts
+  const handleLoadMore = useCallback(async () => {
+    if (isLoading || !loadMorePosts) return;
+    setIsLoading(true);
+    const newPosts = await loadMorePosts();
+    setLoadedPosts((prev) => [...prev, ...newPosts]);
+    setIsLoading(false);
+  }, [isLoading, loadMorePosts]);
+
+  // Scroll infinito (opción 1) con ScrollTrigger solo si no usamos botón
+  useEffect(() => {
+    if (useLoadMoreButton) return; // no crear trigger scroll si usamos botón
+
+    if (loadMoreRef.current && loadMorePosts) {
+      const st = ScrollTrigger.create({
+        trigger: loadMoreRef.current,
+        start: "top 80%",
+        onEnter: () => handleLoadMore()
+      });
+
+      return () => st.kill();
+    }
+  }, [useLoadMoreButton, loadMorePosts, handleLoadMore]);
+
+  // Parallax mousemove
+  useEffect(() => {
     if (ScrollTrigger.isTouch === 1) return;
 
     const handleMouseMove = (e) => {
       const xPos = (e.clientX / window.innerWidth - 0.5) * 20;
       const yPos = (e.clientY / window.innerHeight - 0.5) * 15;
-      
+
       gsap.to('.imgBox', {
         rotationX: yPos * 0.3,
         rotationY: -xPos * 0.3,
@@ -169,12 +281,14 @@ const ParallaxScroll = ({ posts = [], onPostSelect }) => {
         transformPerspective: 1000
       });
 
-      gsap.to(cursorRef.current, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.3,
-        ease: 'power2.out'
-      });
+      if (cursorRef.current) {
+        gsap.to(cursorRef.current, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -185,10 +299,10 @@ const ParallaxScroll = ({ posts = [], onPostSelect }) => {
   const scrollToSection = useCallback((index) => {
     const sections = document.querySelectorAll('[data-section]');
     const sectionPositions = Array.from(new Set(Array.from(sections).map(el => el.dataset.section)));
-    
+
     if (index >= 0 && index < sectionPositions.length) {
       const firstInSection = document.querySelector(`[data-section="${sectionPositions[index]}"]`);
-      
+
       gsap.to(window, {
         duration: 1.2,
         scrollTo: {
@@ -200,76 +314,98 @@ const ParallaxScroll = ({ posts = [], onPostSelect }) => {
     }
   }, []);
 
-  // Mostrar/ocultar detalle
-  const showDetail = useCallback((img) => {
-    const tl = gsap.timeline();
-    tl.set(detailTxtRef.current, { textContent: img.alt })
-      .set(detailImgRef.current, { background: `url(${img.src}) center/contain no-repeat` })
-      .fromTo(detailRef.current, { y: '100%' }, { y: '0%', ease: 'expo.inOut' })
-      .to(cursorCircleRef.current, { opacity: 0 }, 0.2)
-      .to(cursorCloseRef.current, { opacity: 1 }, 0.4);
+  // Mostrar detalle (simplificado)
+  const showDetail = useCallback((index) => {
+    alert(`Mostrar detalle del post ${index + 1}`);
   }, []);
 
-  const closeDetail = useCallback(() => {
-    gsap.timeline()
-      .to(detailRef.current, { y: '100%', ease: 'expo.in', duration: 0.3 })
-      .to(cursorCloseRef.current, { opacity: 0 }, 0)
-      .to(cursorCircleRef.current, { opacity: 1 }, 0.1);
-  }, []);
-
+  // Efecto inicial para cargar posts cuando cambian
   useEffect(() => {
-    gsap.set(appRef.current, { opacity: 1 });
     initPosts();
-    const cleanupParallax = setupParallax();
-
-    if (detailRef.current) {
-      detailRef.current.addEventListener('click', closeDetail);
-    }
-
-    return () => {
-      cleanupParallax?.();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      if (detailRef.current) {
-        detailRef.current.removeEventListener('click', closeDetail);
-      }
-    };
-  }, [initPosts, setupParallax, closeDetail]);
+  }, [initPosts]);
 
   return (
-    <>
-      <div className="parallax-container">
-        {/* Barra lateral de navegación */}
-        <div className="sidebar" ref={sidebarRef}>
-          <div className="sidebar-content">
-            {[...Array(Math.ceil(posts.length / 3)).keys()].map((i) => (
-              <button
-                key={i}
-                className={`sidebar-item ${activeSection === i ? 'active' : ''}`}
-                onClick={() => scrollToSection(i)}
-              >
-                <span className="sidebar-dot"></span>
-                <span className="sidebar-label">Sección {i + 1}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+    <div
+      className="parallax-scroll-container"
+      style={{ paddingTop: '7vh', backgroundColor: '#f8f8f5', minHeight: '100vh' }}
+    >
+      <Navbar onAddNewPostClick={onAddNewPostClick} />
 
-        <div id="app" ref={appRef}>
-          <div id="imgGroup" ref={imgGroupRef} />
-          
-          <div id="detail" ref={detailRef}>
-            <div id="detailImg" ref={detailImgRef} />
-            <div id="detailTxt" ref={detailTxtRef} />
-          </div>
-
-          <svg className="cursor" ref={cursorRef}>
-            <circle ref={cursorCircleRef} cx="0" cy="0" r="12" stroke="#fff" strokeWidth="3" fill="none" />
-            <path ref={cursorCloseRef} d="M-25,-25 L25,25 M-25,25 L25,-25" stroke="#fff" strokeWidth="3.5" opacity="0" />
-          </svg>
-        </div>
+      <div
+        className="imgGroup"
+        ref={imgGroupRef}
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '40px',
+          justifyContent: 'center',
+          padding: '40px'
+        }}
+      >
+        {/* Posts se insertan con JS */}
       </div>
+
+      {/* Selector de opción para cargar más */}
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <label style={{ fontSize: '1rem', marginRight: '10px', userSelect: 'none' }}>
+          <input
+            type="checkbox"
+            checked={useLoadMoreButton}
+            onChange={() => setUseLoadMoreButton(!useLoadMoreButton)}
+          />
+          {' '}Usar botón para cargar más (Opción 2)
+        </label>
+      </div>
+
+      {/* Botón para cargar más posts solo si useLoadMoreButton === true */}
+      {useLoadMoreButton && (
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <button
+            onClick={handleLoadMore}
+            disabled={isLoading}
+            style={{
+              backgroundColor: '#004d00',
+              color: 'white',
+              padding: '0.6rem 1.2rem',
+              fontSize: '1.2rem',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: isLoading ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {isLoading ? 'Cargando...' : 'Cargar más posts'}
+          </button>
+        </div>
+      )}
+
+      {/* Load More con scroll infinito (solo si no usamos botón) */}
+      {!useLoadMoreButton && (
+        <div ref={loadMoreRef} style={{ textAlign: 'center', padding: '1rem' }}>
+          {isLoading ? 'Cargando más posts...' : ''}
+        </div>
+      )}
+
+      {/* Cursor personalizado */}
+      <svg
+        ref={cursorRef}
+        style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}
+        width="60"
+        height="60"
+        viewBox="0 0 60 60"
+      >
+        <circle
+          ref={cursorCircleRef}
+          cx="30"
+          cy="30"
+          r="20"
+          stroke="white"
+          strokeWidth="2"
+          fill="none"
+        />
+      </svg>
+
       <Footer />
-    </>
+    </div>
   );
 };
 
