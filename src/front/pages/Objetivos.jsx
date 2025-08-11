@@ -12,7 +12,30 @@ export const Objetivos = () => {
   const [token, setToken] = useState("");
   const navigate = useNavigate();
   const inputRef = useRef(null);
-  
+
+const baseBtnStyle = {
+    backgroundColor: "#7bff00",
+    border: "none",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "6px",
+    boxShadow: "0 2px 4px rgba(123, 255, 0, 0.3)",
+    color: "white",
+  };
+
+  const hoverBtnStyle = {
+    ...baseBtnStyle,
+    backgroundColor: "#a0ff00",
+  };
+
+  const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
+  const [loading, setLoading] = useState(false);
+
+  const handleMouseEnter = () => setBtnStyle(hoverBtnStyle);
+  const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
 useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -63,7 +86,14 @@ useEffect(() => {
   };
 
   return (
-    <div className="container mt-4" style={{ maxWidth: "400px" }}>
+    <div className="container mt-4" style={{
+        maxWidth: "400px",
+        border: "2px solid #b7ff00", 
+        borderRadius: "10px",
+        padding: "20px",
+        position: "relative",
+        backgroundColor: "#fff",
+      }} >
       <h5>Crear objetivo de ahorro</h5>
       <form onSubmit={handleSubmit}>
         {/* Concepto */}
@@ -107,6 +137,8 @@ useEffect(() => {
             step="50"
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
+            onMouseOver={(e) => e.target.blur()
+            }
           />
         </div>
 
@@ -134,8 +166,14 @@ useEffect(() => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary w-100">
-          Crear Objetivo
+        <button
+          type="submit"
+          style={btnStyle}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          disabled={loading}
+        >
+          {loading ? "Guardando..." : "Crear Objetivo"}
         </button>
       </form>
     </div>

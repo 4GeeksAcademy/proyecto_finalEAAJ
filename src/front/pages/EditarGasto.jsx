@@ -139,7 +139,7 @@ export const EditarGasto = () => {
   const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-  if (!mostrarContenido) return null; // ⛔ No renderiza nada hasta que pasen los 200ms
+  if (!mostrarContenido) return null; 
 
   return (
     <div style={containerStyle}>

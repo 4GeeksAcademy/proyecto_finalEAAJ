@@ -153,7 +153,7 @@ export const EditarObjetivo = () => {
     setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-  // ⛔ No mostrar nada hasta que se cumpla la espera
+  
   if (!mostrarContenido) {
     return null;
   }

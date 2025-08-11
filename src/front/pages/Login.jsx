@@ -45,7 +45,7 @@ export const Login = () => {
             style={{
                 backgroundColor: "white",
                 color: "#000",
-                minHeight: "100vh", // Usamos altura total de la pantalla
+                minHeight: "80vh", // Usamos altura total de la pantalla
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "flex-start",
