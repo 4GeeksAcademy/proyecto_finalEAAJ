@@ -234,7 +234,7 @@ export const Formulario = () => {
 
           <div className="mb-3 d-flex justify-content-center">
             <button type="submit" className="btn btn-primary" style={{ backgroundColor: "#b7ff00", color: "black" }}>
-              Send
+              Crear Usuario
             </button>
           </div>
         </div>

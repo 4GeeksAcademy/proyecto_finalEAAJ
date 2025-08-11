@@ -77,6 +77,9 @@ export const NavbarPrivate = () => {
               <Link className="dropdown-item" to="/inversion" onClick={() => setLogoDropdownOpen(false)}>
                 Invertir
               </Link>
+              <Link className="dropdown-item" to="/blog" onClick={() => setLogoDropdownOpen(false)}>
+                Conoce nuestro blog
+              </Link>
             </div>
           )}
         </div>

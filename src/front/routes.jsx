@@ -21,9 +21,10 @@ import { EditarObjetivo } from "./pages/EditarObjetivo";
 import { EditarGasto } from "./pages/EditarGasto";
 import { Inversion } from "./pages/Inversion";
 import Perfil from "./pages/Perfil";
-import BlogPage from './pages/BlogPage';
+import {BlogPage} from './pages/BlogPage';
 import { NavbarPrivate } from './components/NavbarPrivate';
 import ParallaxScroll from './components/Blog/ParallaxScroll';
+import { NavbarPublic } from './components/NavbarPublic';
 
 
 
