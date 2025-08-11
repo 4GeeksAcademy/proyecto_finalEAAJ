@@ -234,6 +234,11 @@ body {
   background-color: #b7ff00 !important;
   outline: none;
   box-shadow: none;
+<<<<<<< HEAD
   color: black; /* para que el texto se vea bien si quieres */
 }
 
+=======
+  color: black; 
+}
+>>>>>>> 136ff27006052fa95dfe59dcf3dbc1448b3d3246
