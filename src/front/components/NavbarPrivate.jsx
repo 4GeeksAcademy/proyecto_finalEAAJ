@@ -7,9 +7,17 @@ export const NavbarPrivate = () => {
   const [isLogoDropdownOpen, setLogoDropdownOpen] = useState(false);
   const profileDropdownRef = useRef();
   const logoDropdownRef = useRef();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    // Recuperar el nombre del usuario guardado
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) setUsername(storedUsername);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
     navigate("/");
   };
 
@@ -85,35 +93,42 @@ export const NavbarPrivate = () => {
         </div>
 
         {/* Perfil a la derecha */}
-        <div className="position-relative" ref={profileDropdownRef}Cuckyynala33_
-        >
-          <button
-            className="btn btn-outline-light rounded-circle p-0"
-            onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
-            style={{ width: "60px", height: "60px", overflow: "hidden" }}
-          >
-            <img
-              src="https://i.pravatar.cc/300"
-              alt="Perfil"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </button>
+        {/* Bienvenida y perfil */}
+<div className="d-flex align-items-center gap-3" ref={profileDropdownRef}>
+  <span style={{ color: "black", fontWeight: "bold" }}>
+    Bienvenid@, {username || "Usuario"}
+  </span>
 
-          {isProfileDropdownOpen && (
-            <div
-              className="dropdown-menu dropdown-menu-end show mt-2"
-              style={{ position: "absolute", right: 0 }}
-            >
-              <Link className="dropdown-item" to="/perfil" onClick={() => setProfileDropdownOpen(false)}>
-                Perfil
-              </Link>
-             
-              <button className="dropdown-item text-danger" onClick={handleLogout}>
-                Cerrar Sesión
-              </button>
-            </div>
-          )}
-        </div>
+  <button
+    className="btn btn-outline-light rounded-circle p-0"
+    onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
+    style={{ width: "60px", height: "60px", overflow: "hidden" }}
+  >
+    <img
+      src="https://i.pravatar.cc/300"
+      alt="Perfil"
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  </button>
+
+  {isProfileDropdownOpen && (
+    <div
+      className="dropdown-menu dropdown-menu-end show mt-2"
+      style={{ position: "absolute", right: 0 }}
+    >
+      <Link
+        className="dropdown-item"
+        to="/perfil"
+        onClick={() => setProfileDropdownOpen(false)}
+      >
+        Perfil
+      </Link>
+      <button className="dropdown-item text-danger" onClick={handleLogout}>
+        Cerrar Sesión
+      </button>
+    </div>
+  )}
+</div>
       </div>
     </nav>
   );

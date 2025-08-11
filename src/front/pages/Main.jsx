@@ -15,6 +15,7 @@ export const Main = () => {
   const [recargarObjetivos, setRecargarObjetivos] = useState(false);
   const navigate = useNavigate();
   const [mostrarContenido, setMostrarContenido] = useState(false);
+  const [dineroDisponible, setDineroDisponible] = useState(0);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -128,15 +129,14 @@ export const Main = () => {
   }, [token, recargarObjetivos]);
 
   useEffect(() => {
-    const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
-    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
-    setSueldo(disponibleGuardado + sueldoNetoGuardado);
+  const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
+  const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
+  setSueldo(disponibleGuardado + sueldoNetoGuardado);
 
-    const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+  const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+  setAhorro(ahorroGuardado);
+}, []);
 
-    
-    setAhorro(ahorroGuardado);
-  }, []);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -168,12 +168,13 @@ export const Main = () => {
     return cantidad;
   };
 
-  const totalGastos = Array.isArray(gastos)
-    ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
-    : 0;
+useEffect(() => {
+    const totalGastos = Array.isArray(gastos)
+      ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
+      : 0;
 
-  const dineroDisponible = sueldo - totalGastos;
-
+    setDineroDisponible(sueldo - totalGastos);
+  }, [gastos, sueldo]);
 
 
 
@@ -233,7 +234,7 @@ export const Main = () => {
     
     const timer = setTimeout(() => {
       setMostrarContenido(true);
-    }, 100);
+    }, 200);
     return () => clearTimeout(timer);
   }, []);
 
