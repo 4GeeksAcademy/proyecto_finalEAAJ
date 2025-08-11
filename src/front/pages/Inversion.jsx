@@ -38,7 +38,6 @@ export const Inversion = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
-            console.log("Sección visible:", entry.target.id);
           }
         });
       },
@@ -295,7 +294,13 @@ export const Inversion = () => {
 
         {/* Sección Bitcoin - Versión Mejorada */}
         <div id="bitcoin" className="mb-5">
-          <h3 className="d-flex align-items-center">
+          <h3 className="d-flex align-items-center"
+              style={{
+                color: activeSection === "bitcoin" ? "tomato" : "inherit",
+                transform: activeSection === "bitcoin" ? "scale(1.05)" : "scale(1)",
+                transition: "color 0.3s ease"
+              }}
+          >
             <span className="me-2">₿</span> Bitcoin: El activo más volátil del mundo
           </h3>
 
@@ -362,7 +367,13 @@ export const Inversion = () => {
 
         {/* Sección Acciones - Versión Mejorada */}
         <div id="acciones" className="mb-5">
-          <h3>📈 Acciones: Conviértete en dueño parcial de empresas</h3>
+          <h3
+            style={{
+                color: activeSection === "acciones" ? "#b7ff00" : "inherit",
+                transform: activeSection === "acciones" ? "scale(1.05)" : "scale(1)",
+                transition: "color 0.3s ease"
+              }}
+          >📈 Acciones: Conviértete en dueño parcial de empresas</h3>
 
           <Alert variant="primary" className="border-start border-5 border-primary">
             <div className="d-flex">
@@ -431,7 +442,13 @@ export const Inversion = () => {
 
         {/* Sección Fondos Indexados - Versión Mejorada */}
         <div id="fondos" className="mb-5">
-          <h3>🌍 Fondos Indexados: La autopista hacia la libertad financiera</h3>
+          <h3
+              style={{
+              color: activeSection === "fondos" ? "tomato" : "inherit",
+              transform: activeSection === "fondos" ? "scale(1.05)" : "scale(1)",
+              transition: "color 0.3s ease"
+              }}
+          >🌍 Fondos Indexados: La autopista hacia la libertad financiera</h3>
 
           <Alert variant="success" className="border-start border-5 border-success">
             <div className="d-flex">
