@@ -1,8 +1,16 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-export const NavbarLogoDropdown = () => {
+export const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  const getItemStyle = (path) => ({
+    backgroundColor: location.pathname === path ? "#b7ff00" : "transparent",
+    borderRadius: "4px",
+    padding: "6px 10px",
+    transition: "background-color 0.2s ease",
+  });
 
   return (
     <div className="container-fluid d-flex justify-content-between align-items-center position-relative">
@@ -33,6 +41,7 @@ export const NavbarLogoDropdown = () => {
             <Link
               to="/main"
               className="dropdown-item"
+              style={getItemStyle("/main")}
               onClick={() => setOpen(false)}
             >
               Main
@@ -40,6 +49,7 @@ export const NavbarLogoDropdown = () => {
             <Link
               to="/objetivos"
               className="dropdown-item"
+              style={getItemStyle("/objetivos")}
               onClick={() => setOpen(false)}
             >
               Añadir Objetivos
@@ -47,6 +57,7 @@ export const NavbarLogoDropdown = () => {
             <Link
               to="/addnewgasto"
               className="dropdown-item"
+              style={getItemStyle("/addnewgasto")}
               onClick={() => setOpen(false)}
             >
               Añadir Gastos
@@ -54,6 +65,7 @@ export const NavbarLogoDropdown = () => {
             <Link
               to="/inversion"
               className="dropdown-item"
+              style={getItemStyle("/inversion")}
               onClick={() => setOpen(false)}
             >
               Invertir
