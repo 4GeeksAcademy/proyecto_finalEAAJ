@@ -78,11 +78,12 @@ const Perfil = () => {
       style={{
         maxWidth: "350px",
         margin: "20px auto",
-        padding: "20px",
+        padding: "40px",
         borderRadius: "12px",
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         textAlign: "center",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        border: "5px solid #b7ff00",
       }}
     >
       {/* Imagen de perfil con carga */}

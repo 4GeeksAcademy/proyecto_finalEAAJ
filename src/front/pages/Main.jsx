@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 import { HashLink } from "react-router-hash-link";
-import { Button } from "react-bootstrap";
+
 
 
 export const Main = () => {
@@ -14,6 +14,7 @@ export const Main = () => {
   const [recargarGastos, setRecargarGastos] = useState(false);
   const [recargarObjetivos, setRecargarObjetivos] = useState(false);
   const navigate = useNavigate();
+  const [mostrarContenido, setMostrarContenido] = useState(false);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -133,7 +134,7 @@ export const Main = () => {
 
     const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
 
-    setSueldo(disponibleGuardado + sueldoNetoGuardado);
+    
     setAhorro(ahorroGuardado);
   }, []);
 
@@ -146,85 +147,9 @@ export const Main = () => {
 
 
 
-  const handleProfileUser = async (e) => {
-    e.preventDefault();
 
-    try {
-      const res = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/user/profile",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
-        }
-      );
 
-      const data = await res.json();
-      if (res.ok) {
-        setSueldo(data.sueldo);
-      } else {
-        navigate(`/`);
-      }
-    } catch (error) {
-      navigate(`/`);
-    }
-  };
-
-  const handleGasto = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/gasto",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok) {
-
-        setResetLoading(false);
-      } else {
-        setResetLoading(false);
-      }
-    } catch (error) {
-      setResetLoading(false);
-    }
-  };
-
-  const handleObjetivo = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/objetivo",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok) {
-
-        setResetLoading(false);
-      } else {
-        setResetLoading(false);
-      }
-    } catch (error) {
-      setResetLoading(false);
-    }
-  };
+  
 
 
 
@@ -304,6 +229,19 @@ export const Main = () => {
     }
   };
 
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setMostrarContenido(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!mostrarContenido) {
+   
+    return null; 
+  }
+
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: "white" }}>
 
@@ -330,7 +268,7 @@ export const Main = () => {
 
       {/* LISTA DE OBJETIVOS */}
       <div className="container mt-4">
-        <div className="text-center mt-3">
+        <div className="text-center mt-5">
           <h3>Lista de Objetivos</h3>
 
           {objetivos.length === 0 && <p>No hay objetivos aún.</p>}
