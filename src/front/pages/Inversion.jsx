@@ -296,12 +296,18 @@ export const Inversion = () => {
       <div id="bitcoin" className="mb-5">
         <h3 className="d-flex align-items-center"
           style={{
-            color: activeSection === "bitcoin" ? "tomato" : "inherit",
+            color: activeSection === "bitcoin" ? "#b7ff00" : "inherit",
             transform: activeSection === "bitcoin" ? "scale(1.05)" : "scale(1)",
             transition: "color 0.3s ease"
           }}
         >
-          <span className="me-2">₿</span> Bitcoin: El activo más volátil del mundo
+          <span className="me-2"
+                style={{
+              display: "inline-block",
+              transform: activeSection === "bitcoin" ? "rotate(360deg)" : "rotate(0deg)",
+              transition: "transform 0.6s ease"
+          }}
+          >₿</span> Bitcoin: El activo más volátil del mundo
         </h3>
 
         <Alert variant="warning" className="border-start border-5 border-warning">
@@ -377,7 +383,7 @@ export const Inversion = () => {
           className="me-2"
           style={{
             display: "inline-block",
-            transform: activeSection === "bitcoin" ? "rotate(360deg)" : "rotate(0deg)",
+            transform: activeSection === "acciones" ? "rotate(360deg)" : "rotate(0deg)",
             transition: "transform 0.6s ease"
           }}
         >📈</span>Acciones: Conviértete en dueño parcial de empresas</h3>
@@ -451,11 +457,19 @@ export const Inversion = () => {
       <div id="fondos" className="mb-5">
         <h3
           style={{
-            color: activeSection === "fondos" ? "tomato" : "inherit",
+            color: activeSection === "fondos" ? "#b7ff00" : "inherit",
             transform: activeSection === "fondos" ? "scale(1.05)" : "scale(1)",
             transition: "color 0.3s ease"
           }}
-        >🌍 Fondos Indexados: La autopista hacia la libertad financiera</h3>
+        ><span
+            className="me-2"
+             style={{
+            display: "inline-block",
+            transform: activeSection === "fondos" ? "rotate(360deg)" : "rotate(0deg)",
+            transition: "transform 0.6s ease"
+             }}
+          >🌍
+          </span> Fondos Indexados: La autopista hacia la libertad financiera</h3>
 
         <Alert variant="success" className="border-start border-5 border-success">
           <div className="d-flex">
