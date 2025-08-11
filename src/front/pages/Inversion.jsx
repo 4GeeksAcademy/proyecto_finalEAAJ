@@ -27,6 +27,29 @@ export const Inversion = () => {
   const [token, setToken] = useState(null); // Inicialmente null hasta verificar
   const [loading, setLoading] = useState(true); // Estado de carga
 
+ // Estado para la sección activa
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const sections = document.querySelectorAll("#bitcoin, #acciones, #fondos");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+            console.log("Sección visible:", entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 } // activa cuando esté al 50% en pantalla
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []); 
+
   // Función de validación
   const validateToken = (token) => {
     return token &&
