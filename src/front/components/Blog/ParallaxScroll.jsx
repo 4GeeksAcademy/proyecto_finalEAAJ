@@ -166,10 +166,8 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
   const [isLoading, setIsLoading] = useState(false);
   const [loadedPosts, setLoadedPosts] = useState(posts);
 
-  // Nueva opción para elegir entre scroll infinito o botón
-  const [useLoadMoreButton, setUseLoadMoreButton] = useState(true); // true = botón, false = scroll infinito
+  const [useLoadMoreButton, setUseLoadMoreButton] = useState(true);
 
-  // Inicializar posts y animaciones
   const initPosts = useCallback(() => {
     if (!imgGroupRef.current || loadedPosts.length === 0) return;
 
@@ -182,19 +180,28 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
       box.className = 'imgBox';
       box.dataset.index = i;
       box.dataset.section = Math.floor(i / postsPerSection);
+      box.style.position = "relative";
 
       const img = document.createElement('img');
       img.src = post.image || 'https://placehold.co/600x400';
       img.alt = `${post.title} - ${post.body?.join(' ').substring(0, 50)}...`;
 
+      const overlay = document.createElement('div');
+      overlay.style.position = "absolute";
+      overlay.style.bottom = "0";
+      overlay.style.left = "0";
+      overlay.style.width = "100%";
+      overlay.style.background = "rgba(0, 0, 0, 0.6)";
+      overlay.style.color = "white";
+      overlay.style.padding = "10px";
+      overlay.style.fontSize = "0.9rem";
+      overlay.innerHTML = `<strong>${post.title || "Sin título"}</strong><br/><small>${post.date || "Fecha desconocida"}</small>`;
+
       box.appendChild(img);
+      box.appendChild(overlay);
       imgGroupRef.current.appendChild(box);
 
-      gsap.set(box, {
-        opacity: 0,
-        scale: 0.95,
-        y: 30
-      });
+      gsap.set(box, { opacity: 0, scale: 0.95, y: 30 });
 
       ScrollTrigger.create({
         trigger: box,
@@ -223,7 +230,6 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
       box.addEventListener('click', () => onPostSelect(i));
     });
 
-    // ScrollTrigger para secciones
     const sectionElements = document.querySelectorAll('[data-section]');
     const sectionPositions = Array.from(new Set(Array.from(sectionElements).map(el => el.dataset.section)));
 
@@ -241,7 +247,6 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
 
   }, [loadedPosts, onPostSelect]);
 
-  // Cargar más posts
   const handleLoadMore = useCallback(async () => {
     if (isLoading || !loadMorePosts) return;
     setIsLoading(true);
@@ -250,9 +255,8 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
     setIsLoading(false);
   }, [isLoading, loadMorePosts]);
 
-  // Scroll infinito (opción 1) con ScrollTrigger solo si no usamos botón
   useEffect(() => {
-    if (useLoadMoreButton) return; // no crear trigger scroll si usamos botón
+    if (useLoadMoreButton) return;
 
     if (loadMoreRef.current && loadMorePosts) {
       const st = ScrollTrigger.create({
@@ -265,7 +269,6 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
     }
   }, [useLoadMoreButton, loadMorePosts, handleLoadMore]);
 
-  // Parallax mousemove
   useEffect(() => {
     if (ScrollTrigger.isTouch === 1) return;
 
@@ -295,31 +298,6 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Scroll suave a sección
-  const scrollToSection = useCallback((index) => {
-    const sections = document.querySelectorAll('[data-section]');
-    const sectionPositions = Array.from(new Set(Array.from(sections).map(el => el.dataset.section)));
-
-    if (index >= 0 && index < sectionPositions.length) {
-      const firstInSection = document.querySelector(`[data-section="${sectionPositions[index]}"]`);
-
-      gsap.to(window, {
-        duration: 1.2,
-        scrollTo: {
-          y: firstInSection,
-          offsetY: 100
-        },
-        ease: 'power2.inOut'
-      });
-    }
-  }, []);
-
-  // Mostrar detalle (simplificado)
-  const showDetail = useCallback((index) => {
-    alert(`Mostrar detalle del post ${index + 1}`);
-  }, []);
-
-  // Efecto inicial para cargar posts cuando cambian
   useEffect(() => {
     initPosts();
   }, [initPosts]);
@@ -341,11 +319,8 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
           justifyContent: 'center',
           padding: '40px'
         }}
-      >
-        {/* Posts se insertan con JS */}
-      </div>
+      />
 
-      {/* Selector de opción para cargar más */}
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <label style={{ fontSize: '1rem', marginRight: '10px', userSelect: 'none' }}>
           <input
@@ -357,7 +332,6 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
         </label>
       </div>
 
-      {/* Botón para cargar más posts solo si useLoadMoreButton === true */}
       {useLoadMoreButton && (
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <button
@@ -378,14 +352,12 @@ const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostC
         </div>
       )}
 
-      {/* Load More con scroll infinito (solo si no usamos botón) */}
       {!useLoadMoreButton && (
         <div ref={loadMoreRef} style={{ textAlign: 'center', padding: '1rem' }}>
           {isLoading ? 'Cargando más posts...' : ''}
         </div>
       )}
 
-      {/* Cursor personalizado */}
       <svg
         ref={cursorRef}
         style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}

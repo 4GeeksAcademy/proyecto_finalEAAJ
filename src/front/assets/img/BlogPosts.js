@@ -3,6 +3,7 @@ export default [
   {
     id: crypto.randomUUID(),
     title: "The First Post",
+    date:"33/05/25",
     image: "https://picsum.photos/id/1018/600/400",
     body: [
       "This is the first line of the post.",
@@ -28,6 +29,7 @@ export default [
   {
     id: crypto.randomUUID(),
     title: "Another Day, Another Post",
+    date:"33/05/25",
     image: "https://picsum.photos/id/1025/600/400",
     body: ["Exploring more content here."],
     createdOn: new Date("2023-08-31T09:26:40Z").toISOString(),
@@ -37,6 +39,7 @@ export default [
   {
     id: crypto.randomUUID(),
     title: "Sunset Adventures",
+    date:"33/05/25",
     image: "https://picsum.photos/id/1035/600/400",
     body: [
       "Capturing the beauty of the evening sky.",
@@ -56,6 +59,7 @@ export default [
   {
     id: crypto.randomUUID(),
     title: "City Lights",
+    date:"33/05/25",
     image: "https://picsum.photos/id/1043/600/400",
     body: ["Exploring the vibrant nightlife of the city."],
     createdOn: new Date("2023-09-01T03:33:20Z").toISOString(),
@@ -84,6 +88,7 @@ export default [
   {
     id: crypto.randomUUID(),
     title: "Ocean Vibes",
+    date:"33/05/25",
     image: "https://picsum.photos/id/1069/600/400",
     body: [
       "Nothing beats a day by the ocean.",
