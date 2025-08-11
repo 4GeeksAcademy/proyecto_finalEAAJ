@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Accordion, Card, Form, Table, Row, Col, Alert, Badge } from "react-bootstrap";
 import CryptoWidget from "../CryptoWidget";
@@ -16,6 +16,7 @@ import {
 export const Inversion = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
 
   // Estados de inversión
   const [monthlyInvestment, setMonthlyInvestment] = useState(50);
@@ -114,7 +115,7 @@ export const Inversion = () => {
   };
 
   return (
-      <div className="container mt-5">
+    <div className="container mt-5">
         <Card className="p-4 mb-5 bg-white">
           <h3 className="mb-3">🧭 Bienvenido al Espacio de Inversión para Jóvenes</h3>
           <p className="fs-5">
@@ -499,7 +500,7 @@ export const Inversion = () => {
           )}
         </Card>
       </div>
-  );
+      );
 };
 
 
