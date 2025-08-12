@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import Sphere from "./Sphere.jsx";
-import { NavbarPublic } from "../components/NavbarPublic";
+
 import Carrusel from "./Carrusel/Carrusel.jsx";
 
 export const Home = () => {
@@ -69,7 +69,7 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
   </section>
 
   {/* SECCIÓN INVERSIÓN */}
-  <section className="text-center  p-5  mt-5 mx-auto" style={{ maxWidth: '600px',paddingBottom: 0 }}>
+  <section className="text-center  p-5  mt-5 mx-auto" style={{ maxWidth: '900px',paddingBottom: 0 }}>
     <h2 className="mb-3">Inversión</h2>
     <p className="lead">
       Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
@@ -78,10 +78,11 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
       ¡Quiero que mi dinero crezca!
     </Link>
   </section>
-  <div className="col-12 d-flex justify-content-center " style={{ marginBottom: 0, paddingBottom: 0 }}>
+  <div className="col-12 d-flex justify-content-center " >
             <Carrusel />
       </div>
 </div>
+
   );
 };
 

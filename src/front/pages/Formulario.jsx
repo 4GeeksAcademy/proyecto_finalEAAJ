@@ -80,7 +80,10 @@ export const Formulario = () => {
       if (response.status === 201) {
         localStorage.setItem("sueldo", sueldo);
         localStorage.setItem("ahorro", calcularAhorro());
+        localStorage.setItem("username", data.username || usuario);
+
         alert("Usuario registrado con éxito ✅");
+        localStorage.setItem("username", usuario); 
         localStorage.setItem('token', data.token);
         setTimeout(() => {
           navigate("/main");
@@ -234,7 +237,7 @@ export const Formulario = () => {
 
           <div className="mb-3 d-flex justify-content-center">
             <button type="submit" className="btn btn-primary" style={{ backgroundColor: "#b7ff00", color: "black" }}>
-              Send
+              Crear Usuario
             </button>
           </div>
         </div>

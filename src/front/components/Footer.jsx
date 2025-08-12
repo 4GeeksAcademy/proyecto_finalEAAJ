@@ -32,7 +32,7 @@ export  const Footer =()=> {
 
   return (
     <footer
-      className="w-full p-4 text-center overflow-hidden"
+      className="w-full p-2 text-center overflow-hidden"
       style={{
     background: "linear-gradient(to left, #f4ffc4, #b7ff00, #f4ffc4)",
     color: "black",

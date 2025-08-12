@@ -25,7 +25,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 41.9vh;
+  
 }
 
 .forgot-password .text-center,
@@ -179,7 +179,7 @@ body {
 }
 
 .addgasto-container {
-  background-color: #f5f5f5; 
+  background-color: #ffffff; 
   min-height: 80vh;
   display: flex;
   justify-content: center;
@@ -202,7 +202,7 @@ body {
   background-color: #ffffff;
   border-radius: 0.5rem;
   padding: 60px 30px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  
 }
 
 .addgasto-btn-guardar {
@@ -217,11 +217,6 @@ body {
   top: 50px;
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
 
 .app {
   display: flex;
@@ -230,14 +225,18 @@ body {
 }
 
 
-main {
-  flex: 1;
+
+
+
+
+.dropdown-item:focus,
+.dropdown-item:active {
+  background-color: #b7ff00 !important;
+  outline: none;
+  box-shadow: none;
+
+  color: black; /* para que el texto se vea bien si quieres */
 }
 
 
-footer {
-  background-color: #222;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
+  

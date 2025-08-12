@@ -40,7 +40,8 @@ def register():
         access_token = create_access_token(identity=str(new_user.id))
         return jsonify({
             "msg": "Usuario registrado con éxito",
-            "token": access_token
+            "token": access_token,
+            "username": new_user.username
         }), 201
     except requests.exceptions.RequestException as e:
         return jsonify({"msg": "Error al registrar el usuario", "error": str(e)}), 500
