@@ -3,16 +3,18 @@ import { ProfileImageUploader } from "../components/ProfileImageUploader";
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState({
-    username: "username",
-    nombre: "nombre",
-    apellido: "apellido",
-    email: "email",
+    username: "",
+    nombre: "",
+    apellido: "",
+    email: "",
+    pais: "",
+    telefono: "",
+    sueldo: "",
+    situacion: "", // "estudiante" o "trabajador"
   });
 
   const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
-  const [nuevaPassword, setNuevaPassword] = useState("");
 
-  // Obtener datos del usuario al montar el componente
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -34,63 +36,57 @@ const Perfil = () => {
           nombre: data.first_name || data.nombre || "",
           apellido: data.last_name || data.apellido || "",
           email: data.email || "",
+          pais: data.country || "",
+          telefono: data.phone || "",
+          sueldo: data.sueldo || "",
+          situacion: data.is_student ? "estudiante" : (data.is_student === false ? "trabajador" : ""),
         });
         if (data.fotoPerfil) setFotoPerfil(data.fotoPerfil);
       })
       .catch(err => console.error("Error al cargar el perfil:", err));
   }, []);
 
-  // Guardar cambios de perfil en la API
   const handleGuardar = () => {
     const token = localStorage.getItem("token");
-
     fetch("https://tu-dominio.com/api/user/profile", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...usuario, fotoPerfil }),
+      body: JSON.stringify({
+        username: usuario.username,
+        first_name: usuario.nombre,
+        last_name: usuario.apellido,
+        email: usuario.email,
+        country: usuario.pais,
+        phone: usuario.telefono,
+        sueldo: usuario.sueldo,
+        is_student: usuario.situacion === "estudiante",
+        fotoPerfil,
+      }),
     })
       .then(res => {
         if (!res.ok) throw new Error("No se pudo actualizar el perfil");
         return res.json();
       })
       .then(data => {
-        setUsuario(data);
+        setUsuario(prev => ({
+          ...prev,
+          username: data.username || prev.username,
+          nombre: data.first_name || data.nombre,
+          apellido: data.last_name || data.apellido,
+          email: data.email || prev.email,
+          pais: data.country || prev.pais,
+          telefono: data.phone || prev.telefono,
+          sueldo: data.sueldo || prev.sueldo,
+          situacion: data.is_student ? "estudiante" : "trabajador",
+        }));
         localStorage.setItem("user", JSON.stringify(data));
         localStorage.setItem("fotoPerfil", fotoPerfil);
         alert("Perfil actualizado con éxito ✅");
       })
       .catch(err => console.error("Error al actualizar el perfil:", err));
-  };
-
-  // Cambiar contraseña
-  const handleChangePassword = () => {
-    if (!nuevaPassword.trim()) {
-      alert("La contraseña no puede estar vacía");
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-
-    fetch("https://tu-dominio.com/api/user/reset-password", {
-      method: "PUT", // O POST según tu API
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ password: nuevaPassword }),
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("No se pudo cambiar la contraseña");
-        return res.json();
-      })
-      .then(() => {
-        alert("Contraseña cambiada con éxito 🔑");
-        setNuevaPassword("");
-      })
-      .catch(err => console.error("Error al cambiar la contraseña:", err));
   };
 
   const handleChange = (e) => {
@@ -129,11 +125,60 @@ const Perfil = () => {
         <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} />
       </div>
 
-      {/* Inputs de perfil */}
-      <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} />
-      <input type="text" name="nombre" value={usuario.nombre} onChange={handleChange} style={inputStyle} />
-      <input type="text" name="apellido" value={usuario.apellido} onChange={handleChange} style={inputStyle} />
-      <input type="email" name="email" value={usuario.email} onChange={handleChange} style={inputStyle} />
+      {/* Campos básicos */}
+      <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} placeholder="Usuario" />
+      <input type="text" name="nombre" value={usuario.nombre} onChange={handleChange} style={inputStyle} placeholder="Nombre" />
+      <input type="text" name="apellido" value={usuario.apellido} onChange={handleChange} style={inputStyle} placeholder="Apellidos" />
+      <input type="email" name="email" value={usuario.email} onChange={handleChange} style={inputStyle} placeholder="Email" />
+
+      {/* Campos nuevos */}
+      <select name="pais" value={usuario.pais} onChange={handleChange} style={inputStyle}>
+        <option value="">Selecciona país</option>
+        <option value="Alemania">Alemania</option>
+        <option value="Austria">Austria</option>
+        <option value="Bélgica">Bélgica</option>
+        <option value="Chipre">Chipre</option>
+        <option value="Croacia">Croacia</option>
+        <option value="Eslovaquia">Eslovaquia</option>
+        <option value="Eslovenia">Eslovenia</option>
+        <option value="España">España</option>
+        <option value="Estonia">Estonia</option>
+        <option value="Finlandia">Finlandia</option>
+        <option value="Francia">Francia</option>
+        <option value="Grecia">Grecia</option>
+        <option value="Irlanda">Irlanda</option>
+        <option value="Italia">Italia</option>
+        <option value="Letonia">Letonia</option>
+        <option value="Lituania">Lituania</option>
+        <option value="Luxemburgo">Luxemburgo</option>
+        <option value="Malta">Malta</option>
+        <option value="Países Bajos">Países Bajos</option>
+        <option value="Portugal">Portugal</option>
+      </select>
+
+      <input
+        type="tel"
+        name="telefono"
+        value={usuario.telefono}
+        onChange={handleChange}
+        style={inputStyle}
+        placeholder="Teléfono (+prefijo)"
+      />
+
+      <input
+        type="number"
+        name="sueldo"
+        value={usuario.sueldo}
+        onChange={handleChange}
+        style={inputStyle}
+        placeholder="Sueldo (€)"
+      />
+
+      <select name="situacion" value={usuario.situacion} onChange={handleChange} style={inputStyle}>
+        <option value="">Selecciona situación</option>
+        <option value="estudiante">Soy estudiante</option>
+        <option value="trabajador">Tengo trabajo</option>
+      </select>
 
       <button
         onClick={handleGuardar}
@@ -152,17 +197,11 @@ const Perfil = () => {
         Guardar Cambios
       </button>
 
-      {/* Cambio de contraseña */}
-      <input
-        type="password"
-        placeholder="Nueva contraseña"
-        value={nuevaPassword}
-        onChange={(e) => setNuevaPassword(e.target.value)}
-        style={inputStyle}
-      />
-      <button
-        onClick={handleChangePassword}
+      {/* Enlace directo a Reset Password */}
+      <a
+        href="https://stunning-doodle-g47p9q545xx7f9rv-3000.app.github.dev/resetpassword"
         style={{
+          display: "block",
           backgroundColor: "#FFA500",
           border: "none",
           padding: "10px",
@@ -170,11 +209,14 @@ const Perfil = () => {
           marginTop: "10px",
           fontWeight: "bold",
           borderRadius: "6px",
+          textAlign: "center",
+          color: "#000",
+          textDecoration: "none",
           cursor: "pointer",
         }}
       >
         Reset Password
-      </button>
+      </a>
     </div>
   );
 };

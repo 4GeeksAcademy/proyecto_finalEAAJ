@@ -28,6 +28,7 @@ import ParallaxScroll from './components/Blog/ParallaxScroll';
 
 
 
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>

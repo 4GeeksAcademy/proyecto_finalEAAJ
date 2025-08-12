@@ -1,14 +1,12 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import './ParallaxScroll.css';
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = ({ onAddNewPostClick }) => {
+const Navbar = () => {
   const [isLogoDropdownOpen, setLogoDropdownOpen] = useState(false);
   const logoDropdownRef = useRef();
 
@@ -39,7 +37,6 @@ const Navbar = ({ onAddNewPostClick }) => {
       }}
     >
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        {/* Logo Mo'Money dropdown */}
         <div className="position-relative" ref={logoDropdownRef}>
           <div
             className="navbar-brand fw-bold text-white"
@@ -74,309 +71,146 @@ const Navbar = ({ onAddNewPostClick }) => {
             </div>
           )}
         </div>
-
-        {/* Botón + Añadir Posts verde oscuro (solo símbolo +) */}
-        <button
-          onClick={onAddNewPostClick}
-          className="btn"
-          style={{
-            backgroundColor: '#004d00',
-            color: 'white',
-            fontWeight: '700',
-            fontSize: '1.8vh',
-            padding: '0.3rem 0.7rem',
-            borderRadius: '0.3rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: 'none',
-            width: '2.8rem',
-            height: '2.8rem',
-            lineHeight: 1
-          }}
-          aria-label="Añadir Posts"
-        >
-          <span style={{ fontSize: '1.8rem', lineHeight: 1, userSelect: 'none' }}>+</span>
-        </button>
       </div>
     </nav>
   );
 };
 
-const Footer = () => {
-  const frases = [
-    "Ahorra hoy para invertir mañana 💰",
-    "La constancia vence al interés compuesto 📈",
-    "Invierte en conocimiento antes que en activos 📚",
-    "Cada euro cuenta, cada decisión importa 💡"
-  ];
+const ParallaxScroll = ({ posts = [], onPostSelect, onAddNewPostClick }) => {
+  const containerRef = useRef(null);
 
-  const [index, setIndex] = useState(0);
-
+  // Animación de entrada para las tarjetas (modificado)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % frases.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const variants = {
-    initial: { y: 40, opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-    exit: { y: -40, opacity: 0 }
-  };
-
-  return (
-    <footer
-      className="w-full p-4 text-center overflow-hidden"
-      style={{
-        background: "linear-gradient(to left, #f4ffc4, #b7ff00, #f4ffc4)",
-        color: "black",
-        borderTop: "2px solid #b7ff00",
-        height: "80px",
-        paddingTop: "4px",
-        paddingBottom: "4px",
-        position: 'relative'
-      }}
-    >
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={index}
-          variants={variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={{ duration: 0.5 }}
-          className="text-lg font-medium absolute left-1/2 -translate-x-1/2"
-        >
-          {frases[index]}
-        </motion.p>
-      </AnimatePresence>
-    </footer>
-  );
-};
-
-const ParallaxScroll = ({ posts = [], onPostSelect, loadMorePosts, onAddNewPostClick }) => {
-  const imgGroupRef = useRef(null);
-  const cursorRef = useRef(null);
-  const cursorCircleRef = useRef(null);
-  const loadMoreRef = useRef(null);
-
-  const [activeSection, setActiveSection] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadedPosts, setLoadedPosts] = useState(posts);
-
-  const [useLoadMoreButton, setUseLoadMoreButton] = useState(true);
-
-  const initPosts = useCallback(() => {
-    if (!imgGroupRef.current || loadedPosts.length === 0) return;
-
-    imgGroupRef.current.innerHTML = '';
-
-    const postsPerSection = Math.max(3, Math.floor(loadedPosts.length / 3));
-
-    loadedPosts.forEach((post, i) => {
-      const box = document.createElement('div');
-      box.className = 'imgBox';
-      box.dataset.index = i;
-      box.dataset.section = Math.floor(i / postsPerSection);
-      box.style.position = "relative";
-
-      const img = document.createElement('img');
-      img.src = post.image || 'https://placehold.co/600x400';
-      img.alt = `${post.title} - ${post.body?.join(' ').substring(0, 50)}...`;
-
-      const overlay = document.createElement('div');
-      overlay.style.position = "absolute";
-      overlay.style.bottom = "0";
-      overlay.style.left = "0";
-      overlay.style.width = "100%";
-      overlay.style.background = "rgba(0, 0, 0, 0.6)";
-      overlay.style.color = "white";
-      overlay.style.padding = "10px";
-      overlay.style.fontSize = "0.9rem";
-      overlay.innerHTML = `<strong>${post.title || "Sin título"}</strong><br/><small>${post.date || "Fecha desconocida"}</small>`;
-
-      box.appendChild(img);
-      box.appendChild(overlay);
-      imgGroupRef.current.appendChild(box);
-
-      gsap.set(box, { opacity: 0, scale: 0.95, y: 30 });
-
-      ScrollTrigger.create({
-        trigger: box,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.to(box, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.2)',
-            onComplete: () => box.classList.add('active')
-          });
+    const cards = gsap.utils.toArray(".post-card");
+    
+    cards.forEach((card, index) => {
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 90%",
+          toggleActions: "play none none none",
+          // Añadido para evitar que desaparezcan
+          onLeaveBack: () => gsap.to(card, { opacity: 1, y: 0 }),
+          onEnterBack: () => gsap.to(card, { opacity: 1, y: 0 })
         }
       });
-
-      box.addEventListener('mouseenter', () => {
-        gsap.to(cursorCircleRef.current, { attr: { r: 30, 'stroke-width': 4 }, duration: 0.2 });
-        gsap.to(box, { scale: 1.05, zIndex: 30, duration: 0.3 });
-      });
-
-      box.addEventListener('mouseleave', () => {
-        gsap.to(box, { scale: 1, zIndex: 0, duration: 0.3 });
-      });
-
-      box.addEventListener('click', () => onPostSelect(i));
     });
 
-    const sectionElements = document.querySelectorAll('[data-section]');
-    const sectionPositions = Array.from(new Set(Array.from(sectionElements).map(el => el.dataset.section)));
-
-    sectionPositions.forEach((section, index) => {
-      const firstInSection = document.querySelector(`[data-section="${section}"]`);
-
-      ScrollTrigger.create({
-        trigger: firstInSection,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => setActiveSection(index),
-        onEnterBack: () => setActiveSection(index)
-      });
-    });
-
-  }, [loadedPosts, onPostSelect]);
-
-  const handleLoadMore = useCallback(async () => {
-    if (isLoading || !loadMorePosts) return;
-    setIsLoading(true);
-    const newPosts = await loadMorePosts();
-    setLoadedPosts((prev) => [...prev, ...newPosts]);
-    setIsLoading(false);
-  }, [isLoading, loadMorePosts]);
-
-  useEffect(() => {
-    if (useLoadMoreButton) return;
-
-    if (loadMoreRef.current && loadMorePosts) {
-      const st = ScrollTrigger.create({
-        trigger: loadMoreRef.current,
-        start: "top 80%",
-        onEnter: () => handleLoadMore()
-      });
-
-      return () => st.kill();
-    }
-  }, [useLoadMoreButton, loadMorePosts, handleLoadMore]);
-
-  useEffect(() => {
-    if (ScrollTrigger.isTouch === 1) return;
-
-    const handleMouseMove = (e) => {
-      const xPos = (e.clientX / window.innerWidth - 0.5) * 20;
-      const yPos = (e.clientY / window.innerHeight - 0.5) * 15;
-
-      gsap.to('.imgBox', {
-        rotationX: yPos * 0.3,
-        rotationY: -xPos * 0.3,
-        duration: 1.5,
-        ease: 'power1.out',
-        transformPerspective: 1000
-      });
-
-      if (cursorRef.current) {
-        gsap.to(cursorRef.current, {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-      }
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    initPosts();
-  }, [initPosts]);
+  }, [posts]);
 
   return (
-    <div
+    <div 
+      ref={containerRef}
       className="parallax-scroll-container"
-      style={{ paddingTop: '7vh', backgroundColor: '#f8f8f5', minHeight: '100vh' }}
+      style={{
+        paddingTop: '7vh',
+        backgroundColor: '#f8f8f5',
+        minHeight: '100vh',
+        position: 'relative',
+        paddingBottom: '80px' // Espacio para el botón y footer
+      }}
     >
-      <Navbar onAddNewPostClick={onAddNewPostClick} />
+      <Navbar />
 
-      <div
-        className="imgGroup"
-        ref={imgGroupRef}
+      <div 
+        className="posts-grid"
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '40px',
-          justifyContent: 'center',
-          padding: '40px'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '30px',
+          padding: '40px',
+          maxWidth: '1400px',
+          margin: '0 auto'
         }}
-      />
-
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <label style={{ fontSize: '1rem', marginRight: '10px', userSelect: 'none' }}>
-          <input
-            type="checkbox"
-            checked={useLoadMoreButton}
-            onChange={() => setUseLoadMoreButton(!useLoadMoreButton)}
-          />
-          {' '}Usar botón para cargar más (Opción 2)
-        </label>
-      </div>
-
-      {useLoadMoreButton && (
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>
-          <button
-            onClick={handleLoadMore}
-            disabled={isLoading}
+      >
+        {posts.map((post, index) => (
+          <div
+            key={index}
+            className="post-card"
+            onClick={() => onPostSelect(index)}
             style={{
-              backgroundColor: '#004d00',
-              color: 'white',
-              padding: '0.6rem 1.2rem',
-              fontSize: '1.2rem',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: isLoading ? 'not-allowed' : 'pointer'
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              opacity: 0, // Inicialmente invisible para la animación
+              transform: 'translateY(20px)' // Posición inicial para la animación
             }}
           >
-            {isLoading ? 'Cargando...' : 'Cargar más posts'}
-          </button>
-        </div>
-      )}
+            <div style={{ overflow: 'hidden', height: '200px' }}>
+              <img 
+                src={post.image || 'https://placehold.co/600x400'} 
+                alt={post.title}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  transition: 'transform 0.5s ease'
+                }}
+              />
+            </div>
+            <div style={{ padding: '20px' }}>
+              <h3 style={{ 
+                margin: '0 0 10px 0',
+                color: '#333',
+                fontSize: '1.2rem',
+                fontWeight: '600'
+              }}>
+                {post.title || "Sin título"}
+              </h3>
+              <p style={{ 
+                color: '#666', 
+                fontSize: '0.9rem',
+                margin: '0'
+              }}>
+                {post.date || "Fecha desconocida"}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      {!useLoadMoreButton && (
-        <div ref={loadMoreRef} style={{ textAlign: 'center', padding: '1rem' }}>
-          {isLoading ? 'Cargando más posts...' : ''}
-        </div>
-      )}
-
-      <svg
-        ref={cursorRef}
-        style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}
-        width="60"
-        height="60"
-        viewBox="0 0 60 60"
+      {/* Pestaña para añadir nuevo post (ahora no es fixed) */}
+      <div
+        className="add-post-tab"
+        onClick={onAddNewPostClick}
+        style={{
+          position: 'relative',
+          backgroundColor: '#004d00',
+          color: 'white',
+          padding: '12px 40px',
+          borderRadius: '20px',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          fontSize: '1rem',
+          boxShadow: '0 2px 15px rgba(0,0,0,0.2)',
+          zIndex: 100,
+          transition: 'all 0.2s ease',
+          width: 'max-content',
+          margin: '40px auto',
+          textAlign: 'center'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#006600';
+          e.currentTarget.style.transform = 'scale(1.05)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#004d00';
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
       >
-        <circle
-          ref={cursorCircleRef}
-          cx="30"
-          cy="30"
-          r="20"
-          stroke="white"
-          strokeWidth="2"
-          fill="none"
-        />
-      </svg>
-
-      <Footer />
+        + Añadir nuevo post
+      </div>
     </div>
   );
 };
