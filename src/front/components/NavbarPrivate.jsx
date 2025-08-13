@@ -132,46 +132,47 @@ export const NavbarPrivate = () => {
         </div>
 
         {/* Bienvenida y perfil */}
-        <div
-          className="d-flex align-items-center gap-3"
-          ref={profileDropdownRef}
-        >
+        <div className="d-flex align-items-center gap-3">
+          {/* Texto de bienvenida */}
           <span style={{ color: "black", fontWeight: "bold" }}>
             Bienvenid@, {username || "Usuario"}
           </span>
 
-          <button
-            className="btn btn-outline-light rounded-circle p-0"
-            onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
-            style={{ width: "60px", height: "60px", overflow: "hidden" }}
-          >
-            <img
-              src="https://i.pravatar.cc/300"
-              alt="Perfil"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </button>
-
-          {isProfileDropdownOpen && (
-            <div
-              className="dropdown-menu dropdown-menu-end show mt-2"
-              style={{ position: "absolute", right: 0 }}
+          {/* Botón de perfil con dropdown */}
+          <div className="position-relative" ref={profileDropdownRef}>
+            <button
+              className="btn btn-outline-light rounded-circle p-0"
+              onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
+              style={{ width: "60px", height: "60px", overflow: "hidden" }}
             >
-              <Link
-                className="dropdown-item"
-                to="/perfil"
-                onClick={() => setProfileDropdownOpen(false)}
+              <img
+                src="https://i.pravatar.cc/300"
+                alt="Perfil"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </button>
+
+            {isProfileDropdownOpen && (
+              <div
+                className="dropdown-menu dropdown-menu-end show mt-2"
+                style={{ position: "absolute", right: 0, top: "100%" }}
               >
-                Perfil
-              </Link>
-              <button
-                className="dropdown-item text-danger"
-                onClick={handleLogout}
-              >
-                Cerrar Sesión
-              </button>
-            </div>
-          )}
+                <Link
+                  className="dropdown-item"
+                  to="/perfil"
+                  onClick={() => setProfileDropdownOpen(false)}
+                >
+                  Perfil
+                </Link>
+                <button
+                  className="dropdown-item text-danger"
+                  onClick={handleLogout}
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>
