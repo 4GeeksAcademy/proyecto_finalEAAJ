@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
-
 from flask_bcrypt import Bcrypt
 #from datetime import datetime
 
@@ -93,27 +92,41 @@ class Objetivo(db.Model):
 class Articulo(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(255), nullable=False)
+    autor = db.Column(db.String(255), nullable=False)
     texto = db.Column(db.Text, nullable=False)
+    fecha = db.Column(db.DateTime, nullable=True)
+    likes = db.Column(db.Integer, nullable=False)
 
     def serialize(self):
         return {
             "id": self.id,
             "titulo": self.titulo,
+            "autor": self.autor,
             "texto": self.texto,
+            "fecha": self.fecha.strftime('%Y-%m-%d') if self.fecha else None,
+            "likes": self.likes,
         }
 class Link(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    url_imagen = db.Column(db.String(255), nullable=True)
+    img_nombre = db.Column(db.String(120), nullable=True)
+    imagen = db.Column(db.LargeBinary, nullable=True)# Imagen binaria (BLOB)
     enlace = db.Column(db.String(255), nullable=True)
     articulo_id = db.Column(db.Integer, db.ForeignKey('articulo.id'), nullable=False)
 
     def serialize(self):
-        return {
+        data =  {
             "id": self.id,
-            "url_imagen": self.url_imagen,
             "enlace": self.enlace,
             "articulo_id": self.articulo_id,
-        }  
+        }
+        if self.imagen:
+            import base64
+            data["img_nombre"] = self.img_nombre
+            data["imagen"] = base64.b64encode(self.imagen).decode('utf-8')
+        else:
+            data["img_nombre"] = None
+            data["imagen"] = None
+        return data
 
 """ class PostForo(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -2,11 +2,12 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, send_file
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
 from api.models import db, User, Gasto, Objetivo, Articulo, Link#, PostForo
 from api.utils import generate_sitemap, APIException
+from io import BytesIO
 import requests
 from datetime import datetime
 
@@ -418,7 +419,10 @@ def register_articulo():
 
     new_articulo = Articulo()
     new_articulo.titulo = body["titulo"]
-    new_articulo.texto = body["texto"]  
+    new_articulo.autor = body["autor"]
+    new_articulo.texto = body["texto"]
+    new_articulo.fecha = body["fecha"]
+    new_articulo.likes = body["likes"]
 
     db.session.add(new_articulo)
     db.session.commit()
@@ -448,6 +452,12 @@ def update_articulo(articulo_id):
         articulo.titulo = body['titulo']
     if 'texto' in body:  
         articulo.texto = body['texto']
+    if 'autor' in body:
+        articulo.autor = body['autor']
+    if 'fecha' in body:  
+        articulo.fecha = body['fecha']
+    if 'likes' in body:
+        articulo.likes = body['likes']
 
     db.session.commit()
     return jsonify({"msg": "Artículo actualizado correctamente", "articulo": articulo.serialize()}), 200
@@ -473,26 +483,41 @@ def delete_articulo(articulo_id):
 # Registro de Link
 @api.route("/link/register", methods=['POST'])
 def register_link():
-    body = request.get_json()
-    new_link = Link()
-    new_link.url_imagen = body["url_imagen"]
-    new_link.enlace = body["enlace"]
-    new_link.articulo_id = body["articulo_id"]  
+    if 'imagen' not in request.files:
+        return jsonify({"msg": "No se envió ninguna imagen"}), 400
+
+    imagen_file = request.files['imagen']
+    enlace = request.form.get("enlace")
+    articulo_id = request.form.get("articulo_id")
+
+    new_link = Link(
+        img_nombre=imagen_file.filename,
+        imagen=imagen_file.read(),
+        enlace=enlace,
+        articulo_id=articulo_id
+    )
 
     db.session.add(new_link)
     db.session.commit()
-
     return jsonify({"msg": "Link registrado con éxito", "link": new_link.serialize()}), 201
 
-# Obtener Link por ID
+# Obtener Link por ID (metadatos)
 @api.route("/link/<int:link_id>", methods=['GET'])
 def get_link(link_id):
     link = Link.query.filter_by(id=link_id).first()
-
     if not link:
         return jsonify({"msg": "Link no encontrado"}), 404
-
     return jsonify({"link": link.serialize()}), 200
+
+
+# Obtener imagen de un Link por ID
+@api.route("/link/<int:link_id>/imagen", methods=['GET'])
+def get_link_image(link_id):
+    link = Link.query.filter_by(id=link_id).first()
+    if not link:
+        return jsonify({"msg": "Imagen no encontrada"}), 404
+    return send_file(BytesIO(link.imagen), mimetype="image/jpeg", download_name=link.img_nombre)
+
 
 # Obtener todos los Links relacionados a un Artículo
 @api.route("/articulo/<int:articulo_id>/links", methods=['GET'])
@@ -500,28 +525,30 @@ def get_links_by_articulo(articulo_id):
     links = Link.query.filter_by(articulo_id=articulo_id).all()
     return jsonify({"links": [link.serialize() for link in links]}), 200
 
-# Actualizar Link
+
+# Actualizar Link (opcionalmente reemplazar imagen)
 @api.route("/link/update/<int:link_id>", methods=['PUT'])
 def update_link(link_id):
     link = Link.query.filter_by(id=link_id).first()
-
     if not link:
         return jsonify({"msg": "Link no encontrado"}), 404
 
-    body = request.get_json()
-    if 'url_imagen' in body:
-        link.url_imagen = body['url_imagen']
-    if 'enlace' in body:
-        link.enlace = body['enlace']
+    if 'imagen' in request.files:
+        imagen_file = request.files['imagen']
+        link.img_nombre = imagen_file.filename
+        link.imagen = imagen_file.read()
+
+    if 'enlace' in request.form:
+        link.enlace = request.form['enlace']
 
     db.session.commit()
     return jsonify({"msg": "Link actualizado correctamente", "link": link.serialize()}), 200
+
 
 # Eliminar Link
 @api.route("/link/delete/<int:link_id>", methods=['DELETE'])
 def delete_link(link_id):
     link = Link.query.filter_by(id=link_id).first()
-
     if not link:
         return jsonify({"msg": "Link no encontrado"}), 404
 
