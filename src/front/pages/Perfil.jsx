@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ProfileImageUploader } from "../components/ProfileImageUploader";
+import { Link, useNavigate } from "react-router-dom";
 
 const Perfil = () => {
+  const navigate = useNavigate(); // ✅ Ahora está dentro del componente
+
   const [usuario, setUsuario] = useState({
     username: "",
     nombre: "",
@@ -10,7 +13,7 @@ const Perfil = () => {
     pais: "",
     telefono: "",
     sueldo: "",
-    situacion: "", // "estudiante" o "trabajador"
+    situacion: "",
   });
 
   const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
@@ -121,18 +124,15 @@ const Perfil = () => {
         border: "5px solid #b7ff00",
       }}
     >
-      {/* Imagen de perfil */}
       <div style={{ marginBottom: "20px" }}>
         <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} />
       </div>
 
-      {/* Campos básicos */}
       <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} placeholder="Usuario" />
       <input type="text" name="nombre" value={usuario.nombre} onChange={handleChange} style={inputStyle} placeholder="Nombre" />
       <input type="text" name="apellido" value={usuario.apellido} onChange={handleChange} style={inputStyle} placeholder="Apellidos" />
       <input type="email" name="email" value={usuario.email} onChange={handleChange} style={inputStyle} placeholder="Email" />
 
-      {/* Campos nuevos */}
       <select name="pais" value={usuario.pais} onChange={handleChange} style={inputStyle}>
         <option value="">Selecciona país</option>
         <option value="Alemania">Alemania</option>
@@ -198,9 +198,9 @@ const Perfil = () => {
         Guardar Cambios
       </button>
 
-      {/* Enlace directo a Reset Password */}
-      <a
-        href="https://stunning-doodle-g47p9q545xx7f9rv-3000.app.github.dev/resetpassword"
+      {/* Botón para ir a Reset Password */}
+      <button
+        onClick={() => navigate("/resetpassword")}
         style={{
           display: "block",
           backgroundColor: "#FFA500",
@@ -212,12 +212,11 @@ const Perfil = () => {
           borderRadius: "6px",
           textAlign: "center",
           color: "#000",
-          textDecoration: "none",
           cursor: "pointer",
         }}
       >
         Reset Password
-      </a>
+      </button>
     </div>
   );
 };
