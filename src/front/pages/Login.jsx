@@ -22,10 +22,19 @@ export const Login = () => {
             const data = await response.json();
 
             if (response.status === 200) {
+                // Guardar token
                 localStorage.setItem('token', data.access_token || data.token);
+
+                // Guardar username directo (para Navbar)
+                if (data.user?.username) {
+                    localStorage.setItem("username", data.user.username);
+                }
+
+                // Guardar el objeto user como respaldo
                 if (data.user) {
                     localStorage.setItem('user', JSON.stringify(data.user));
                 }
+
                 navigate("/main");
             } else {
                 setMessage("⛔ " + (data.msg || "Error al iniciar sesión."));
@@ -45,11 +54,11 @@ export const Login = () => {
             style={{
                 backgroundColor: "white",
                 color: "#000",
-                minHeight: "80vh", // Usamos altura total de la pantalla
+                minHeight: "80vh",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "flex-start",
-                paddingTop: "8rem", // Bajar el recuadro
+                paddingTop: "8rem",
                 paddingBottom: "2rem",
             }}
         >
