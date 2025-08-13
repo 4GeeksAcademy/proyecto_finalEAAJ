@@ -1,6 +1,7 @@
 import React, { useState, useRef,useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
+import confetti from "canvas-confetti";
 
 export const Objetivos = () => {
   const [concepto, setConcepto] = useState("");
@@ -58,7 +59,11 @@ useEffect(() => {
 });
 
     if (!res.ok) throw new Error("Error al guardar objetivo");
-    navigate("/main");
+
+    megaConfeti();
+
+    setTimeout(() => navigate("/main"), 1500)
+
   } catch (err) {
     console.error(err);
     alert("No se pudo guardar el objetivo");
@@ -84,6 +89,52 @@ useEffect(() => {
     setEmoji(emojiChar);
     setShowPicker(false);
   };
+
+  // Confeti en el botón de guardar objetivo
+
+  const megaConfeti = () => {
+  const colors = ["#bb0000", "#ffffff", "#00ff00", "#0000ff", "#ff00ff", "#ffa500"];
+
+  // Explosión 1 - centro
+  confetti({
+    particleCount: 120,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors,
+  });
+
+  // Explosión 2 - izquierda
+  setTimeout(() => {
+    confetti({
+      particleCount: 80,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors,
+    });
+  }, 300);
+
+  // Explosión 3 - derecha
+  setTimeout(() => {
+    confetti({
+      particleCount: 80,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors,
+    });
+  }, 600);
+
+  // Lluvia final
+  setTimeout(() => {
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0 },
+      colors,
+    });
+  }, 1000);
+};
 
   return (
     <div className="container mt-4" style={{

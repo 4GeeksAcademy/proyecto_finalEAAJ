@@ -9,7 +9,9 @@ import '../components/Blog/Blog.css';
 import '../components/Blog/ParallaxScroll.css';
 import initialPostsData from "../assets/img/BlogPosts.js";
 
-function BlogPage() {
+
+
+export const  BlogPage = () => {
   const [posts, setPosts] = useState(initialPostsData);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -41,6 +43,7 @@ function BlogPage() {
     updatedPosts[index].likes++;
     setPosts(updatedPosts);
   };
+
 
   return (
     <div className="blog-container">
