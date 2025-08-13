@@ -77,14 +77,15 @@ export const Formulario = () => {
 
       const data = await response.json();
 
-      if (response.status === 201) {
+      if (response.status === 201) { 
+        localStorage.setItem('token', data.token);
         localStorage.setItem("sueldo", sueldo);
         localStorage.setItem("ahorro", calcularAhorro());
         localStorage.setItem("username", data.username || usuario);
 
         alert("Usuario registrado con éxito ✅");
-        localStorage.setItem("username", usuario); 
-        localStorage.setItem('token', data.token);
+      
+       
         setTimeout(() => {
           navigate("/main");
         }, 1000);
