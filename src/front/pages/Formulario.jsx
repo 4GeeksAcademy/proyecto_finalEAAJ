@@ -85,6 +85,8 @@ export const Formulario = () => {
         alert("Usuario registrado con éxito ✅");
         localStorage.setItem("username", usuario); 
         localStorage.setItem('token', data.token);
+        localStorage.setItem("isNewUser", "true");
+        
         setTimeout(() => {
           navigate("/main");
         }, 1000);

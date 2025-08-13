@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 import { HashLink } from "react-router-hash-link";
-
+import OnboardingTutorial from "./OnboardingTutorial";
 
 
 export const Main = () => {
@@ -16,6 +16,17 @@ export const Main = () => {
   const navigate = useNavigate();
   const [mostrarContenido, setMostrarContenido] = useState(false);
   const [dineroDisponible, setDineroDisponible] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    const hasSeenTutorial = localStorage.getItem("hasSeenMainTutorial");
+    const isNewUser = localStorage.getItem("isNewUser") === "true";
+
+    if (isNewUser || !hasSeenTutorial) {
+      setShowTutorial(true);
+      localStorage.removeItem("isNewUser");
+    }
+  }, []);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -245,7 +256,7 @@ useEffect(() => {
 
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: "white" }}>
-
+      {showTutorial && <OnboardingTutorial onFinish={() => setShowTutorial(false)} />}
       {/* RESUMEN DINERO */}
       <div className="row mb-4">
         <div className="col-md-6">
