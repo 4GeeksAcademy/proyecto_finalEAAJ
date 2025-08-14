@@ -432,7 +432,7 @@ def register_articulo():
 
 # Obtener todos los Artículos
 @api.route("/articulo/", methods=['GET'])
-def get_articulo(articulo_id):
+def get_articulos():
     articulos = Articulo.query.all()
     return jsonify({"articulos": [articulo.serialize() for articulo in articulos]}), 200
 
