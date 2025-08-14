@@ -1,6 +1,9 @@
 import React from 'react';
 
 function BlogPostPage({ posts, setSelectedIndex }) {
+
+  
+
   return (
     <div className="row">
       {posts.map((post, index) => (
