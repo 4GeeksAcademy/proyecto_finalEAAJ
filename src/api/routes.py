@@ -116,10 +116,10 @@ def update_user():
         user.phone = body['phone']
     if 'perfil' in body:
         user.perfil = body['perfil']
-    if 'cantidad' in body:
-        user.cantidad = body['cantidad']
-    if 'emoji' in body:
-        user.emoji = body['emoji']
+    if 'sueldo' in body:
+        user.sueldo = body['sueldo']
+    if 'is_student' in body:
+        user.is_student = body['is_student']
 
     db.session.commit()
     return jsonify({"msg": "Usuario actualizado correctamente"}), 200

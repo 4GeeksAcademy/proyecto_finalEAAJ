@@ -22,11 +22,11 @@ const Perfil = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch("https://tu-dominio.com/api/user/profile", {
+    fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then(res => {
@@ -34,24 +34,28 @@ const Perfil = () => {
         return res.json();
       })
       .then(data => {
+        // ⚠️ Adaptar a la estructura real de la respuesta
+        const u = data.user;
         setUsuario({
-          username: data.username || "",
-          nombre: data.first_name || data.nombre || "",
-          apellido: data.last_name || data.apellido || "",
-          email: data.email || "",
-          pais: data.country || "",
-          telefono: data.phone || "",
-          sueldo: data.sueldo || "",
-          situacion: data.is_student ? "estudiante" : (data.is_student === false ? "trabajador" : ""),
+          username: u.username || "",
+          nombre: u.firstname || "",
+          apellido: u.lastname || "",
+          email: u.email || "",
+          pais: u.country || "",
+          telefono: u.phone || "",
+          sueldo: u.sueldo || "",
+          situacion: u.is_student ? "estudiante" : (u.is_student === false ? "trabajador" : ""),
         });
-        if (data.fotoPerfil) setFotoPerfil(data.fotoPerfil);
+
+        if (u.perfil) setFotoPerfil(u.perfil);
       })
       .catch(err => console.error("Error al cargar el perfil:", err));
   }, []);
 
+
   const handleGuardar = () => {
     const token = localStorage.getItem("token");
-    fetch("https://tu-dominio.com/api/user/profile", {
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -59,14 +63,14 @@ const Perfil = () => {
       },
       body: JSON.stringify({
         username: usuario.username,
-        first_name: usuario.nombre,
-        last_name: usuario.apellido,
+        firstname: usuario.nombre,
+        lastname: usuario.apellido,
         email: usuario.email,
         country: usuario.pais,
         phone: usuario.telefono,
-        sueldo: usuario.sueldo,
+        sueldo: Number(usuario.sueldo),
         is_student: usuario.situacion === "estudiante",
-        fotoPerfil,
+        //fotoPerfil,
       }),
     })
       .then(res => {
@@ -77,8 +81,8 @@ const Perfil = () => {
         setUsuario(prev => ({
           ...prev,
           username: data.username || prev.username,
-          nombre: data.first_name || data.nombre,
-          apellido: data.last_name || data.apellido,
+          nombre: data.firstname || data.nombre,
+          apellido: data.lastname || data.apellido,
           email: data.email || prev.email,
           pais: data.country || prev.pais,
           telefono: data.phone || prev.telefono,
@@ -87,9 +91,43 @@ const Perfil = () => {
         }));
         localStorage.setItem("user", JSON.stringify(data));
         localStorage.setItem("fotoPerfil", fotoPerfil);
-        alert("Perfil actualizado con éxito ✅");
+        alert("Perfil actualizado con éxito :marca_de_verificación_blanca:");
       })
       .catch(err => console.error("Error al actualizar el perfil:", err));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/user/profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        setMessage("✅ Token generado. Redirigiendo al cambio de contraseña...");
+        setEmail("");
+
+        setTimeout(() => {
+          navigate("/resetpassword");
+        }, 1500);
+      } else {
+        setMessage(data.msg || "❌ No se pudo generar el token.");
+      }
+    } catch (error) {
+      setMessage("❌ Error de red. Intenta de nuevo más tarde." + import.meta.env.VITE_BACKEND_URL);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -217,7 +255,7 @@ const Perfil = () => {
       >
         Reset Password
       </button>
-      
+
     </div>
   );
 };

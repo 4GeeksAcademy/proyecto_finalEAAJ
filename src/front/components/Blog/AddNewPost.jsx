@@ -24,7 +24,7 @@ function AddNewPost({ onAddPost, onCancel }) {
         },
         body: JSON.stringify({
           titulo: titulo,
-  imagen: autor,
+          autor: autor,
           texto: texto,
           fecha: Date.now(),
           likes: 0,
@@ -50,7 +50,6 @@ function AddNewPost({ onAddPost, onCancel }) {
         body: JSON.stringify({
 
          articulo_id: data.id,
-          img_nombre: "",
           imagen:imagen ,
           enlace:enlace , 
           
