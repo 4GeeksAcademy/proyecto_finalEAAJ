@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 import { HashLink } from "react-router-hash-link";
-
+import OnboardingTutorial from "./OnboardingTutorial";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 export const Main = () => {
@@ -16,6 +17,19 @@ export const Main = () => {
   const navigate = useNavigate();
   const [mostrarContenido, setMostrarContenido] = useState(false);
   const [dineroDisponible, setDineroDisponible] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+
+
+  useEffect(() => {
+    const hasSeenTutorial = localStorage.getItem("hasSeenMainTutorial");
+    const isNewUser = localStorage.getItem("isNewUser") === "true";
+
+    if (isNewUser || !hasSeenTutorial) {
+      setShowTutorial(true);
+      localStorage.removeItem("isNewUser");
+    }
+  }, []);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
@@ -129,13 +143,13 @@ export const Main = () => {
   }, [token, recargarObjetivos]);
 
   useEffect(() => {
-  const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
-  const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
-  setSueldo(disponibleGuardado + sueldoNetoGuardado);
+    const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
+    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
+    setSueldo(disponibleGuardado + sueldoNetoGuardado);
 
-  const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
-  setAhorro(ahorroGuardado);
-}, []);
+    const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+    setAhorro(ahorroGuardado);
+  }, []);
 
 
   useEffect(() => {
@@ -149,7 +163,7 @@ export const Main = () => {
 
 
 
-  
+
 
 
 
@@ -168,7 +182,7 @@ export const Main = () => {
     return cantidad;
   };
 
-useEffect(() => {
+  useEffect(() => {
     const totalGastos = Array.isArray(gastos)
       ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
       : 0;
@@ -204,34 +218,41 @@ useEffect(() => {
   };
 
   const marcarComoCompletado = async (id, completado) => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ completado: !completado }),
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ completado: !completado }),
+      }
+    );
+
+    if (!res.ok) throw new Error("Error al actualizar");
+
+    setObjetivos((prev) =>
+      prev.map((obj) => {
+        if (obj.id === id) {
+          if (!completado) {
+            setShowCelebration(true); 
+            setTimeout(() => setShowCelebration(false), 2000); 
+          }
+          return { ...obj, completado: !completado };
         }
-      );
-
-      if (!res.ok) throw new Error("Error al actualizar");
-
-      setObjetivos((prev) =>
-        prev.map((obj) =>
-          obj.id === id ? { ...obj, completado: !completado } : obj
-        )
-      );
-    } catch (err) {
-      console.error(err);
-      alert("No se pudo actualizar el objetivo");
-    }
-  };
+        return obj;
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    alert("No se pudo actualizar el objetivo");
+  }
+};
 
   useEffect(() => {
-    
+
     const timer = setTimeout(() => {
       setMostrarContenido(true);
     }, 200);
@@ -239,13 +260,13 @@ useEffect(() => {
   }, []);
 
   if (!mostrarContenido) {
-   
-    return null; 
+
+    return null;
   }
 
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: "white" }}>
-
+      {showTutorial && <OnboardingTutorial onFinish={() => setShowTutorial(false)} />}
       {/* RESUMEN DINERO */}
       <div className="row mb-4">
         <div className="col-md-6">
@@ -328,13 +349,13 @@ useEffect(() => {
                     position: "absolute",
                     top: "5px",
                     right: "5px",
-                    background: "white", 
+                    background: "white",
                     border: "none",
-                    color: "#ff0000",     
+                    color: "#ff0000",
                     fontSize: "20px",
                     cursor: "pointer",
                     fontWeight: "bold",
-                    borderRadius: "50%",  
+                    borderRadius: "50%",
                     width: "30px",
                     height: "30px",
                     display: "flex",
@@ -478,8 +499,27 @@ useEffect(() => {
 
         </div>
       </div>
-       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
-  </div>
-</div>
+      {showCelebration && (
+        <div style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "#c5bebe",
+          color: "#000000ff",
+          padding: "20px 30px",
+          borderRadius: "12px",
+          boxShadow: "0 5px 15px rgba(0, 0, 0, 0.99)",
+          textAlign: "center",
+          fontWeight: "bold",
+          zIndex: 10000
+        }}>
+          <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🎉 ¡Enhorabuena!</div>
+          <div>¡Objetivo conseguido! Eres un rockstar de las finanzas 💰🎸</div>
+        </div>
+      )}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
+      </div>
+    </div>
   );
 }

@@ -81,10 +81,10 @@ export const Formulario = () => {
         localStorage.setItem("sueldo", sueldo);
         localStorage.setItem("ahorro", calcularAhorro());
         localStorage.setItem("username", data.username || usuario);
+        localStorage.setItem("isNewUser", "true");
 
         alert("Usuario registrado con éxito ✅");
-        localStorage.setItem("username", usuario); 
-        localStorage.setItem('token', data.token);
+
         setTimeout(() => {
           navigate("/main");
         }, 1000);
