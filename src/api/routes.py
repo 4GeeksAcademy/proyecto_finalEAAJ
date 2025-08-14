@@ -430,15 +430,21 @@ def register_articulo():
 
     return jsonify({"msg": "Artículo registrado con éxito", "articulo": new_articulo.serialize()}), 201
 
+# Obtener todos los Artículos
+@api.route("/articulo/", methods=['GET'])
+def get_articulo(articulo_id):
+    articulos = Articulo.query.all()
+    return jsonify({"articulos": [articulo.serialize() for articulo in articulos]}), 200
+
 # Obtener Artículo por ID
 @api.route("/articulo/<int:articulo_id>", methods=['GET'])
 def get_articulo(articulo_id):
     articulo = Articulo.query.filter_by(id=articulo_id).first()
-
     if not articulo:
         return jsonify({"msg": "Artículo no encontrado"}), 404
 
     return jsonify({"articulo": articulo.serialize()}), 200
+
 
 # Actualizar Artículo
 @api.route("/articulo/update/<int:articulo_id>", methods=['PUT'])
