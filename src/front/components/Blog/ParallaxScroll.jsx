@@ -6,7 +6,7 @@ import './ParallaxScroll.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = () => {
+/* const Navbar = () => {
   const [isLogoDropdownOpen, setLogoDropdownOpen] = useState(false);
   const logoDropdownRef = useRef();
 
@@ -74,7 +74,7 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
+}; */
 
 const ParallaxScroll = ({ posts = [], onPostSelect, onAddNewPostClick }) => {
   const containerRef = useRef(null);
@@ -118,7 +118,7 @@ const ParallaxScroll = ({ posts = [], onPostSelect, onAddNewPostClick }) => {
         paddingBottom: '80px' // Espacio para el botón y footer
       }}
     >
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div 
         className="posts-grid"

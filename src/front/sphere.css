@@ -5,12 +5,12 @@
 }
 
 .sphere {
-  width: 300px;
-  height: 300px;
+  width: 30vh;
+  height: 30vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; 
   overflow: visible;
   border-radius: 50%;
   transform-style: preserve-3d;
@@ -20,8 +20,8 @@
 
 .sphere .meridian {
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 30vh;
+  height: 30vh;
   border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 50%;
   transform-style: preserve-3d;
@@ -30,8 +30,8 @@
 
 .sphere .latitude {
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 30vh;
+  height: 30vh;
   border: 1px solid rgba(0, 0, 0, 0.25);
   transform: rotateY(90deg);
   border-radius: 50%;
@@ -40,12 +40,9 @@
 /*Eliminado el Axio por inecesario es la linia del mundo un incordio visual. Alexis*/
 @keyframes rotate {
   0% {
-    transform: rotateX(30deg) rotateY(0deg) rotateZ(80deg);
+    transform: rotateX(-30deg) rotateY(0deg) rotateZ(80deg);
   }
   100% {
-    transform: rotateX(30deg) rotateY(360deg) rotateZ(80deg);
+    transform: rotateX(-30deg) rotateY(360deg) rotateZ(80deg);
   }
 }
-
-
-
