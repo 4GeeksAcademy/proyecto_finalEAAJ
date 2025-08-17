@@ -127,19 +127,3 @@ class Link(db.Model):
             data["img_nombre"] = None
             data["imagen"] = None
         return data
-
-""" class PostForo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(255), nullable=False)
-    contenido = db.Column(db.Text, nullable=False)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
-
-    def serialize(self):
-        return { 
-            "id": self.id,
-            "titulo": self.titulo,
-            "contenido": self.contenido,
-            "fecha_creacion": self.fecha_creacion,
-            "user_id": self.user_id,
-        } """  
