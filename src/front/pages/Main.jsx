@@ -4,38 +4,64 @@ import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 import { HashLink } from "react-router-hash-link";
 import OnboardingTutorial from "./OnboardingTutorial";
 import { motion, AnimatePresence } from "framer-motion";
-
+//import { motion, AnimatePresence } from "framer-motion";
 
 export const Main = () => {
-  const [objetivos, setObjetivos] = useState([]);
   const [sueldo, setSueldo] = useState(0);
   const [ahorro, setAhorro] = useState(0);
   const [token, setToken] = useState("");
   const [gastos, setGastos] = useState([]);
+  const [objetivos, setObjetivos] = useState([]);
   const [recargarGastos, setRecargarGastos] = useState(false);
   const [recargarObjetivos, setRecargarObjetivos] = useState(false);
-  const navigate = useNavigate();
   const [mostrarContenido, setMostrarContenido] = useState(false);
   const [dineroDisponible, setDineroDisponible] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
-
-
-  useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem("hasSeenMainTutorial");
-    const isNewUser = localStorage.getItem("isNewUser") === "true";
-
-    if (isNewUser || !hasSeenTutorial) {
-      setShowTutorial(true);
-      localStorage.removeItem("isNewUser");
-    }
-  }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("token") || "";
+    const savedToken = localStorage.getItem("token");
     setToken(savedToken);
-  }, []);
+    if (!token) return;
 
+    const userProfile=()=>{fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
+        return res.json();
+      })
+      .then(data => {
+        setSueldo(data.user.sueldo);
+        setAhorro((parseFloat(sueldo) * 0.2).toFixed(2));
+        const isNewUser = data.user.isNewUser;
+        if (isNewUser) {
+          setShowTutorial(true);
+          fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              isNewUser: false,
+            }),
+          })
+            .then(res => {
+              if (!res.ok) throw new Error("No se pudo actualizar el perfil");
+              return res.json();
+            })
+            .catch(err => console.error("Error al actualizar el perfil:", err));
+              }
+            })
+            .catch(err => console.error("Error al cargar el perfil:", err));}  
+      if (token) userProfile();
+  }, [token, sueldo, ahorro]);
 
   // 🔹 Obtener gastos
   useEffect(() => {
@@ -44,22 +70,15 @@ export const Main = () => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gasto`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!res.ok) throw new Error("Error al obtener gastos");
-
         const data = await res.json();
-        const lista = Array.isArray(data)
-          ? data
-          : Array.isArray(data.gastos)
-            ? data.gastos
-            : [];
+        const lista = Array.isArray(data) ? data : Array.isArray(data.gastos) ? data.gastos : [];
         setGastos(lista);
       } catch (err) {
         console.error(err);
         setGastos([]);
       }
     };
-
     if (token) fetchGastos();
   }, [token, recargarGastos]);
 
@@ -87,7 +106,6 @@ export const Main = () => {
   // 🔹 Eliminar gasto
   const eliminarGasto = async (id) => {
     if (!window.confirm("¿Seguro que quieres eliminar este gasto?")) return;
-
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/gasto/delete/${id}`,
@@ -96,9 +114,7 @@ export const Main = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (!res.ok) throw new Error("Error al eliminar");
-
       setGastos((prev) => prev.filter((g) => g.id !== id));
     } catch (err) {
       console.error(err);
@@ -109,49 +125,43 @@ export const Main = () => {
   // 🔹 Obtener objetivos
   useEffect(() => {
     if (!token) return;
-
     const fetchObjetivos = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/objetivo`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!res.ok) throw new Error("Error al obtener objetivos");
-
         const data = await res.json();
-
         const objetivosAdaptados = Array.isArray(data)
           ? data.map((o) => ({
-            id: o.id,
-            concepto: o.titulo,
-            cantidad: o.cantidad_meta,
-            fechaLimite: o.fecha_limite,
-            completado: o.completado || false,
-            frecuencia: o.frecuencia || "diario",
-          }))
+              id: o.id,
+              concepto: o.titulo,
+              cantidad: o.cantidad_meta,
+              fechaLimite: o.fecha_limite,
+              completado: o.completado || false,
+              frecuencia: o.frecuencia || "diario",
+            }))
           : [];
-
         setObjetivos(objetivosAdaptados);
-        localStorage.setItem("objetivos", JSON.stringify(objetivosAdaptados));
+        //localStorage.setItem("objetivos", JSON.stringify(objetivosAdaptados));
       } catch (err) {
         console.error("Error cargando objetivos:", err);
         setObjetivos([]);
       }
     };
-
     fetchObjetivos();
   }, [token, recargarObjetivos]);
 
+  // 🔹 Perfil de usuario (sueldo, ahorro, dinero disponible)
   useEffect(() => {
-    const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
-    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
+    const disponibleGuardado = parseFloat(localStorage.getItem("disponible"));
+    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto"));
     setSueldo(disponibleGuardado + sueldoNetoGuardado);
-
-    const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
+    const ahorroGuardado = (parseFloat(sueldo) * 0.2).toFixed(2);
     setAhorro(ahorroGuardado);
   }, []);
 
-
+//Te expulsa si ha expirado el token o no tienes token
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     if (!savedToken || savedToken.length < 10) {
@@ -159,19 +169,10 @@ export const Main = () => {
     }
   }, [navigate]);
 
-
-
-
-
-
-
-
-
   const calcularAhorroSegunFrecuencia = (cantidad, fechaLimite, frecuencia) => {
     const hoy = new Date();
     const limite = new Date(fechaLimite);
     const diffTiempo = limite - hoy;
-
     const dias = Math.ceil(diffTiempo / (1000 * 60 * 60 * 24));
     const meses = Math.ceil(dias / 30);
     const años = Math.ceil(dias / 365);
@@ -182,15 +183,13 @@ export const Main = () => {
     return cantidad;
   };
 
+  // 🔹 Recalcular dinero disponible restando gastos
   useEffect(() => {
     const totalGastos = Array.isArray(gastos)
-      ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
-      : 0;
-
+      ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0) : 0;
     setDineroDisponible(sueldo - totalGastos);
+    setAhorro((parseFloat(sueldo) * 0.2).toFixed(2));//He añadido aque la recarga de el ahorro para que se recargue cada vez
   }, [gastos, sueldo]);
-
-
 
   const handleEditarObjetivo = (id) => {
     navigate(`/objetivos/editar/${id}`);
@@ -198,7 +197,6 @@ export const Main = () => {
 
   const eliminarObjetivo = async (id) => {
     if (!window.confirm("¿Seguro que quieres eliminar este objetivo?")) return;
-
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/delete/${id}`,
@@ -207,9 +205,7 @@ export const Main = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (!res.ok) throw new Error("Error al eliminar");
-
       setObjetivos((prev) => prev.filter((obj) => obj.id !== id));
     } catch (err) {
       console.error(err);
@@ -218,41 +214,38 @@ export const Main = () => {
   };
 
   const marcarComoCompletado = async (id, completado) => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ completado: !completado }),
-      }
-    );
-
-    if (!res.ok) throw new Error("Error al actualizar");
-
-    setObjetivos((prev) =>
-      prev.map((obj) => {
-        if (obj.id === id) {
-          if (!completado) {
-            setShowCelebration(true); 
-            setTimeout(() => setShowCelebration(false), 2000); 
-          }
-          return { ...obj, completado: !completado };
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ completado: !completado }),
         }
-        return obj;
-      })
-    );
-  } catch (err) {
-    console.error(err);
-    alert("No se pudo actualizar el objetivo");
-  }
-};
+      );
+      if (!res.ok) throw new Error("Error al actualizar");
+      setObjetivos((prev) =>
+        prev.map((obj) => {
+          if (obj.id === id) {
+            if (!completado) {
+              setShowCelebration(true);
+              setTimeout(() => setShowCelebration(false), 2000);
+            }
+            return { ...obj, completado: !completado };
+          }
+          return obj;
+        })
+      );
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo actualizar el objetivo");
+    }
+  };
 
   useEffect(() => {
-
     const timer = setTimeout(() => {
       setMostrarContenido(true);
     }, 200);
@@ -260,24 +253,28 @@ export const Main = () => {
   }, []);
 
   if (!mostrarContenido) {
-
     return null;
   }
 
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: "white" }}>
       {showTutorial && <OnboardingTutorial onFinish={() => setShowTutorial(false)} />}
+
       {/* RESUMEN DINERO */}
       <div className="row mb-4">
         <div className="col-md-6">
-          <div className="card text-center p-3" style={{
-            backgroundColor: dineroDisponible < ahorro ? "#f8663b" : "#b7ff00",
-            border: "none",
-            color: dineroDisponible < ahorro ? "white" : "black",
-            transition: "background-color 0.3s ease",
-          }}>
+          <div
+            className="card text-center p-3"
+            style={{
+              backgroundColor: dineroDisponible < ahorro ? "#f8663b" : "#b7ff00",
+              border: "none",
+              color: dineroDisponible < ahorro ? "white" : "black",
+              transition: "background-color 0.3s ease",
+            }}
+          >
             <h5>Dinero Total</h5>
             <p className="display-6">{dineroDisponible}€</p>
+
           </div>
         </div>
         <div className="col-md-6">
@@ -292,9 +289,7 @@ export const Main = () => {
       <div className="container mt-4">
         <div className="text-center mt-5">
           <h3>Lista de Objetivos</h3>
-
           {objetivos.length === 0 && <p>No hay objetivos aún.</p>}
-
           <div className="d-flex flex-wrap gap-5 justify-content-center mt-3">
             {objetivos.map((obj) => (
               <div
@@ -386,8 +381,6 @@ export const Main = () => {
             ))}
           </div>
         </div>
-
-
         <div className="text-center mt-4">
           <Link to="/objetivos">
             <button className="btn " style={{ backgroundColor: "#b7ff00", color: "black" }}>+ Crear objetivo</button>
@@ -464,14 +457,14 @@ export const Main = () => {
         <div style={{
           display: "flex",
           justifyContent: "center",
-          gap: "26rem",
+          gap: "30vh",
           alignItems: "center",
           marginTop: "2rem"
         }}>
           <div style={{ textAlign: "center" }}>
-            <HashLink to="/inversion#bitcoin" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#bitcoin" style={{ fontSize: "11vh", color: "#b7ff00", textDecoration: "none" }}>
               <FaBitcoin />
-              <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
+              <div style={{ marginTop: "0.5vh", color: "black", fontWeight: "bold", fontSize: "2.5vh" }}>
                 Criptomonedas
               </div>
             </HashLink>
@@ -479,9 +472,9 @@ export const Main = () => {
 
           {/* Fondos */}
           <div style={{ textAlign: "center" }}>
-            <HashLink to="/inversion#fondos" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#fondos" style={{ fontSize: "11vh", color: "#b7ff00", textDecoration: "none" }}>
               <FaChartLine />
-              <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
+              <div style={{ marginTop: "0.5vh", color: "black", fontWeight: "bold", fontSize: "2.5vh" }}>
                 Fondos
               </div>
             </HashLink>
@@ -489,9 +482,9 @@ export const Main = () => {
 
           {/* Acciones */}
           <div style={{ textAlign: "center" }}>
-            <HashLink to="/inversion#acciones" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#acciones" style={{ fontSize: "11vh", color: "#b7ff00", textDecoration: "none" }}>
               <FaPiggyBank />
-              <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
+              <div style={{ marginTop: "0.5vh", color: "black", fontWeight: "bold", fontSize: "2.5vh" }}>
                 Acciones
               </div>
             </HashLink>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "/user-profile.png";
 
 const PasswordValidation = ({ password }) => {
   if (!password) return null;
@@ -32,7 +33,8 @@ const PasswordValidation = ({ password }) => {
 
 export const Formulario = () => {
   const [situacion, setSituacion] = useState(null);
-  const [sueldo, setSueldo] = useState("");
+  const [sueldoEstudiante, setSueldoEstudiante] = useState("");
+  const [sueldoTrabajador, setSueldoTrabajador] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [usuario, setUsuario] = useState("");
@@ -44,8 +46,39 @@ export const Formulario = () => {
   const [perfil, setPerfil] = useState("");
   const navigate = useNavigate();
 
+  const prefijos = {
+    Alemania: "+49",
+    Austria: "+43",
+    Bélgica: "+32",
+    Chipre: "+357",
+    Croacia: "+385",
+    Eslovaquia: "+421",
+    Eslovenia: "+386",
+    España: "+34",
+    Estonia: "+372",
+    Finlandia: "+358",
+    Francia: "+33",
+    Grecia: "+30",
+    Irlanda: "+353",
+    Italia: "+39",
+    Letonia: "+371",
+    Lituania: "+370",
+    Luxemburgo: "+352",
+    Malta: "+356",
+    "Países Bajos": "+31",
+    Portugal: "+351",
+  };
+
+  useEffect(() => {
+    if (pais && prefijos[pais]) {
+      setPrefijo(prefijos[pais]);
+    }
+  }, [pais]);
+
+  const sueldoFinal = situacion === "estudiante" ? sueldoEstudiante : sueldoTrabajador;
+
   const calcularAhorro = () => {
-    const valor = parseFloat(sueldo);
+    const valor = parseFloat(sueldoFinal);
     if (isNaN(valor)) return 0;
     return (valor * 0.2).toFixed(2);
   };
@@ -53,55 +86,59 @@ export const Formulario = () => {
   const situacionBoolean = () => situacion === "estudiante";
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "api/user/register", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: usuario,
-          email: email,
-          password: password,
-          firstname: nombre,
-          lastname: apellidos,
-          country: pais,
-          phone: prefijo + telefono,
-          sueldo: sueldo,
-          is_student: situacionBoolean(),
-          perfil: perfil
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 201) {
-        localStorage.setItem("sueldo", sueldo);
-        localStorage.setItem("ahorro", calcularAhorro());
-        localStorage.setItem("username", data.username || usuario);
-        localStorage.setItem("isNewUser", "true");
-
-        alert("Usuario registrado con éxito ✅");
-
-        setTimeout(() => {
-          navigate("/main");
-        }, 1000);
-      } else if (response.status >= 400) {
-        alert("Error: " + data.msg);
-      }
-    } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-      alert("Error al enviar el formulario ❌");
-    }
+  const payload = {
+    username: usuario,
+    email: email,
+    password: password,
+    firstname: nombre,
+    lastname: apellidos,
+    country: pais,
+    phone: prefijo + telefono,
+    sueldo: sueldoFinal,
+    dinero_disponible: situacion === "estudiante" ? sueldoEstudiante : null,
+    is_student: situacionBoolean(),
+    perfil: perfil
   };
+
+
+
+  try {
+    const response = await fetch(import.meta.env.VITE_BACKEND_URL + "api/user/register", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    console.log("📥 Status de respuesta:", response.status);
+
+    const data = await response.json();
+    console.log("📥 Respuesta del servidor:", data);
+
+    if (response.status === 201) {
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        console.log("🔑 Token guardado en localStorage");
+      }
+      alert("Usuario registrado con éxito ✅");
+      navigate("/main");
+    } else {
+      alert(data.error || "Error al registrar usuario ❌");
+    }
+  } catch (err) {
+    console.error("🚨 Error en el registro:", err);
+    alert("Hubo un problema con el servidor ❌");
+  }
+};
 
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#ffffff", minHeight: "80vh" }}>
       <form className="w-100" style={{ maxWidth: "600px", margin: "1vh", borderRadius: "8px", padding: "0px" }} onSubmit={handleSubmit}>
         <div className="text-center"><h1>Formulario</h1></div>
-        <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff",border: "3px solid #b7ff00", borderRadius: "8px", padding: "20px"}}>
+        <div className="p-5 rounded shadow-lg" style={{ backgroundColor: "#ffffff", border: "3px solid #b7ff00", borderRadius: "8px", padding: "20px" }}>
 
           {/* Nombre */}
           <div className="mb-4" >
@@ -135,9 +172,9 @@ export const Formulario = () => {
           </div>
 
           {/* País */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <select className="form-select mb-4" value={pais} onChange={(e) => setPais(e.target.value)} required>
-              <option disabled selected>¿Dónde vives?</option>
+              <option disabled value="">¿Dónde vives?</option>
               <option value="Alemania">Alemania</option>
               <option value="Austria">Austria</option>
               <option value="Bélgica">Bélgica</option>
@@ -161,13 +198,12 @@ export const Formulario = () => {
             </select>
           </div>
 
-          {/* Teléfono */}
+          {/* Teléfono }
           <div className="mb-4">
             <label className="form-label">Contacto</label>
             <div className="d-flex gap-2">
               <select className="form-select text-secondary" value={prefijo} style={{ width: '30%' }} onChange={(e) => setPrefijo(e.target.value)} required>
-                <option value="" disabled selected>+</option>
-                <option disabled selected>Selecciona tu prefijo</option>
+                <option value="" disabled>Selecciona tu prefijo</option>
                 <option value="+49">(+49) Alemania</option>
                 <option value="+43">(+43) Austria</option>
                 <option value="+32">(+32) Bélgica</option>
@@ -190,6 +226,55 @@ export const Formulario = () => {
                 <option value="+351">(+351) Portugal</option>
               </select>
               <input type="tel" className="form-control" required onChange={(e) => setTelefono(e.target.value)} />
+            </div>
+          </div> */}
+
+          {/* País */}
+          <div className="mb-4">
+            <select
+              className="form-select mb-4"
+              value={pais}
+              onChange={(e) => setPais(e.target.value)}
+              required
+            >
+              <option disabled value="">
+                ¿Dónde vives?
+              </option>
+              {Object.keys(prefijos).map((nombrePais) => (
+                <option key={nombrePais} value={nombrePais}>
+                  {nombrePais}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Teléfono */}
+          <div className="mb-4">
+            <label className="form-label">Contacto</label>
+            <div className="d-flex gap-2">
+              <select
+                className="form-select text-secondary"
+                value={prefijo}
+                style={{ width: "30%" }}
+                onChange={(e) => setPrefijo(e.target.value)} // Este cambio NO afecta al país
+                required
+              >
+                <option value="" disabled>
+                  Selecciona tu prefijo
+                </option>
+                {Object.entries(prefijos).map(([nombrePais, codigo]) => (
+                  <option key={codigo} value={codigo}>
+                    ({codigo}) {nombrePais}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="tel"
+                className="form-control"
+                required
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
             </div>
           </div>
 
@@ -214,22 +299,31 @@ export const Formulario = () => {
               </button>
             </div>
 
-            
             {/* Campos de sueldo */}
-            <div className="mb- pt-3">
+            <div className="mb-3 pt-3">
               <label className="form-label">¿Cuánto dispones al mes?</label>
-              <input type="number" className="form-control" placeholder="€"
-                disabled={situacion !== "estudiante"} onChange={(e) => setSueldo(e.target.value)} />
+              <input
+                type="number"
+                className="form-control"
+                placeholder="€"
+                disabled={situacion !== "estudiante"}
+                onChange={(e) => setSueldoEstudiante(e.target.value)}
+              />
             </div>
 
             <div className="mb-3">
               <label className="form-label">¿Cuál es tu sueldo neto?</label>
-              <input type="number" className="form-control" placeholder="€"
-                disabled={situacion !== "trabajador"} onChange={(e) => setSueldo(e.target.value)} />
+              <input
+                type="number"
+                className="form-control"
+                placeholder="€"
+                disabled={situacion !== "trabajador"}
+                onChange={(e) => setSueldoTrabajador(e.target.value)}
+              />
             </div>
           </div>
 
-          {sueldo && !isNaN(parseFloat(sueldo)) && (
+          {sueldoFinal && !isNaN(parseFloat(sueldoFinal)) && (
             <div className="alert" style={{ backgroundColor: "#b7ff00" }}>
               💰 Deberías ahorrar mensualmente: <strong>{calcularAhorro()} €</strong> (20%)
             </div>
@@ -245,8 +339,3 @@ export const Formulario = () => {
     </div>
   );
 };
-
-
-
-
-

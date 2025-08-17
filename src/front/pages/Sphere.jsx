@@ -1,11 +1,10 @@
 import React from "react";
-
 const Sphere = () => {
   const meridians = Array.from({ length: 36 }, (_, i) => ( 
     <div
       className="meridian"
       key={`meridian-${i}`}
-      style={{ transform: `rotateX(${(i + 1) * 10}deg)`}}/>
+      style={{ transform: `rotateX(${(i - 1) * 10}deg)`, backgroundColor:"#ffffff10"}} />
   ));
 
   const latitudes = [
@@ -23,18 +22,18 @@ const Sphere = () => {
     { size: 20, top: 140, left: 140, z: 150, border: true },
   ];
   return (
-    <div className="sphere" style={{background: `no-repeat center url(${"Mo-moneyIcon290.webp"})`, /* width: "100vh", height: "100vh",  */}}>{/* Se puede cambiar la imagen de fondo de la esfera por cualquier otra imagen que se desee. Alexis */}
+    <div className="sphere" /*style={{background: `no-repeat center url(${"Mo-moneyIcon290.webp"})`,  width: "100vh", height: "100vh",  }}*/>{/* Se puede cambiar la imagen de fondo de la esfera por cualquier otra imagen que se desee. Alexis */}
       {meridians}
       {latitudes.map((lat, i) => (
         <div
           key={`latitude-${i}`}
           className="latitude"
           style={{
-            width: `${lat.size}px`,
-            height: `${lat.size}px`,
-            top: `${lat.top}px`,
-            left: `${lat.left}px`,
-            transform: `rotateY(90deg) translateZ(${lat.z}px)`,
+            width: `${lat.size*0.1}vh`,
+            height: `${lat.size*0.1}vh`,
+            top: `${lat.top*0.1}vh`,
+            left: `${lat.left*0.1}vh`,
+            transform: `rotateY(90deg) translateZ(${lat.z*0.1}vh)`,
             border: lat.border ? "10px" : undefined,//He quitado los colores negro de la parte superior de la esfera. Alexis
           }}
         />

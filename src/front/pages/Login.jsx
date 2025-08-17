@@ -11,7 +11,7 @@ export const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/login', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,16 +23,30 @@ export const Login = () => {
 
             if (response.status === 200) {
                 // Guardar token
-                localStorage.setItem('token', data.access_token || data.token);
+                const token = data.access_token || data.token;
+                localStorage.setItem("token", token);
 
                 // Guardar username directo (para Navbar)
                 if (data.user?.username) {
                     localStorage.setItem("username", data.user.username);
                 }
 
-                // Guardar el objeto user como respaldo
+                
                 if (data.user) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                }
+
+                
+                try {
+                    const dineroRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/dinero`, {
+                        headers: { Authorization: "Bearer " + token },
+                    });
+                    const dineroInfo = await dineroRes.json();
+                    localStorage.setItem("dineroTotal", dineroInfo.dinero_total);
+
+
+                } catch (err) {
+                    console.error("Error trayendo dinero:", err);
                 }
 
                 navigate("/main");
@@ -90,7 +104,7 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
-                            color:"#000",
+                            color: "#000",
                             borderRadius: "4px",
                         }}
                     />
@@ -108,7 +122,7 @@ export const Login = () => {
                             padding: "8px",
                             border: "1px solid #B7FF00",
                             backgroundColor: "white",
-                            color:"#000",
+                            color: "#000",
                             borderRadius: "4px",
                         }}
                     />

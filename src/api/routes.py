@@ -15,7 +15,7 @@ from datetime import datetime
 
 api = Blueprint('api', __name__)
 CORS(api)
-CORS(api, resources={r"/api/*": {"origins": "*"}})
+CORS(api, resources={r"/api/": {"origins": ""}})
 
 
 
@@ -35,6 +35,7 @@ def register():
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
         new_user.is_active = True
+        new_user.isNewUser = True
 
         db.session.add(new_user)
         db.session.commit()
@@ -47,6 +48,23 @@ def register():
     except requests.exceptions.RequestException as e:
         return jsonify({"msg": "Error al registrar el usuario", "error": str(e)}), 500
 
+        # Obtener dinero disponible (sueldo o dinero de estudiante)
+@api.route('/user/dinero', methods=['GET'])
+@jwt_required()
+def get_dinero():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    # ✅ Dinero total según rol
+    dinero_total = user.dinero_disponible if user.is_student else user.sueldo
+
+    return jsonify({
+        "dinero_total": dinero_total,
+        "is_student": user.is_student
+    }), 200
     """ try:
         # Preparar los datos para la solicitud a la API de gastos
         gasto_data = {
@@ -114,12 +132,18 @@ def update_user():
         user.country = body['country']
     if 'phone' in body:
         user.phone = body['phone']
-    if 'perfil' in body:
-        user.perfil = body['perfil']
+    if 'perfil' in request.files:
+        imagen_file = request.files['perfil']
+        #link.img_nombre = imagen_file.filename
+        user.perfil = imagen_file.read()
     if 'sueldo' in body:
         user.sueldo = body['sueldo']
     if 'is_student' in body:
         user.is_student = body['is_student']
+    if 'is_active' in body:
+        user.is_active = body['is_active']
+    if 'isNewUser' in body:
+        user.isNewUser = body['isNewUser']
 
     db.session.commit()
     return jsonify({"msg": "Usuario actualizado correctamente"}), 200
@@ -137,8 +161,6 @@ def update_user():
         return jsonify({"msg": "Error al actualizar el gasto", "error": str(e)}), 500 """
 
 # Endpoint para modificar la contraseña
-
-
 @api.route("/user/change-password", methods=['PUT'])
 @jwt_required()
 def change_password():
@@ -228,7 +250,7 @@ def token():
         return jsonify({"msg": "Error al procesar el token", "error": str(e)}), 401
 
 
-#____________________________________________________________________________________
+#__________________________________________________________________________________
 
 # Endpoints relacionados con gastos
 
@@ -305,10 +327,7 @@ def delete_gasto(gasto_id):
     db.session.commit()
     return jsonify({"msg": "Gasto eliminado correctamente"}), 200
 
-
-#____________________________________________________________________________________
-
-# Registro de Objetivo
+ # Registro de Objetivo
 @api.route("/objetivo/register", methods=["POST"])
 @jwt_required()
 def register_objetivo():
@@ -411,7 +430,7 @@ def delete_objetivo(objetivo_id):
                                                                                                                                
 
 
-#____________________________________________________________________________________
+#__________________________________________________________________________________
 
 # Registro de Artículo
 @api.route("/articulo/register", methods=['POST'])
@@ -485,7 +504,7 @@ def delete_articulo(articulo_id):
     return jsonify({"msg": "Artículo y Links eliminados correctamente"}), 200
 
 
-#____________________________________________________________________________________
+#__________________________________________________________________________________
 
 # Registro de Link
 @api.route("/link/register", methods=['POST'])
@@ -564,7 +583,7 @@ def delete_link(link_id):
     return jsonify({"msg": "Link eliminado correctamente"}), 200
 
 
-#____________________________________________________________________________________
+#__________________________________________________________________________________
 
 # Registro de post
 """ @api.route('/foro', methods=['POST'])

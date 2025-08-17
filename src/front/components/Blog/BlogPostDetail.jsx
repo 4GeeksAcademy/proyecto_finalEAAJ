@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 
-
-
-
 function BlogPostDetail({ post, index, handleLike, handleAddComment, onBack }) {
 
   const [comment, setComment] = useState({ author: '', body: '' });
-
 
   const submitComment = (e) => {
     e.preventDefault();

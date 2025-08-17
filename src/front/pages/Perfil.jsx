@@ -3,7 +3,7 @@ import { ProfileImageUploader } from "../components/ProfileImageUploader";
 import { Link, useNavigate } from "react-router-dom";
 
 const Perfil = () => {
-  const navigate = useNavigate(); // ✅ Ahora está dentro del componente
+  const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState({
     username: "",
@@ -69,6 +69,7 @@ const Perfil = () => {
         phone: usuario.telefono,
         sueldo: Number(usuario.sueldo),
         is_student: usuario.situacion === "estudiante",
+        //fotoPerfil,
       }),
     })
       .then(res => {
@@ -87,9 +88,12 @@ const Perfil = () => {
           sueldo: data.sueldo || prev.sueldo,
           situacion: data.is_student ? "estudiante" : "trabajador",
         }));
-        localStorage.setItem("user", JSON.stringify(data));
-        localStorage.setItem("fotoPerfil", fotoPerfil);
-        alert("Perfil actualizado con éxito ✅");
+        /* localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("fotoPerfil", fotoPerfil); */
+        alert("Perfil actualizado con éxito");
+        setTimeout(() => {
+          navigate("/main");
+        }, 1000);
       })
       .catch(err => console.error("Error al actualizar el perfil:", err));
   };
