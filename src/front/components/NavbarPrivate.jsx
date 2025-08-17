@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { checkTokenExpiration, refreshTokenWithCooldown } from "../utils/token";
 
 export const NavbarPrivate = () => {
   const navigate = useNavigate();
@@ -10,13 +11,28 @@ export const NavbarPrivate = () => {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
+    /* const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
       setUsername(storedUsername);
       return;
-    }
-
-    const storedUser = localStorage.getItem("user");
+    } */
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
+        return res.json();
+      })
+      .then(data => {
+        setUsername(data.user.username || "");
+      })
+    /* const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -31,13 +47,54 @@ export const NavbarPrivate = () => {
       } catch (e) {
         console.error("Error parsing user from localStorage:", e);
       }
+    } */
+  }, []);
+
+  useEffect(() => {
+    const expired = checkTokenExpiration();
+    if (expired) {
+      console.log("El token ha expirado y fue eliminado");
     }
   }, []);
 
+  useEffect(() => {
+    const handleActivity = () => {
+      refreshTokenWithCooldown();
+    };
+
+    // Escuchamos cambios de actividad en la página
+    window.addEventListener("click", handleActivity);
+    window.addEventListener("scroll", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+
+    // cleanup al desmontar
+    return () => {
+      window.removeEventListener("click", handleActivity);
+      window.removeEventListener("scroll", handleActivity);
+      window.removeEventListener("keydown", handleActivity);
+    };
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    const token = localStorage.getItem("token");/* 
     localStorage.removeItem("username");
-    localStorage.removeItem("user");
+    localStorage.removeItem("user"); */
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+        body: JSON.stringify({
+        is_active: false,
+      }),
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("No se pudo actualizar el perfil");
+        return res.json();
+    })
+    .catch(err => console.error("Error al actualizar el perfil:", err));
+    localStorage.removeItem("token");
     navigate("/");
   };
 

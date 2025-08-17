@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BlogPostDetail from '../components/Blog/BlogPostDetail';
 import AddNewPost from '../components/Blog/AddNewPost';
-import BlogPostPage from '../components/Blog/BlogPostPage';
+//import BlogPostPage from '../components/Blog/BlogPostPage';
 import ParallaxScroll from '../components/Blog/ParallaxScroll';
 import { Footer } from '../components/Footer';
 import '../components/Blog/Blog.css';
@@ -68,7 +68,7 @@ export const  BlogPage = () => {
         </>
       ) : (
         <>
-          <div className="parallax-header">
+          {/* <div className="parallax-header">
             <Link to="/main" className="blog-title-link">
               <h1>Mo'Money Blog</h1>
             </Link>
@@ -79,7 +79,7 @@ export const  BlogPage = () => {
             >
               +
             </button>
-          </div>
+          </div> */}
           <ParallaxScroll 
             posts={posts} 
             onPostSelect={setSelectedIndex} 

@@ -23,16 +23,11 @@ import { Inversion } from "./pages/Inversion";
 import Perfil from "./pages/Perfil";
 import {BlogPage} from './pages/BlogPage';
 import { NavbarPrivate } from './components/NavbarPrivate';
-import ParallaxScroll from './components/Blog/ParallaxScroll';
 import { NavbarPublic } from './components/NavbarPublic';
-
-
-
-
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
+    <Route path="/" element={<Layout />} /* errorElement={<Page404 />} loader={<Loader />} */>
       <Route path="/" element={<Home />} />
       <Route path="/Main" element={<Main />} />
       <Route path="/Objetivos" element={<Objetivos />} />
@@ -46,8 +41,6 @@ export const router = createBrowserRouter(
       <Route path="/addnewgasto" element={<AddNewGasto />} />
       <Route path="/Perfil" element={<Perfil />} />
       <Route path="/blog" element={<BlogPage />} />
-      <Route path="/navbarprivate" element={<NavbarPrivate />} />
-      <Route path="/scroll-demo" element={<ParallaxScroll />} />
       
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
