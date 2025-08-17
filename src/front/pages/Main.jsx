@@ -5,7 +5,6 @@ import { HashLink } from "react-router-hash-link";
 import OnboardingTutorial from "./OnboardingTutorial";
 import { motion, AnimatePresence } from "framer-motion";
 
-
 export const Main = () => {
   const [objetivos, setObjetivos] = useState([]);
   const [sueldo, setSueldo] = useState(0);
@@ -20,22 +19,29 @@ export const Main = () => {
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
-
+  // Tutorial onboarding
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem("hasSeenMainTutorial");
     const isNewUser = localStorage.getItem("isNewUser") === "true";
-
     if (isNewUser || !hasSeenTutorial) {
       setShowTutorial(true);
       localStorage.removeItem("isNewUser");
     }
   }, []);
 
+  // Guardar token
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     setToken(savedToken);
   }, []);
 
+  // Inicializar dinero total desde localStorage
+  useEffect(() => {
+    const dineroGuardado = localStorage.getItem("dineroTotal");
+    if (dineroGuardado) {
+      setDineroDisponible(Number(dineroGuardado));
+    }
+  }, []);
 
   // 🔹 Obtener gastos
   useEffect(() => {
@@ -44,22 +50,15 @@ export const Main = () => {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gasto`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!res.ok) throw new Error("Error al obtener gastos");
-
         const data = await res.json();
-        const lista = Array.isArray(data)
-          ? data
-          : Array.isArray(data.gastos)
-            ? data.gastos
-            : [];
+        const lista = Array.isArray(data) ? data : Array.isArray(data.gastos) ? data.gastos : [];
         setGastos(lista);
       } catch (err) {
         console.error(err);
         setGastos([]);
       }
     };
-
     if (token) fetchGastos();
   }, [token, recargarGastos]);
 
@@ -87,7 +86,6 @@ export const Main = () => {
   // 🔹 Eliminar gasto
   const eliminarGasto = async (id) => {
     if (!window.confirm("¿Seguro que quieres eliminar este gasto?")) return;
-
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/gasto/delete/${id}`,
@@ -96,9 +94,7 @@ export const Main = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (!res.ok) throw new Error("Error al eliminar");
-
       setGastos((prev) => prev.filter((g) => g.id !== id));
     } catch (err) {
       console.error(err);
@@ -109,28 +105,23 @@ export const Main = () => {
   // 🔹 Obtener objetivos
   useEffect(() => {
     if (!token) return;
-
     const fetchObjetivos = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/objetivo`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!res.ok) throw new Error("Error al obtener objetivos");
-
         const data = await res.json();
-
         const objetivosAdaptados = Array.isArray(data)
           ? data.map((o) => ({
-            id: o.id,
-            concepto: o.titulo,
-            cantidad: o.cantidad_meta,
-            fechaLimite: o.fecha_limite,
-            completado: o.completado || false,
-            frecuencia: o.frecuencia || "diario",
-          }))
+              id: o.id,
+              concepto: o.titulo,
+              cantidad: o.cantidad_meta,
+              fechaLimite: o.fecha_limite,
+              completado: o.completado || false,
+              frecuencia: o.frecuencia || "diario",
+            }))
           : [];
-
         setObjetivos(objetivosAdaptados);
         localStorage.setItem("objetivos", JSON.stringify(objetivosAdaptados));
       } catch (err) {
@@ -138,20 +129,30 @@ export const Main = () => {
         setObjetivos([]);
       }
     };
-
     fetchObjetivos();
   }, [token, recargarObjetivos]);
 
+  // 🔹 Perfil de usuario (sueldo, ahorro, dinero disponible)
   useEffect(() => {
-    const disponibleGuardado = parseFloat(localStorage.getItem("disponible")) || 0;
-    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto")) || 0;
-    setSueldo(disponibleGuardado + sueldoNetoGuardado);
+    const fetchUserProfile = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Error al obtener perfil");
+        const data = await res.json();
+        const { sueldo, dinero_disponible } = data.user;
+        setSueldo(sueldo || 0);
+        setDineroDisponible(dinero_disponible || sueldo || 0);
+        setAhorro(((sueldo || 0) * 0.2).toFixed(2));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (token) fetchUserProfile();
+  }, [token]);
 
-    const ahorroGuardado = parseFloat(localStorage.getItem("ahorro")) || 0;
-    setAhorro(ahorroGuardado);
-  }, []);
-
-
+  // Redirigir si no hay token
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     if (!savedToken || savedToken.length < 10) {
@@ -159,19 +160,10 @@ export const Main = () => {
     }
   }, [navigate]);
 
-
-
-
-
-
-
-
-
   const calcularAhorroSegunFrecuencia = (cantidad, fechaLimite, frecuencia) => {
     const hoy = new Date();
     const limite = new Date(fechaLimite);
     const diffTiempo = limite - hoy;
-
     const dias = Math.ceil(diffTiempo / (1000 * 60 * 60 * 24));
     const meses = Math.ceil(dias / 30);
     const años = Math.ceil(dias / 365);
@@ -182,15 +174,13 @@ export const Main = () => {
     return cantidad;
   };
 
+  // 🔹 Recalcular dinero disponible restando gastos
   useEffect(() => {
     const totalGastos = Array.isArray(gastos)
       ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
       : 0;
-
-    setDineroDisponible(sueldo - totalGastos);
+    setDineroDisponible((prev) => (sueldo > 0 ? sueldo - totalGastos : prev - totalGastos));
   }, [gastos, sueldo]);
-
-
 
   const handleEditarObjetivo = (id) => {
     navigate(`/objetivos/editar/${id}`);
@@ -198,7 +188,6 @@ export const Main = () => {
 
   const eliminarObjetivo = async (id) => {
     if (!window.confirm("¿Seguro que quieres eliminar este objetivo?")) return;
-
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/delete/${id}`,
@@ -207,9 +196,7 @@ export const Main = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (!res.ok) throw new Error("Error al eliminar");
-
       setObjetivos((prev) => prev.filter((obj) => obj.id !== id));
     } catch (err) {
       console.error(err);
@@ -218,41 +205,38 @@ export const Main = () => {
   };
 
   const marcarComoCompletado = async (id, completado) => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ completado: !completado }),
-      }
-    );
-
-    if (!res.ok) throw new Error("Error al actualizar");
-
-    setObjetivos((prev) =>
-      prev.map((obj) => {
-        if (obj.id === id) {
-          if (!completado) {
-            setShowCelebration(true); 
-            setTimeout(() => setShowCelebration(false), 2000); 
-          }
-          return { ...obj, completado: !completado };
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ completado: !completado }),
         }
-        return obj;
-      })
-    );
-  } catch (err) {
-    console.error(err);
-    alert("No se pudo actualizar el objetivo");
-  }
-};
+      );
+      if (!res.ok) throw new Error("Error al actualizar");
+      setObjetivos((prev) =>
+        prev.map((obj) => {
+          if (obj.id === id) {
+            if (!completado) {
+              setShowCelebration(true);
+              setTimeout(() => setShowCelebration(false), 2000);
+            }
+            return { ...obj, completado: !completado };
+          }
+          return obj;
+        })
+      );
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo actualizar el objetivo");
+    }
+  };
 
   useEffect(() => {
-
     const timer = setTimeout(() => {
       setMostrarContenido(true);
     }, 200);
@@ -260,24 +244,28 @@ export const Main = () => {
   }, []);
 
   if (!mostrarContenido) {
-
     return null;
   }
 
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: "white" }}>
       {showTutorial && <OnboardingTutorial onFinish={() => setShowTutorial(false)} />}
+
       {/* RESUMEN DINERO */}
       <div className="row mb-4">
         <div className="col-md-6">
-          <div className="card text-center p-3" style={{
-            backgroundColor: dineroDisponible < ahorro ? "#f8663b" : "#b7ff00",
-            border: "none",
-            color: dineroDisponible < ahorro ? "white" : "black",
-            transition: "background-color 0.3s ease",
-          }}>
+          <div
+            className="card text-center p-3"
+            style={{
+              backgroundColor: dineroDisponible < ahorro ? "#f8663b" : "#b7ff00",
+              border: "none",
+              color: dineroDisponible < ahorro ? "white" : "black",
+              transition: "background-color 0.3s ease",
+            }}
+          >
             <h5>Dinero Total</h5>
             <p className="display-6">{dineroDisponible}€</p>
+
           </div>
         </div>
         <div className="col-md-6">
