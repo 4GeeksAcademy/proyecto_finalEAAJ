@@ -53,11 +53,12 @@ export const Icosahedron = () => {
         // Variables para adaptarse al tamaño
         let centerX, centerY, scale;
         function updateSize() {
-            canvas.width = window.innerWidth*0.225;
-            canvas.height = window.innerHeight*0.225;
+            const size = Math.min(window.innerWidth, window.innerHeight) * 0.15;
+            canvas.width = size;
+            canvas.height = size;
             centerX = canvas.width / 2;
             centerY = canvas.height / 2;
-            scale = Math.min(canvas.width, canvas.height) / 4; // Escala proporcional
+            scale = size / 4;
         }
         updateSize();
         window.addEventListener("resize", updateSize);
@@ -136,8 +137,17 @@ export const Icosahedron = () => {
     }, []);
 
     return (
-        <div className="icosahedron container-fluid d-flex justify-content-center align-items-center">
-            <canvas ref={canvasRef} id="canvas"></canvas>
+        <div className="icosahedron" style={{
+            width: "17vh", 
+            height: "17vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+        }}>
+            <canvas ref={canvasRef} id="canvas" style={{
+                width: "100%",
+                height: "100%"
+            }}></canvas>
         </div>
     );
 };
@@ -471,4 +481,4 @@ export const Icosahedron = () => {//Adaptación de "https://codepen.io/damienmeg
         </div>
     </div>
   );
-}; */ 
+}; */
