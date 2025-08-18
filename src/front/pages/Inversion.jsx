@@ -140,7 +140,7 @@ export const Inversion = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" id="inicio">
       <Card className="p-4 mb-5 bg-white">
         <h3 className="mb-3">🧭 Bienvenido al Espacio de Inversión para Jóvenes</h3>
         <p className="fs-5">

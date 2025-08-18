@@ -457,7 +457,8 @@ export const Main = () => {
         <div style={{
           display: "flex",
           justifyContent: "center",
-          gap: "30vh",
+          flexWrap: "wrap",
+          gap: "2rem",
           alignItems: "center",
           marginTop: "2rem"
         }}>

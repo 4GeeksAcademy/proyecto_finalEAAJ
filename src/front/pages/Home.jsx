@@ -4,9 +4,12 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import Sphere from "./Sphere.jsx";
 import { Icosahedron } from "../components/Icosahedron";
 import Carrusel from "./Carrusel/Carrusel.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
+  const navigate = useNavigate();
+
 
   const loadMessage = async () => {
     try {
@@ -96,7 +99,21 @@ export const Home = () => {
         <p className="lead">
           Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
         </p>
-        <Link to="/inversion" className="btn" style={{ backgroundColor: "#7bff00" }}>
+        <Link
+          to="/inversion"
+          className="btn"
+          style={{ backgroundColor: "#7bff00" }}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/inversion").then(() => {
+              // Espera a que la navegación se complete
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+              });
+            });
+          }}
+        >
           ¡Quiero que mi dinero crezca!
         </Link>
       </section>
