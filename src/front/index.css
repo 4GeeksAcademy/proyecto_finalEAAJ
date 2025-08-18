@@ -232,5 +232,27 @@ body {
   color: black; /* para que el texto se vea bien si quieres */
 }
 
+@media (max-width: 576px) {
+  .forgot-password.card,
+  .reset-password.card {
+    margin: 20px auto;
+    padding: 1.5rem;
+    min-height: auto; /* Evita altura fija en móvil */
+    width: 90%; /* Ocupa casi todo el ancho */
+  }
 
-  
+  .forgot-password .emoji,
+  .reset-password .emoji {
+    font-size: 1.8rem;
+  }
+
+  .forgot-password h3,
+  .reset-password h3 {
+    font-size: 1.4rem;
+  }
+
+  .forgot-password .btn,
+  .reset-password .btn {
+    padding: 0.5rem;
+  }
+}
