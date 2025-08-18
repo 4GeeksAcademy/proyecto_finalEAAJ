@@ -509,19 +509,11 @@ def delete_articulo(articulo_id):
 # Registro de Link
 @api.route("/link/register", methods=['POST'])
 def register_link():
-    if 'imagen' not in request.files:
-        return jsonify({"msg": "No se envió ninguna imagen"}), 400
-
-    imagen_file = request.files['imagen']
-    enlace = request.form.get("enlace")
-    articulo_id = request.form.get("articulo_id")
-
-    new_link = Link(
-        img_nombre=imagen_file.filename,
-        imagen=imagen_file.read(),
-        enlace=enlace,
-        articulo_id=articulo_id
-    )
+    body = request.get_json()
+    new_link = Link()
+    new_link.titulo = body["imagen"]
+    new_link.autor = body["enlace"]
+    new_link.texto = body["id_articulo"]
 
     db.session.add(new_link)
     db.session.commit()
@@ -536,13 +528,13 @@ def get_link(link_id):
     return jsonify({"link": link.serialize()}), 200
 
 
-# Obtener imagen de un Link por ID
+""" # Obtener imagen de un Link por ID
 @api.route("/link/<int:link_id>/imagen", methods=['GET'])
 def get_link_image(link_id):
     link = Link.query.filter_by(id=link_id).first()
     if not link:
         return jsonify({"msg": "Imagen no encontrada"}), 404
-    return send_file(BytesIO(link.imagen), mimetype="image/jpeg", download_name=link.img_nombre)
+    return send_file(BytesIO(link.imagen), mimetype="image/jpeg", download_name=link.img_nombre) """
 
 
 # Obtener todos los Links relacionados a un Artículo
@@ -560,9 +552,7 @@ def update_link(link_id):
         return jsonify({"msg": "Link no encontrado"}), 404
 
     if 'imagen' in request.files:
-        imagen_file = request.files['imagen']
-        link.img_nombre = imagen_file.filename
-        link.imagen = imagen_file.read()
+        link.imagen = request.files['imagen']
 
     if 'enlace' in request.form:
         link.enlace = request.form['enlace']
