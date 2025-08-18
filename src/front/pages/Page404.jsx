@@ -17,6 +17,7 @@ export const Page404 = () => {
   font-family: "Sora", sans-serif;
 }
 body {
+  min-height: 100vh !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,16 +29,16 @@ body {
 .container {
   min-width: 100vh;
   min-height: 80vh;
-  border-radius: 50px;
+  border-radius: 5vh;
   background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  box-shadow: 12px 12px 23px #bebebe, -12px -12px 23px #fff;
+  box-shadow: 3vh 3vh 5.25vh #bebebe, -3vh -3vh 5.25vh #fff;
   text-align: center;
 }
 .container h1 {
-  font-size: 10rem;
+  font-size: 20vh;
   background: linear-gradient(45deg, #22b455, #1dd1a1) center;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -45,19 +46,22 @@ body {
   font-weight: 750;
 }
 .container h2 {
-  padding: 9vh 0 0 0;
+  font-size: 5vh;
+  padding: 11vh 0 0 0;
   color: #204829;
-  margin-top: 15rem;
-  margin-bottom: 10px;
+  margin-top: 22vh;
+  margin-bottom: 1vh;
 }
 .container p {
+  font-size: 2.5vh;
   color: #204829;
   font-weight: 450;
-  margin: 10px;
+  margin: 1vh;
 }
 .container .btn {
-  padding: 12px 24px;
-  border-radius: 50px;
+  font-size: 2vh;
+  padding: 1.2vh 2.4vh;
+  border-radius: 5vh;
   border: none;
   background: linear-gradient(to left, #22b455, #1dd1a1, #22b455);
   background-size: 200%;

@@ -1,9 +1,77 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ProfileImageUploader } from '../ProfileImageUploader';
+
 
 function AddNewPost({ onAddPost, onCancel }) {
   const [formData, setFormData] = useState({ title: '', image: '', body: '' });
   const navigate = useNavigate();
+
+  const [titulo, setTitulo] = useState("");
+  const [autor, setAutor] = useState("");
+  const [texto, setTexto] = useState("");
+  const [imagen, setImagen] = useState("");
+  const [enlace, setEnlace] = useState("");
+
+ const handleApiSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "api/articulo/register", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          titulo: titulo,
+          autor: autor,
+          texto: texto,
+          fecha: Date.now(),
+          likes: 0,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+
+        alert("articulo registrado con éxito ✅");
+        setTimeout(() => {
+          navigate({ handleBack });
+        }, 1000);
+      } else if (response.status >= 400) {
+        alert("Error: " + data.msg);
+      }
+      const response2 = await fetch(import.meta.env.VITE_BACKEND_URL + "api/link/register", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+
+         articulo_id: data.id,
+          imagen:imagen ,
+          enlace:enlace , 
+          
+        }),
+      });
+
+      const data2 = await response2.json();
+
+      if (response2.status === 201) {
+
+        alert("articulo registrado con éxito ✅");
+        setTimeout(() => {
+          navigate({ handleBack });
+        }, 1000);
+      } else if (response2.status >= 400) {
+        alert("Error: " + data2.msg);
+      }
+    } catch (error) {
+      console.error("Error al enviar el artículo:", error);
+      alert("Error al enviar el artículo ❌");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +90,8 @@ function AddNewPost({ onAddPost, onCancel }) {
       navigate('/blog');
     }
   };
+
+
 
   return (
     <div
@@ -54,16 +124,21 @@ function AddNewPost({ onAddPost, onCancel }) {
         ← Volver al Blog
       </button>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleApiSubmit}>
         <input
           className="form-control"
           type="text"
           placeholder="Title"
           value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          onChange={(e) =>{ setFormData({ ...formData, title: e.target.value }); setTitulo(e.target.value)}}
           style={{ marginBottom: '1rem' }}
         />
-        <input
+
+        <ProfileImageUploader 
+        onImageChange={setImagen}
+        />
+
+        {/*         <input
           className="form-control"
           type="text"
           placeholder="Image URL"
@@ -71,14 +146,35 @@ function AddNewPost({ onAddPost, onCancel }) {
           onChange={(e) => setFormData({ ...formData, image: e.target.value })}
           style={{ marginBottom: '1rem' }}
         />
+ */}
+        <input
+          className="form-control"
+          type="text"
+          autor="autor"
+          placeholder="autor"
+          value={formData.autor}
+          onChange={(e) => {setFormData({ ...formData, autor: e.target.value }); setAutor(e.target.value)}}
+          style={{ marginBottom: '1rem' }}
+        />
+
         <textarea
           className="form-control"
           placeholder="Post content"
           value={formData.body}
-          onChange={(e) => setFormData({ ...formData, body: e.target.value })}
+          onChange={(e) => {setFormData({ ...formData, body: e.target.value }); setTexto(e.target.value)}}
           rows={6}
           style={{ marginBottom: '1rem' }}
         />
+
+        <input
+          className="form-control"
+          type="text"
+          placeholder="Enlace"
+          value={formData.enlace}
+          onChange={(e) => {setFormData({ ...formData, enlace: e.target.value }); setEnlace(e.target.value)}}
+          style={{ marginBottom: '1rem' }}
+        />
+
         <button
           className="btn btn-success"
           type="submit"
