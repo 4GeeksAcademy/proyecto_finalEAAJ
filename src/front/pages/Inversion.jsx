@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Accordion, Card, Form, Table, Row, Col, Alert, Badge } from "react-bootstrap";
 import CryptoWidget from "../CryptoWidget";
+import ScrollToTopButton from "./ScrollToTopButton";
 import {
   ResponsiveContainer,
   LineChart,
