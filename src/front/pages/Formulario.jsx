@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "/user-profile.png";
 
 const PasswordValidation = ({ password }) => {
   if (!password) return null;
@@ -44,6 +45,35 @@ export const Formulario = () => {
   const [telefono, setTelefono] = useState("");
   const [perfil, setPerfil] = useState("");
   const navigate = useNavigate();
+
+  const prefijos = {
+    Alemania: "+49",
+    Austria: "+43",
+    Bélgica: "+32",
+    Chipre: "+357",
+    Croacia: "+385",
+    Eslovaquia: "+421",
+    Eslovenia: "+386",
+    España: "+34",
+    Estonia: "+372",
+    Finlandia: "+358",
+    Francia: "+33",
+    Grecia: "+30",
+    Irlanda: "+353",
+    Italia: "+39",
+    Letonia: "+371",
+    Lituania: "+370",
+    Luxemburgo: "+352",
+    Malta: "+356",
+    "Países Bajos": "+31",
+    Portugal: "+351",
+  };
+
+  useEffect(() => {
+    if (pais && prefijos[pais]) {
+      setPrefijo(prefijos[pais]);
+    }
+  }, [pais]);
 
   const sueldoFinal = situacion === "estudiante" ? sueldoEstudiante : sueldoTrabajador;
 
@@ -142,7 +172,7 @@ export const Formulario = () => {
           </div>
 
           {/* País */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <select className="form-select mb-4" value={pais} onChange={(e) => setPais(e.target.value)} required>
               <option disabled value="">¿Dónde vives?</option>
               <option value="Alemania">Alemania</option>
@@ -168,7 +198,7 @@ export const Formulario = () => {
             </select>
           </div>
 
-          {/* Teléfono */}
+          {/* Teléfono }
           <div className="mb-4">
             <label className="form-label">Contacto</label>
             <div className="d-flex gap-2">
@@ -196,6 +226,55 @@ export const Formulario = () => {
                 <option value="+351">(+351) Portugal</option>
               </select>
               <input type="tel" className="form-control" required onChange={(e) => setTelefono(e.target.value)} />
+            </div>
+          </div> */}
+
+          {/* País */}
+          <div className="mb-4">
+            <select
+              className="form-select mb-4"
+              value={pais}
+              onChange={(e) => setPais(e.target.value)}
+              required
+            >
+              <option disabled value="">
+                ¿Dónde vives?
+              </option>
+              {Object.keys(prefijos).map((nombrePais) => (
+                <option key={nombrePais} value={nombrePais}>
+                  {nombrePais}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Teléfono */}
+          <div className="mb-4">
+            <label className="form-label">Contacto</label>
+            <div className="d-flex gap-2">
+              <select
+                className="form-select text-secondary"
+                value={prefijo}
+                style={{ width: "30%" }}
+                onChange={(e) => setPrefijo(e.target.value)} // Este cambio NO afecta al país
+                required
+              >
+                <option value="" disabled>
+                  Selecciona tu prefijo
+                </option>
+                {Object.entries(prefijos).map(([nombrePais, codigo]) => (
+                  <option key={codigo} value={codigo}>
+                    ({codigo}) {nombrePais}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="tel"
+                className="form-control"
+                required
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
             </div>
           </div>
 

@@ -102,14 +102,14 @@ export const AddNewGasto = () => {
           setTimeout(createMoneyAnimation, i * 300);
         }
 
-        const gastosGuardados = JSON.parse(localStorage.getItem("gastos")) || [];
+        /* const gastosGuardados = JSON.parse(localStorage.getItem("gastos")) || [];
         gastosGuardados.push({
           concepto,
           cantidad: parseFloat(cantidad),
           emoji,
           fecha: new Date().toISOString(),
         });
-        localStorage.setItem("gastos", JSON.stringify(gastosGuardados));
+        localStorage.setItem("gastos", JSON.stringify(gastosGuardados)); */
 
         setMensaje(`✅ Gasto guardado: ${concepto} ${emoji} - ${cantidad}€`);
         setTimeout(() => {

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import Sphere from "./Sphere.jsx";
-
+import {Icosahedron}  from "../components/Icosahedron";
 import Carrusel from "./Carrusel/Carrusel.jsx";
 
 export const Home = () => {
@@ -54,7 +54,12 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
 
       {/* ESFERA */}
       <div className="col-md-4 d-flex justify-content-center mb-4 mb-md-0">
+        <div style={{marginLeft:"-0.1vh"}}>
         <Sphere />
+        </div>
+        <div style={{marginLeft:"-31.5vh", marginTop:"4vh"}}>
+        <Icosahedron />
+        </div>
       </div>
 
       {/* QUÉ HACEMOS */}

@@ -4,44 +4,64 @@ import { FaBitcoin, FaChartLine, FaPiggyBank } from "react-icons/fa";
 import { HashLink } from "react-router-hash-link";
 import OnboardingTutorial from "./OnboardingTutorial";
 import { motion, AnimatePresence } from "framer-motion";
+//import { motion, AnimatePresence } from "framer-motion";
 
 export const Main = () => {
-  const [objetivos, setObjetivos] = useState([]);
   const [sueldo, setSueldo] = useState(0);
   const [ahorro, setAhorro] = useState(0);
   const [token, setToken] = useState("");
   const [gastos, setGastos] = useState([]);
+  const [objetivos, setObjetivos] = useState([]);
   const [recargarGastos, setRecargarGastos] = useState(false);
   const [recargarObjetivos, setRecargarObjetivos] = useState(false);
-  const navigate = useNavigate();
   const [mostrarContenido, setMostrarContenido] = useState(false);
   const [dineroDisponible, setDineroDisponible] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const navigate = useNavigate();
 
-  // Tutorial onboarding
   useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem("hasSeenMainTutorial");
-    const isNewUser = localStorage.getItem("isNewUser") === "true";
-    if (isNewUser || !hasSeenTutorial) {
-      setShowTutorial(true);
-      localStorage.removeItem("isNewUser");
-    }
-  }, []);
-
-  // Guardar token
-  useEffect(() => {
-    const savedToken = localStorage.getItem("token") || "";
+    const savedToken = localStorage.getItem("token");
     setToken(savedToken);
-  }, []);
+    if (!token) return;
 
-  // Inicializar dinero total desde localStorage
-  useEffect(() => {
-    const dineroGuardado = localStorage.getItem("dineroTotal");
-    if (dineroGuardado) {
-      setDineroDisponible(Number(dineroGuardado));
-    }
-  }, []);
+    const userProfile=()=>{fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
+        return res.json();
+      })
+      .then(data => {
+        setSueldo(data.user.sueldo);
+        setAhorro((parseFloat(sueldo) * 0.2).toFixed(2));
+        const isNewUser = data.user.isNewUser;
+        if (isNewUser) {
+          setShowTutorial(true);
+          fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              isNewUser: false,
+            }),
+          })
+            .then(res => {
+              if (!res.ok) throw new Error("No se pudo actualizar el perfil");
+              return res.json();
+            })
+            .catch(err => console.error("Error al actualizar el perfil:", err));
+              }
+            })
+            .catch(err => console.error("Error al cargar el perfil:", err));}  
+      if (token) userProfile();
+  }, [token, sueldo, ahorro]);
 
   // 🔹 Obtener gastos
   useEffect(() => {
@@ -123,7 +143,7 @@ export const Main = () => {
             }))
           : [];
         setObjetivos(objetivosAdaptados);
-        localStorage.setItem("objetivos", JSON.stringify(objetivosAdaptados));
+        //localStorage.setItem("objetivos", JSON.stringify(objetivosAdaptados));
       } catch (err) {
         console.error("Error cargando objetivos:", err);
         setObjetivos([]);
@@ -134,25 +154,14 @@ export const Main = () => {
 
   // 🔹 Perfil de usuario (sueldo, ahorro, dinero disponible)
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error("Error al obtener perfil");
-        const data = await res.json();
-        const { sueldo, dinero_disponible } = data.user;
-        setSueldo(sueldo || 0);
-        setDineroDisponible(dinero_disponible || sueldo || 0);
-        setAhorro(((sueldo || 0) * 0.2).toFixed(2));
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    if (token) fetchUserProfile();
-  }, [token]);
+    const disponibleGuardado = parseFloat(localStorage.getItem("disponible"));
+    const sueldoNetoGuardado = parseFloat(localStorage.getItem("sueldoNeto"));
+    setSueldo(disponibleGuardado + sueldoNetoGuardado);
+    const ahorroGuardado = (parseFloat(sueldo) * 0.2).toFixed(2);
+    setAhorro(ahorroGuardado);
+  }, []);
 
-  // Redirigir si no hay token
+//Te expulsa si ha expirado el token o no tienes token
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     if (!savedToken || savedToken.length < 10) {
@@ -177,9 +186,9 @@ export const Main = () => {
   // 🔹 Recalcular dinero disponible restando gastos
   useEffect(() => {
     const totalGastos = Array.isArray(gastos)
-      ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0)
-      : 0;
-    setDineroDisponible((prev) => (sueldo > 0 ? sueldo - totalGastos : prev - totalGastos));
+      ? gastos.reduce((acc, g) => acc + Number(g.cantidad || 0), 0) : 0;
+    setDineroDisponible(sueldo - totalGastos);
+    setAhorro((parseFloat(sueldo) * 0.2).toFixed(2));//He añadido aque la recarga de el ahorro para que se recargue cada vez
   }, [gastos, sueldo]);
 
   const handleEditarObjetivo = (id) => {
@@ -280,9 +289,7 @@ export const Main = () => {
       <div className="container mt-4">
         <div className="text-center mt-5">
           <h3>Lista de Objetivos</h3>
-
           {objetivos.length === 0 && <p>No hay objetivos aún.</p>}
-
           <div className="d-flex flex-wrap gap-5 justify-content-center mt-3">
             {objetivos.map((obj) => (
               <div
@@ -374,8 +381,6 @@ export const Main = () => {
             ))}
           </div>
         </div>
-
-
         <div className="text-center mt-4">
           <Link to="/objetivos">
             <button className="btn " style={{ backgroundColor: "#b7ff00", color: "black" }}>+ Crear objetivo</button>
@@ -452,14 +457,14 @@ export const Main = () => {
         <div style={{
           display: "flex",
           justifyContent: "center",
-          gap: "26rem",
+          gap: "30vh",
           alignItems: "center",
           marginTop: "2rem"
         }}>
           <div style={{ textAlign: "center" }}>
-            <HashLink to="/inversion#bitcoin" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#bitcoin" style={{ fontSize: "11vh", color: "#b7ff00", textDecoration: "none" }}>
               <FaBitcoin />
-              <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
+              <div style={{ marginTop: "0.5vh", color: "black", fontWeight: "bold", fontSize: "2.5vh" }}>
                 Criptomonedas
               </div>
             </HashLink>
@@ -467,9 +472,9 @@ export const Main = () => {
 
           {/* Fondos */}
           <div style={{ textAlign: "center" }}>
-            <HashLink to="/inversion#fondos" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#fondos" style={{ fontSize: "11vh", color: "#b7ff00", textDecoration: "none" }}>
               <FaChartLine />
-              <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
+              <div style={{ marginTop: "0.5vh", color: "black", fontWeight: "bold", fontSize: "2.5vh" }}>
                 Fondos
               </div>
             </HashLink>
@@ -477,9 +482,9 @@ export const Main = () => {
 
           {/* Acciones */}
           <div style={{ textAlign: "center" }}>
-            <HashLink to="/inversion#acciones" style={{ fontSize: "7.5rem", color: "#b7ff00", textDecoration: "none" }}>
+            <HashLink to="/inversion#acciones" style={{ fontSize: "11vh", color: "#b7ff00", textDecoration: "none" }}>
               <FaPiggyBank />
-              <div style={{ marginTop: "0.5rem", color: "black", fontWeight: "bold", fontSize: "1.5rem" }}>
+              <div style={{ marginTop: "0.5vh", color: "black", fontWeight: "bold", fontSize: "2.5vh" }}>
                 Acciones
               </div>
             </HashLink>

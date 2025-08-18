@@ -35,6 +35,7 @@ def register():
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
         new_user.is_active = True
+        new_user.isNewUser = True
 
         db.session.add(new_user)
         db.session.commit()
@@ -131,12 +132,18 @@ def update_user():
         user.country = body['country']
     if 'phone' in body:
         user.phone = body['phone']
-    if 'perfil' in body:
-        user.perfil = body['perfil']
+    if 'perfil' in request.files:
+        imagen_file = request.files['perfil']
+        #link.img_nombre = imagen_file.filename
+        user.perfil = imagen_file.read()
     if 'sueldo' in body:
         user.sueldo = body['sueldo']
     if 'is_student' in body:
         user.is_student = body['is_student']
+    if 'is_active' in body:
+        user.is_active = body['is_active']
+    if 'isNewUser' in body:
+        user.isNewUser = body['isNewUser']
 
     db.session.commit()
     return jsonify({"msg": "Usuario actualizado correctamente"}), 200
@@ -154,8 +161,6 @@ def update_user():
         return jsonify({"msg": "Error al actualizar el gasto", "error": str(e)}), 500 """
 
 # Endpoint para modificar la contraseña
-
-
 @api.route("/user/change-password", methods=['PUT'])
 @jwt_required()
 def change_password():
