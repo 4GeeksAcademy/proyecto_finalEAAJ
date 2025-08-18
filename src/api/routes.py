@@ -10,7 +10,7 @@ from api.utils import generate_sitemap, APIException
 from io import BytesIO
 import requests
 from datetime import datetime
-from api.routes import api 
+
 
 
 api = Blueprint('api', __name__)
