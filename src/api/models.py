@@ -20,17 +20,15 @@ class User(db.Model):
     firstname: Mapped[str] = mapped_column(String(120), nullable=True)
     lastname: Mapped[str] = mapped_column(String(120), nullable=True)
     country: Mapped[str] = mapped_column(String(120), nullable=True)
-    perfil: Mapped[str] = mapped_column(String(120), nullable=True)
+    perfil: Mapped[str] = mapped_column(String(255), nullable=True)
     phone: Mapped[str] = mapped_column(String(27), unique=True, nullable=False)
     sueldo = db.Column(db.Float, nullable=False)
     is_student: Mapped[bool] = mapped_column(Boolean(), nullable=False)
-    isNewUser: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
     def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
-
             "username": self.username,
             "firstname": self.firstname,
             "lastname": self.lastname,
@@ -39,7 +37,6 @@ class User(db.Model):
             "perfil": self.perfil,
             "sueldo": self.sueldo,
             "is_student": self.is_student,
-            "isNewUser": self.isNewUser,
             # do not serialize the password, its a security breach
         }
 
@@ -110,22 +107,14 @@ class Articulo(db.Model):
         }
 class Link(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    img_nombre = db.Column(db.String(120), nullable=True)
-    imagen = db.Column(db.LargeBinary, nullable=True)# Imagen binaria (BLOB)
+    imagen= db.Column(db.String(255), nullable=True)
     enlace = db.Column(db.String(255), nullable=True)
     articulo_id = db.Column(db.Integer, db.ForeignKey('articulo.id'), nullable=False)
 
     def serialize(self):
-        data =  {
+        return{
             "id": self.id,
+            "imagen":self.imagen,
             "enlace": self.enlace,
             "articulo_id": self.articulo_id,
         }
-        if self.imagen:
-            import base64
-            data["img_nombre"] = self.img_nombre
-            data["imagen"] = base64.b64encode(self.imagen).decode('utf-8')
-        else:
-            data["img_nombre"] = None
-            data["imagen"] = None
-        return data

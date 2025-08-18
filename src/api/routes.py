@@ -35,7 +35,6 @@ def register():
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
         new_user.is_active = True
-        new_user.isNewUser = True
 
         db.session.add(new_user)
         db.session.commit()
@@ -47,8 +46,8 @@ def register():
         }), 201
     except requests.exceptions.RequestException as e:
         return jsonify({"msg": "Error al registrar el usuario", "error": str(e)}), 500
-
-        # Obtener dinero disponible (sueldo o dinero de estudiante)
+    
+    # Obtener dinero disponible (sueldo o dinero de estudiante)
 @api.route('/user/dinero', methods=['GET'])
 @jwt_required()
 def get_dinero():
@@ -65,6 +64,8 @@ def get_dinero():
         "dinero_total": dinero_total,
         "is_student": user.is_student
     }), 200
+
+
     """ try:
         # Preparar los datos para la solicitud a la API de gastos
         gasto_data = {
@@ -132,18 +133,12 @@ def update_user():
         user.country = body['country']
     if 'phone' in body:
         user.phone = body['phone']
-    if 'perfil' in request.files:
-        imagen_file = request.files['perfil']
-        #link.img_nombre = imagen_file.filename
-        user.perfil = imagen_file.read()
+    if 'perfil' in body:
+        user.perfil = body['perfil']
     if 'sueldo' in body:
         user.sueldo = body['sueldo']
     if 'is_student' in body:
         user.is_student = body['is_student']
-    if 'is_active' in body:
-        user.is_active = body['is_active']
-    if 'isNewUser' in body:
-        user.isNewUser = body['isNewUser']
 
     db.session.commit()
     return jsonify({"msg": "Usuario actualizado correctamente"}), 200
@@ -161,6 +156,8 @@ def update_user():
         return jsonify({"msg": "Error al actualizar el gasto", "error": str(e)}), 500 """
 
 # Endpoint para modificar la contraseña
+
+
 @api.route("/user/change-password", methods=['PUT'])
 @jwt_required()
 def change_password():
@@ -327,7 +324,7 @@ def delete_gasto(gasto_id):
     db.session.commit()
     return jsonify({"msg": "Gasto eliminado correctamente"}), 200
 
- # Registro de Objetivo
+# Registro de Objetivo
 @api.route("/objetivo/register", methods=["POST"])
 @jwt_required()
 def register_objetivo():
@@ -509,19 +506,11 @@ def delete_articulo(articulo_id):
 # Registro de Link
 @api.route("/link/register", methods=['POST'])
 def register_link():
-    if 'imagen' not in request.files:
-        return jsonify({"msg": "No se envió ninguna imagen"}), 400
-
-    imagen_file = request.files['imagen']
-    enlace = request.form.get("enlace")
-    articulo_id = request.form.get("articulo_id")
-
-    new_link = Link(
-        img_nombre=imagen_file.filename,
-        imagen=imagen_file.read(),
-        enlace=enlace,
-        articulo_id=articulo_id
-    )
+    body = request.get_json()
+    new_link = Link()
+    new_link.titulo = body["imagen"]
+    new_link.autor = body["enlace"]
+    new_link.texto = body["id_articulo"]
 
     db.session.add(new_link)
     db.session.commit()
@@ -536,13 +525,13 @@ def get_link(link_id):
     return jsonify({"link": link.serialize()}), 200
 
 
-# Obtener imagen de un Link por ID
+""" # Obtener imagen de un Link por ID
 @api.route("/link/<int:link_id>/imagen", methods=['GET'])
 def get_link_image(link_id):
     link = Link.query.filter_by(id=link_id).first()
     if not link:
         return jsonify({"msg": "Imagen no encontrada"}), 404
-    return send_file(BytesIO(link.imagen), mimetype="image/jpeg", download_name=link.img_nombre)
+    return send_file(BytesIO(link.imagen), mimetype="image/jpeg", download_name=link.img_nombre) """
 
 
 # Obtener todos los Links relacionados a un Artículo
@@ -560,9 +549,7 @@ def update_link(link_id):
         return jsonify({"msg": "Link no encontrado"}), 404
 
     if 'imagen' in request.files:
-        imagen_file = request.files['imagen']
-        link.img_nombre = imagen_file.filename
-        link.imagen = imagen_file.read()
+        link.imagen = request.files['imagen']
 
     if 'enlace' in request.form:
         link.enlace = request.form['enlace']
