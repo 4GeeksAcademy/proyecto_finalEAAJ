@@ -79,11 +79,13 @@ export const Inversion = () => {
 
   // Efecto para scroll
   useEffect(() => {
-    if (!loading) { // Solo hacer scroll cuando haya terminado de cargar
+    if (!loading && location.hash) { // Solo si hay hash explícito
       const anchor = location.hash.replace("#", "");
-      if (anchor) {
-        const element = document.getElementById(anchor);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
+      const element = document.getElementById(anchor);
+      if (element) {
+        setTimeout(() => { // Pequeño delay para asegurar renderizado
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 100);
       }
     }
   }, [location, loading]);
@@ -303,11 +305,11 @@ export const Inversion = () => {
           }}
         >
           <span className="me-2"
-                style={{
+            style={{
               display: "inline-block",
               transform: activeSection === "bitcoin" ? "rotate(360deg)" : "rotate(0deg)",
               transition: "transform 0.6s ease"
-          }}
+            }}
           >₿</span> Bitcoin: El activo más volátil del mundo
         </h3>
 
@@ -463,13 +465,13 @@ export const Inversion = () => {
             transition: "color 0.3s ease"
           }}
         ><span
-            className="me-2"
-             style={{
+          className="me-2"
+          style={{
             display: "inline-block",
             transform: activeSection === "fondos" ? "rotate(360deg)" : "rotate(0deg)",
             transition: "transform 0.6s ease"
-             }}
-          >🌍
+          }}
+        >🌍
           </span> Fondos Indexados: La autopista hacia la libertad financiera</h3>
 
         <Alert variant="success" className="border-start border-5 border-success">
