@@ -52,51 +52,70 @@ const Perfil = () => {
       .catch(err => console.error("Error al cargar el perfil:", err));
   }, []);
 
-  const handleGuardar = () => {
-    const token = localStorage.getItem("token");
-    fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: usuario.username,
-        firstname: usuario.nombre,
-        lastname: usuario.apellido,
-        email: usuario.email,
-        country: usuario.pais,
-        phone: usuario.telefono,
-        sueldo: Number(usuario.sueldo),
-        is_student: usuario.situacion === "estudiante",
-        //fotoPerfil,
-      }),
+  const handleGuardarFoto = () => {
+  const token = localStorage.getItem("token");
+  fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update_photo", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ perfil: fotoPerfil }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      setFotoPerfil(data.perfil);
+      localStorage.setItem("fotoPerfil", data.perfil);
     })
-      .then(res => {
-        if (!res.ok) throw new Error("No se pudo actualizar el perfil");
-        return res.json();
-      })
-      .then(data => {
-        setUsuario(prev => ({
-          ...prev,
-          username: data.username || prev.username,
-          nombre: data.firstname || data.nombre,
-          apellido: data.lastname || data.apellido,
-          email: data.email || prev.email,
-          pais: data.country || prev.pais,
-          telefono: data.phone || prev.telefono,
-          sueldo: data.sueldo || prev.sueldo,
-          situacion: data.is_student ? "estudiante" : "trabajador",
-        }));
-        /* localStorage.setItem("user", JSON.stringify(data));
-        localStorage.setItem("fotoPerfil", fotoPerfil); */
-        alert("Perfil actualizado con éxito");
-        setTimeout(() => {
-          navigate("/main");
-        }, 1000);
-      })
-      .catch(err => console.error("Error al actualizar el perfil:", err));
-  };
+    .catch(err => console.error("Error al guardar foto:", err));
+};
+
+  const handleGuardar = () => {
+  const token = localStorage.getItem("token");
+  fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: usuario.username,
+      firstname: usuario.nombre,
+      lastname: usuario.apellido,
+      email: usuario.email,
+      country: usuario.pais,
+      phone: usuario.telefono,
+      sueldo: Number(usuario.sueldo),
+      is_student: usuario.situacion === "estudiante",
+      perfil: fotoPerfil, // 🔹 Ahora sí enviamos la foto
+    }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      setUsuario(prev => ({
+        ...prev,
+        username: data.username || prev.username,
+        nombre: data.firstname || prev.nombre,
+        apellido: data.lastname || prev.apellido,
+        email: data.email || prev.email,
+        pais: data.country || prev.pais,
+        telefono: data.phone || prev.telefono,
+        sueldo: data.sueldo || prev.sueldo,
+        situacion: data.is_student ? "estudiante" : "trabajador",
+      }));
+
+      if (data.perfil) {
+        setFotoPerfil(data.perfil);
+        localStorage.setItem("fotoPerfil", data.perfil);
+      }
+
+      alert("Perfil actualizado con éxito");
+      setTimeout(() => {
+        navigate("/main");
+      }, 1000);
+    })
+    .catch(err => console.error("Error al actualizar el perfil:", err));
+};
 
   const handleEliminar = async () => {
     const token = localStorage.getItem("token");

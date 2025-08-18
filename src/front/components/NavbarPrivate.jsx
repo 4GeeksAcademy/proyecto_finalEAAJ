@@ -9,6 +9,10 @@ export const NavbarPrivate = () => {
   const profileDropdownRef = useRef();
   const logoDropdownRef = useRef();
   const [username, setUsername] = useState("");
+  
+  const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
+
+  
 
   useEffect(() => {
     /* const storedUsername = localStorage.getItem("username");
@@ -25,30 +29,14 @@ export const NavbarPrivate = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => {
-        if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
-        return res.json();
-      })
-      .then(data => {
-        setUsername(data.user.username || "");
-      })
-    /* const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUsername(
-          parsedUser.username ||
-          parsedUser.firstname ||
-          parsedUser.lastname ||
-          parsedUser.nombre ||
-          parsedUser.name ||
-          ""
-        );
-      } catch (e) {
-        console.error("Error parsing user from localStorage:", e);
+      .then(res => res.json())
+    .then(data => {
+      setUsername(data.user.username || "");
+      if (data.user.perfil) {
+        setFotoPerfil(data.user.perfil);
       }
-    } */
-  }, []);
+    });
+}, []);
 
   useEffect(() => {
     const expired = checkTokenExpiration();
@@ -203,10 +191,10 @@ export const NavbarPrivate = () => {
               style={{ width: "60px", height: "60px", overflow: "hidden" }}
             >
               <img
-                src="https://i.pravatar.cc/300"
-                alt="Perfil"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
+  src={fotoPerfil}
+  alt="Perfil"
+  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+/>
             </button>
 
             {isProfileDropdownOpen && (

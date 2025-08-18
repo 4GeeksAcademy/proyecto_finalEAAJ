@@ -35,7 +35,6 @@ def register():
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
         new_user.is_active = True
-        new_user.isNewUser = True
 
         db.session.add(new_user)
         db.session.commit()
@@ -47,8 +46,8 @@ def register():
         }), 201
     except requests.exceptions.RequestException as e:
         return jsonify({"msg": "Error al registrar el usuario", "error": str(e)}), 500
-
-        # Obtener dinero disponible (sueldo o dinero de estudiante)
+    
+    # Obtener dinero disponible (sueldo o dinero de estudiante)
 @api.route('/user/dinero', methods=['GET'])
 @jwt_required()
 def get_dinero():
@@ -65,6 +64,8 @@ def get_dinero():
         "dinero_total": dinero_total,
         "is_student": user.is_student
     }), 200
+
+
     """ try:
         # Preparar los datos para la solicitud a la API de gastos
         gasto_data = {
@@ -132,18 +133,12 @@ def update_user():
         user.country = body['country']
     if 'phone' in body:
         user.phone = body['phone']
-    if 'perfil' in request.files:
-        imagen_file = request.files['perfil']
-        #link.img_nombre = imagen_file.filename
-        user.perfil = imagen_file.read()
+    if 'perfil' in body:
+        user.perfil = body['perfil']
     if 'sueldo' in body:
         user.sueldo = body['sueldo']
     if 'is_student' in body:
         user.is_student = body['is_student']
-    if 'is_active' in body:
-        user.is_active = body['is_active']
-    if 'isNewUser' in body:
-        user.isNewUser = body['isNewUser']
 
     db.session.commit()
     return jsonify({"msg": "Usuario actualizado correctamente"}), 200
@@ -161,6 +156,8 @@ def update_user():
         return jsonify({"msg": "Error al actualizar el gasto", "error": str(e)}), 500 """
 
 # Endpoint para modificar la contraseña
+
+
 @api.route("/user/change-password", methods=['PUT'])
 @jwt_required()
 def change_password():
@@ -327,7 +324,7 @@ def delete_gasto(gasto_id):
     db.session.commit()
     return jsonify({"msg": "Gasto eliminado correctamente"}), 200
 
- # Registro de Objetivo
+# Registro de Objetivo
 @api.route("/objetivo/register", methods=["POST"])
 @jwt_required()
 def register_objetivo():
