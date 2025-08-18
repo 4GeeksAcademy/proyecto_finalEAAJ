@@ -99,23 +99,24 @@ export const Home = () => {
         <p className="lead">
           Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
         </p>
-        <Link
-          to="/inversion"
-          className="btn"
-          style={{ backgroundColor: "#7bff00" }}
-          onClick={(e) => {
-            e.preventDefault();
-            navigate("/inversion").then(() => {
-              // Espera a que la navegación se complete
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-              });
-            });
-          }}
-        >
-          ¡Quiero que mi dinero crezca!
-        </Link>
+
+<Link
+  to="/inversion"
+  className="btn"
+  style={{ backgroundColor: "#7bff00" }}
+  onClick={(e) => {
+    e.preventDefault();
+    navigate("/inversion").then(() => {
+      // Espera a que la navegación se complete
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  }}
+>
+  ¡Quiero que mi dinero crezca!
+</Link>
       </section>
       <div className="col-12 d-flex justify-content-center " >
         <Carrusel />
