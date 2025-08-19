@@ -120,16 +120,12 @@ export const NavbarPrivate = () => {
         {/* Logo Mo'Money como dropdown */}
         <div className="position-relative" ref={logoDropdownRef}>
           <div
-            className="navbar-brand fw-bold text-white"
+            className="navbar-brand fw-bold text-black"
             style={{ cursor: "pointer", fontSize: "2.5vh" }}
             onClick={() => setLogoDropdownOpen(!isLogoDropdownOpen)}
           >
-            <img
-              src="/Mo-moneyIcon2.webp"
-              alt="Logo"
-              style={{ width: "6vh", height: "6vh" }}
-            />
-            Mo’money ⌄
+            
+            Mo’Money ⌄
           </div>
 
           {isLogoDropdownOpen && (
