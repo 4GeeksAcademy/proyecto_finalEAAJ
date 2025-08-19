@@ -65,14 +65,14 @@ export default function OnboardingTutorial({ onFinish }) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(245, 245, 245, 0.95)", // Fondo blanco sucio con transparencia
-        backdropFilter: "blur(4px)", // Efecto de desenfoque
+        backgroundColor: "rgba(245, 245, 245, 0.95)", 
+        backdropFilter: "blur(4px)", 
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         zIndex: 9999,
-        color: "#333", // Texto oscuro para mejor contraste
+        color: "#333",
         padding: "20px",
       }}
     >
@@ -122,7 +122,7 @@ export default function OnboardingTutorial({ onFinish }) {
             <div style={{ 
               fontSize: "3rem", 
               marginBottom: "20px",
-              color: "#b7ff00" // Color verde para el emoji
+              color: "#b7ff00" 
             }}>
               {emoji}
             </div>
