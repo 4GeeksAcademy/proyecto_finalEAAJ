@@ -6,6 +6,7 @@ import OnboardingTutorial from "./OnboardingTutorial";
 import { motion, AnimatePresence } from "framer-motion";
 //import { motion, AnimatePresence } from "framer-motion";
 import Loader from "./Loader.jsx";
+import Swal from "sweetalert2";
 
 export const Main = () => {
   const [sueldo, setSueldo] = useState(0);
@@ -106,23 +107,89 @@ export const Main = () => {
   };
 
   // 🔹 Eliminar gasto
-  const eliminarGasto = async (id) => {
-    if (!window.confirm("¿Seguro que quieres eliminar este gasto?")) return;
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/gasto/delete/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!res.ok) throw new Error("Error al eliminar");
-      setGastos((prev) => prev.filter((g) => g.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert("No se pudo eliminar el gasto");
+ const eliminarGasto = async (id) => {
+  Swal.fire({
+    title: "¿Seguro que quieres eliminar este gasto?",
+    text: "No podrás deshacer esta acción",
+    iconHtml: '<span style="color:#7bff00; font-size:48px;">!</span>',
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: "confirm-btn-inline",
+      cancelButton: "cancel-btn-inline",
+    },
+    didOpen: () => {
+      // Estilos inline para los botones de confirmación/cancelar
+      const confirmBtn = document.querySelector(".confirm-btn-inline");
+      const cancelBtn = document.querySelector(".cancel-btn-inline");
+
+      if (confirmBtn) {
+        confirmBtn.style.backgroundColor = "#7bff00";
+        confirmBtn.style.color = "black";
+        confirmBtn.style.border = "none";
+        confirmBtn.style.padding = "8px 20px";
+        confirmBtn.style.fontSize = "16px";
+        confirmBtn.style.borderRadius = "8px";
+        confirmBtn.style.cursor = "pointer";
+      }
+
+      if (cancelBtn) {
+        cancelBtn.style.backgroundColor = "#e0e0e0";
+        cancelBtn.style.color = "black";
+        cancelBtn.style.border = "none";
+        cancelBtn.style.padding = "8px 20px";
+        cancelBtn.style.fontSize = "16px";
+        cancelBtn.style.borderRadius = "8px";
+        cancelBtn.style.cursor = "pointer";
+      }
+    },
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/gasto/delete/${id}`,
+          {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!res.ok) throw new Error("Error al eliminar");
+
+        setGastos((prev) => prev.filter((g) => g.id !== id));
+
+        // Alerta de éxito con botón verde también
+        Swal.fire({
+          title: "Eliminado!",
+          text: "Tu gasto ha sido eliminado.",
+          icon: "success",
+          confirmButtonText: "OK",
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: "ok-btn-inline",
+          },
+          didOpen: () => {
+            const okBtn = document.querySelector(".ok-btn-inline");
+            if (okBtn) {
+              okBtn.style.backgroundColor = "#7bff00";
+              okBtn.style.color = "black";
+              okBtn.style.border = "none";
+              okBtn.style.padding = "8px 20px";
+              okBtn.style.fontSize = "16px";
+              okBtn.style.borderRadius = "8px";
+              okBtn.style.cursor = "pointer";
+            }
+          },
+        });
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "No se pudo eliminar el gasto", "error");
+      }
     }
-  };
+  });
+};
 
   // 🔹 Obtener objetivos
   useEffect(() => {
@@ -197,23 +264,87 @@ export const Main = () => {
     navigate(`/objetivos/editar/${id}`);
   };
 
-  const eliminarObjetivo = async (id) => {
-    if (!window.confirm("¿Seguro que quieres eliminar este objetivo?")) return;
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/delete/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!res.ok) throw new Error("Error al eliminar");
-      setObjetivos((prev) => prev.filter((obj) => obj.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert("No se pudo eliminar el objetivo");
+const eliminarObjetivo = async (id) => {
+  Swal.fire({
+    title: "¿Seguro que quieres eliminar este objetivo?",
+    text: "No podrás deshacer esta acción",
+    iconHtml: '<span style="color:#7bff00; font-size:48px;">!</span>',
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: "confirm-btn-inline",
+      cancelButton: "cancel-btn-inline",
+    },
+    didOpen: () => {
+      const confirmBtn = document.querySelector(".confirm-btn-inline");
+      const cancelBtn = document.querySelector(".cancel-btn-inline");
+
+      if (confirmBtn) {
+        confirmBtn.style.backgroundColor = "#7bff00";
+        confirmBtn.style.color = "black";
+        confirmBtn.style.border = "none";
+        confirmBtn.style.padding = "8px 20px";
+        confirmBtn.style.fontSize = "16px";
+        confirmBtn.style.borderRadius = "8px";
+        confirmBtn.style.cursor = "pointer";
+      }
+
+      if (cancelBtn) {
+        cancelBtn.style.backgroundColor = "#e0e0e0";
+        cancelBtn.style.color = "black";
+        cancelBtn.style.border = "none";
+        cancelBtn.style.padding = "8px 20px";
+        cancelBtn.style.fontSize = "16px";
+        cancelBtn.style.borderRadius = "8px";
+        cancelBtn.style.cursor = "pointer";
+      }
+    },
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/objetivo/delete/${id}`,
+          {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!res.ok) throw new Error("Error al eliminar");
+
+        setObjetivos((prev) => prev.filter((obj) => obj.id !== id));
+
+        Swal.fire({
+          title: "Eliminado!",
+          text: "Tu objetivo ha sido eliminado.",
+          icon: "success",
+          confirmButtonText: "OK",
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: "ok-btn-inline",
+          },
+          didOpen: () => {
+            const okBtn = document.querySelector(".ok-btn-inline");
+            if (okBtn) {
+              okBtn.style.backgroundColor = "#7bff00";
+              okBtn.style.color = "black";
+              okBtn.style.border = "none";
+              okBtn.style.padding = "8px 20px";
+              okBtn.style.fontSize = "16px";
+              okBtn.style.borderRadius = "8px";
+              okBtn.style.cursor = "pointer";
+            }
+          },
+        });
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "No se pudo eliminar el objetivo", "error");
+      }
     }
-  };
+  });
+};
 
   const marcarComoCompletado = async (id, completado) => {
     try {
@@ -234,7 +365,7 @@ export const Main = () => {
           if (obj.id === id) {
             if (!completado) {
               setShowCelebration(true);
-              setTimeout(() => setShowCelebration(false), 2000);
+              setTimeout(() => setShowCelebration(false), 3000);
             }
             return { ...obj, completado: !completado };
           }
@@ -251,7 +382,7 @@ export const Main = () => {
     const timer = setTimeout(() => {
       setLoading(false);
       setMostrarContenido(true);
-    }, 3000);
+    }, 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -505,16 +636,19 @@ export const Main = () => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          backgroundColor: "#c5bebe",
+          backgroundColor: "white",
           color: "#000000ff",
           padding: "20px 30px",
+          borderColor: "#b7ff00",
+          borderWidth: "2px",
+          borderStyle: "solid",
           borderRadius: "12px",
           boxShadow: "0 5px 15px rgba(0, 0, 0, 0.99)",
           textAlign: "center",
           fontWeight: "bold",
           zIndex: 10000
         }}>
-          <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🎉 ¡Enhorabuena!</div>
+          <div style={{ fontSize: "2rem", marginBottom: "10px" }}>🎉 ¡Enhorabuena!</div><br></br>
           <div>¡Objetivo conseguido! Eres un rockstar de las finanzas 💰🎸</div>
         </div>
       )}

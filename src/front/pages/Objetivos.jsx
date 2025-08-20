@@ -137,7 +137,7 @@ useEffect(() => {
 };
 
   return (
-    <div className="container mt-4" style={{
+    <div className="container mt-5" style={{
         maxWidth: "400px",
         border: "2px solid #b7ff00", 
         borderRadius: "10px",
@@ -145,7 +145,8 @@ useEffect(() => {
         position: "relative",
         backgroundColor: "#fff",
       }} >
-      <h5>Crear objetivo de ahorro</h5>
+      <h3 classname="text-center">Crear objetivo de ahorro</h3>
+      <br></br>
       <form onSubmit={handleSubmit}>
         {/* Concepto */}
         <div className="mb-3">

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ProfileImageUploader } from "../components/ProfileImageUploader";
 import { Link, useNavigate } from "react-router-dom";
-
+import Loader from "../pages/Loader"; // 👈 importamos tu Loader
+import Swal from "sweetalert2";
 const Perfil = () => {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true); 
 
   const [usuario, setUsuario] = useState({
     username: "",
@@ -21,7 +24,10 @@ const Perfil = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) {
+      setLoading(false); // 👈 si no hay token, dejamos de cargar
+      return;
+    }
 
     fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
       method: "GET",
@@ -49,26 +55,20 @@ const Perfil = () => {
 
         if (u.perfil) setFotoPerfil(u.perfil);
       })
-      .catch(err => console.error("Error al cargar el perfil:", err));
+      .catch(err => console.error("Error al cargar el perfil:", err))
+      .finally(() => setLoading(false)); 
   }, []);
 
-  const handleGuardarFoto = () => {
-  const token = localStorage.getItem("token");
-  fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update_photo", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ perfil: fotoPerfil }),
-  })
-    .then(res => res.json())
-    .then(data => {
-      setFotoPerfil(data.perfil);
-      localStorage.setItem("fotoPerfil", data.perfil);
-    })
-    .catch(err => console.error("Error al guardar foto:", err));
-};
+  // 
+  if (loading) {
+    return (
+      <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:"100vh" }}>
+        <Loader />
+      </div>
+    );
+  }
+
+  
 
   const handleGuardar = () => {
   const token = localStorage.getItem("token");
@@ -87,7 +87,6 @@ const Perfil = () => {
       phone: usuario.telefono,
       sueldo: Number(usuario.sueldo),
       is_student: usuario.situacion === "estudiante",
-      perfil: fotoPerfil, // 🔹 Ahora sí enviamos la foto
     }),
   })
     .then(res => res.json())
@@ -109,12 +108,50 @@ const Perfil = () => {
         localStorage.setItem("fotoPerfil", data.perfil);
       }
 
-      alert("Perfil actualizado con éxito");
-      setTimeout(() => {
+      // 🚀 SweetAlert2 con botón verde fosfo (#7bff00) y letras negras
+      Swal.fire({
+        title: "Perfil actualizado con éxito",
+        icon: "success",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#7bff00",
+        color: "#000", // color del texto del contenido
+        customClass: {
+          confirmButton: "swal2-confirm-custom",
+        },
+      }).then(() => {
         navigate("/main");
-      }, 1000);
+      });
+
+      // pequeño truco: aplicar estilo inline al botón
+      setTimeout(() => {
+        const btn = document.querySelector(".swal2-confirm-custom");
+        if (btn) {
+          btn.style.color = "#000"; // texto negro
+          btn.style.fontWeight = "bold";
+        }
+      }, 0);
     })
-    .catch(err => console.error("Error al actualizar el perfil:", err));
+    .catch(err => {
+      console.error("Error al actualizar el perfil:", err);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo actualizar el perfil",
+        icon: "error",
+        confirmButtonText: "Ok",
+        confirmButtonColor: "#7bff00",
+        color: "#000",
+        customClass: {
+          confirmButton: "swal2-confirm-custom",
+        },
+      });
+      setTimeout(() => {
+        const btn = document.querySelector(".swal2-confirm-custom");
+        if (btn) {
+          btn.style.color = "#000";
+          btn.style.fontWeight = "bold";
+        }
+      }, 0);
+    });
 };
 
   const handleEliminar = async () => {
@@ -168,9 +205,9 @@ const Perfil = () => {
     fontSize: "16px",
     color: "#333",
   };
-
   return (
-    <div
+   
+    <div 
       style={{
         maxWidth: "350px",
         margin: "20px auto",
@@ -181,7 +218,7 @@ const Perfil = () => {
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         border: "5px solid #b7ff00",
       }}
-    >
+    > <h1>Perfil</h1><br></br>
       <div style={{ marginBottom: "20px" }}>
         <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} />
       </div>
@@ -251,6 +288,7 @@ const Perfil = () => {
           borderRadius: "6px",
           boxShadow: "0 2px 4px #FBFFE4",
           cursor: "pointer",
+          color: "white"
         }}
       >
         Guardar Cambios
@@ -268,7 +306,7 @@ const Perfil = () => {
           fontWeight: "bold",
           borderRadius: "6px",
           textAlign: "center",
-          color: "#000",
+          color: "white",
           cursor: "pointer",
         }}
       >
@@ -321,7 +359,7 @@ const Perfil = () => {
               boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
             }}
           >
-            <h3>⚠️ Confirmar eliminación</h3>
+            <h3>⚠️ </h3>
             <p>¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
             <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-around" }}>
               <button
