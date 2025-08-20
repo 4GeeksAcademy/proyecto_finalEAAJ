@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProfileImageUploader } from '../ProfileImageUploader';
+import ImageViewer from '../ImageViewer';
 
 
 function AddNewPost({ onAddPost, onCancel }) {
@@ -134,9 +135,10 @@ function AddNewPost({ onAddPost, onCancel }) {
           style={{ marginBottom: '1rem' }}
         />
 
-        <ProfileImageUploader 
+        {/* <ProfileImageUploader 
         onImageChange={setImagen}
-        />
+        /> */}
+        <ImageViewer image={setImagen} onImageChange={setImagen} />
 
         {/*         <input
           className="form-control"

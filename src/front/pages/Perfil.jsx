@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ProfileImageUploader } from "../components/ProfileImageUploader";
-//import { ImageViewer } from "../components/ImageViewer";
+//import { ProfileImageUploader } from "../components/ProfileImageUploader";
+import ImageViewer from "../components/ImageViewer";
 import { Link, useNavigate } from "react-router-dom";
 
 const Perfil = () => {
@@ -184,8 +184,8 @@ const Perfil = () => {
       }}
     >
       <div style={{ marginBottom: "20px" }}>
-        <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} />
-        {/* <ImageViewer image={fotoPerfil} onImageChange={setFotoPerfil} /> */}
+        {/* <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} /> */}
+        <ImageViewer image={fotoPerfil} onImageChange={setFotoPerfil} />
       </div>
 
       <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} placeholder="Usuario" />
