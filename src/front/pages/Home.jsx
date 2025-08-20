@@ -8,7 +8,7 @@ import Carrusel from "./Carrusel/Carrusel.jsx";
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
 
-  const loadMessage = async () => {
+  /* const loadMessage = async () => {
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -29,11 +29,11 @@ const response = await fetch(cleanBackendUrl + "/api/hello");
           Please check if the backend is running and the backend port is public.`
         );
     }
-  };
+  }; 
 
   useEffect(() => {
     loadMessage();
-  }, []);
+  }, []);*/
 
   return (
  <div className="page" style={{

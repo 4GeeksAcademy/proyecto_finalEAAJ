@@ -43,7 +43,7 @@ export const Formulario = () => {
   const [pais, setPais] = useState("");
   const [prefijo, setPrefijo] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [perfil, setPerfil] = useState("");
+  const [perfil, setPerfil] = useState("/user-profile.png");
   const navigate = useNavigate();
 
   const prefijos = {
@@ -99,7 +99,8 @@ export const Formulario = () => {
     sueldo: sueldoFinal,
     dinero_disponible: situacion === "estudiante" ? sueldoEstudiante : null,
     is_student: situacionBoolean(),
-    perfil: perfil
+    perfil: perfil,
+    isNewUser: true,
   };
 
 

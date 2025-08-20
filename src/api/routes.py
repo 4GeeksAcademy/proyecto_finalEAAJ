@@ -35,6 +35,7 @@ def register():
         new_user.sueldo = body["sueldo"]
         new_user.is_student = body["is_student"] 
         new_user.is_active = True
+        new_user.isNewUser = True
 
         db.session.add(new_user)
         db.session.commit()
@@ -46,25 +47,6 @@ def register():
         }), 201
     except requests.exceptions.RequestException as e:
         return jsonify({"msg": "Error al registrar el usuario", "error": str(e)}), 500
-    
-    # Obtener dinero disponible (sueldo o dinero de estudiante)
-@api.route('/user/dinero', methods=['GET'])
-@jwt_required()
-def get_dinero():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-
-    if user is None:
-        return jsonify({"msg": "Usuario no encontrado"}), 404
-
-    # ✅ Dinero total según rol
-    dinero_total = user.dinero_disponible if user.is_student else user.sueldo
-
-    return jsonify({
-        "dinero_total": dinero_total,
-        "is_student": user.is_student
-    }), 200
-
 
     """ try:
         # Preparar los datos para la solicitud a la API de gastos
@@ -103,6 +85,44 @@ def login():
         print("Something went wrong:", e)
     return jsonify({"msg": "username/email o contraseña equivocados"}), 401
 
+@api.route('/user/dinero', methods=['GET'])
+@jwt_required()
+def get_dinero():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    # ✅ Dinero total según rol
+    dinero_total = user.dinero_disponible if user.is_student else user.sueldo
+
+    return jsonify({
+        "dinero_total": dinero_total,
+        "is_student": user.is_student
+    }), 200
+
+
+    """ try:
+        # Preparar los datos para la solicitud a la API de gastos
+        gasto_data = {
+            "user_id": new_user.id,
+            "sueldo": body["sueldo"],
+            "is_student": body["is_student"],
+        }
+        # Enviar solicitud POST a la API de gastos
+        response = requests.post(
+            "http://localhost:3001/api/gasto/register", json=gasto_data)
+        response_data = response.json()
+        access_token = create_access_token(identity=str(new_user.id))
+        return jsonify({
+            "msg": "Usuario registrado con éxito",
+            "gasto": response_data,
+            "token": access_token
+        }), 201
+    except requests.exceptions.RequestException as e:
+        return jsonify({"msg": "Error al registrar el usuario", "error": str(e)}), 500 """
+
 # Con el Token devolver el usuario
 @api.route('/user/profile', methods=['GET'])
 @jwt_required()
@@ -139,6 +159,8 @@ def update_user():
         user.sueldo = body['sueldo']
     if 'is_student' in body:
         user.is_student = body['is_student']
+    if 'isNewUser' in body:
+        user.isNewUser = body['isNewUser']
 
     db.session.commit()
     return jsonify({"msg": "Usuario actualizado correctamente"}), 200

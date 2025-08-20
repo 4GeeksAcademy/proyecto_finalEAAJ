@@ -50,8 +50,8 @@ function AddNewPost({ onAddPost, onCancel }) {
         body: JSON.stringify({
 
          articulo_id: data.id,
-          imagen:imagen ,
-          enlace:enlace , 
+          imagen:imagen,
+          enlace:enlace, 
           
         }),
       });
