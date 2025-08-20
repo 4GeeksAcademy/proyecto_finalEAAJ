@@ -11,7 +11,7 @@ export const Home = () => {
   const navigate = useNavigate();
 
 
-  const loadMessage = async () => {
+  /* const loadMessage = async () => {
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -32,19 +32,15 @@ export const Home = () => {
           Please check if the backend is running and the backend port is public.`
         );
     }
-  };
+  }; 
 
   useEffect(() => {
     loadMessage();
-  }, []);
+  }, []);*/
 
   return (
-    <div className="page" style={{
-
-      marginTop: '80px',
-      marginBottom: 0
-    }}>
-      {/* SECCIÓN CENTRAL: Quiénes somos + Esfera + Qué hacemos */}
+    <div className="page" style={{ marginTop: '80px', marginBottom: 0 }}>
+      {/* SECCIÓN CENTRAL*/}
       <section className="container my-5">
         <div className="row align-items-center text-center text-md-center justify-content-center">
           {/* QUIÉNES SOMOS */}
@@ -93,36 +89,59 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* SECCIÓN INVERSIÓN */}
-      <section className="text-center  p-5  mt-5 mx-auto" style={{ maxWidth: '900px', paddingBottom: 0 }}>
-        <h2 className="mb-3">Inversión</h2>
-        <p className="lead">
-          Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos
-        </p>
+      {/* SECCIÓN INVERSIÓN Y BLOG*/}
+      <section className="container my-5">
+        <div className="row align-items-center text-center justify-content-center">
+          {/* INVERSIÓN */}
+          <div className="col-md-5 mb-4 mb-md-0">
+            <h2 className="mb-3">Inversión</h2>
+            <p className="lead">
+              Descubre cómo hacer que tu dinero trabaje por ti con nuestro <strong>simulador interactivo</strong>, consejos adaptados a jóvenes y explicaciones sin tecnicismos.
+            </p>
+            <Link
+              to="/inversion"
+              className="btn"
+              style={{ backgroundColor: "#7bff00" }}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/inversion").then(() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+              }}
+            >
+              ¡Quiero que mi dinero crezca!
+            </Link>
+          </div>
 
-<Link
-  to="/inversion"
-  className="btn"
-  style={{ backgroundColor: "#7bff00" }}
-  onClick={(e) => {
-    e.preventDefault();
-    navigate("/inversion").then(() => {
-      // Espera a que la navegación se complete
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    });
-  }}
->
-  ¡Quiero que mi dinero crezca!
-</Link>
+          {/* BLOG */}
+          <div className="col-md-5 mb-4 mb-md-0">
+            <h2 className="mb-3">Conoce nuestro blog</h2>
+            <p className="lead">
+              Accede a contenido que te ayudará a tomar el control
+              de tus finanzas. Aprende a evitar deudas, generar ingresos y
+              alcanzar tu libertad financiera más rápido.
+            </p>
+            <Link
+              to="/blog"
+              className="btn"
+              style={{ backgroundColor: "#7bff00" }}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/blog").then(() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+              }}
+            >
+              Si, quiero
+            </Link>
+          </div>
+        </div>
       </section>
-      <div className="col-12 d-flex justify-content-center " >
+      {/* CARRUSEL */}
+      <div className="col-12 d-flex justify-content-center">
         <Carrusel />
       </div>
     </div>
-
   );
 };
 

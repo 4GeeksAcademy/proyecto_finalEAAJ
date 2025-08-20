@@ -7,9 +7,7 @@ from datetime import datetime
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-
-db = SQLAlchemy()
-
+#db = SQLAlchemy()
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -24,6 +22,8 @@ class User(db.Model):
     phone: Mapped[str] = mapped_column(String(27), unique=True, nullable=False)
     sueldo = db.Column(db.Float, nullable=False)
     is_student: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    isNewUser: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    
 
     def serialize(self):
         return {
@@ -37,6 +37,7 @@ class User(db.Model):
             "perfil": self.perfil,
             "sueldo": self.sueldo,
             "is_student": self.is_student,
+            "isNewUser": self.isNewUser,
             # do not serialize the password, its a security breach
         }
 

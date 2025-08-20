@@ -24,6 +24,7 @@ import Perfil from "./pages/Perfil";
 import {BlogPage} from './pages/BlogPage';
 import { NavbarPrivate } from './components/NavbarPrivate';
 import { NavbarPublic } from './components/NavbarPublic';
+import ImageViewer from "./components/ImageViewer";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,6 +43,7 @@ export const router = createBrowserRouter(
       <Route path="/Perfil" element={<Perfil />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/loader" element={<Loader />} />
+      <Route path="/imageviewer" element={<ImageViewer />} />
       
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>
