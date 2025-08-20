@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Accordion, Card, Form, Table, Row, Col, Alert, Badge } from "react-bootstrap";
 import CryptoWidget from "../CryptoWidget";
+import ScrollToTopButton from "./ScrollToTopButton";
 import {
   ResponsiveContainer,
   LineChart,
@@ -78,11 +79,13 @@ export const Inversion = () => {
 
   // Efecto para scroll
   useEffect(() => {
-    if (!loading) { // Solo hacer scroll cuando haya terminado de cargar
+    if (!loading && location.hash) { // Solo si hay hash explícito
       const anchor = location.hash.replace("#", "");
-      if (anchor) {
-        const element = document.getElementById(anchor);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
+      const element = document.getElementById(anchor);
+      if (element) {
+        setTimeout(() => { // Pequeño delay para asegurar renderizado
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 100);
       }
     }
   }, [location, loading]);
@@ -137,7 +140,7 @@ export const Inversion = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" id="inicio">
       <Card className="p-4 mb-5 bg-white">
         <h3 className="mb-3">🧭 Bienvenido al Espacio de Inversión para Jóvenes</h3>
         <p className="fs-5">
@@ -302,11 +305,11 @@ export const Inversion = () => {
           }}
         >
           <span className="me-2"
-                style={{
+            style={{
               display: "inline-block",
               transform: activeSection === "bitcoin" ? "rotate(360deg)" : "rotate(0deg)",
               transition: "transform 0.6s ease"
-          }}
+            }}
           >₿</span> Bitcoin: El activo más volátil del mundo
         </h3>
 
@@ -462,13 +465,13 @@ export const Inversion = () => {
             transition: "color 0.3s ease"
           }}
         ><span
-            className="me-2"
-             style={{
+          className="me-2"
+          style={{
             display: "inline-block",
             transform: activeSection === "fondos" ? "rotate(360deg)" : "rotate(0deg)",
             transition: "transform 0.6s ease"
-             }}
-          >🌍
+          }}
+        >🌍
           </span> Fondos Indexados: La autopista hacia la libertad financiera</h3>
 
         <Alert variant="success" className="border-start border-5 border-success">

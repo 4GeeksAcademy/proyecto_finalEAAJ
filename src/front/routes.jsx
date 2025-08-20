@@ -14,7 +14,7 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { Formulario } from "./pages/Formulario";
 import { Page404 } from "./pages/Page404";
 import { AddNewGasto } from "./pages/AddNewGasto";
-import { Loader } from "./pages/Loader";
+import  Loader  from "./pages/Loader";
 import { Main } from "./pages/Main";
 import { Objetivos } from "./pages/Objetivos";
 import { EditarObjetivo } from "./pages/EditarObjetivo";
@@ -42,6 +42,7 @@ export const router = createBrowserRouter(
       <Route path="/addnewgasto" element={<AddNewGasto />} />
       <Route path="/Perfil" element={<Perfil />} />
       <Route path="/blog" element={<BlogPage />} />
+      <Route path="/loader" element={<Loader />} />
       <Route path="/imageviewer" element={<ImageViewer />} />
       
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}

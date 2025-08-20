@@ -1,95 +1,73 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import BlogPostDetail from '../components/Blog/BlogPostDetail';
 import AddNewPost from '../components/Blog/AddNewPost';
-//import BlogPostPage from '../components/Blog/BlogPostPage';
 import ParallaxScroll from '../components/Blog/ParallaxScroll';
 import { Footer } from '../components/Footer';
 import '../components/Blog/Blog.css';
 import '../components/Blog/ParallaxScroll.css';
-import initialPostsData from "../assets/img/BlogPosts.js";
 
+// Importamos el store
+import storeReducer, { initialStore } from "../store.js";
 
-
-export const  BlogPage = () => {
-  const [posts, setPosts] = useState(initialPostsData);
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [showAddForm, setShowAddForm] = useState(false);
+export const BlogPage = () => {
+  const [store, dispatch] = useReducer(storeReducer, {}, initialStore);
 
   const handleAddPost = (post) => {
-    const newPost = {
-      ...post,
-      body: post.body.split('\n'),
-      comments: [],
-      likes: 0,
-      createdOn: Date.now(),
-      image: post.image || 'https://placehold.co/600x400'
-    };
-    setPosts([newPost, ...posts]);
-    setShowAddForm(false);
+    dispatch({ type: "add_post", payload: { post } });
   };
 
   const handleAddComment = (postIndex, comment) => {
-    const updatedPosts = [...posts];
-    updatedPosts[postIndex].comments.push({ 
-      ...comment, 
-      createdOn: Date.now() 
-    });
-    setPosts(updatedPosts);
+    dispatch({ type: "add_comment", payload: { postIndex, comment } });
   };
 
   const handleLike = (index) => {
-    const updatedPosts = [...posts];
-    updatedPosts[index].likes++;
-    setPosts(updatedPosts);
+    dispatch({ type: "like_post", payload: { index } });
   };
 
+  const handleBack = () => {
+    dispatch({ type: "set_selected_index", payload: { index: null } });
+  };
+
+  const handleShowAddForm = () => {
+    dispatch({ type: "toggle_add_form" });
+  };
 
   return (
     <div className="blog-container">
-      {selectedIndex !== null ? (
+      {store.selectedIndex !== null ? (
         <>
           <BlogPostDetail
-            post={posts[selectedIndex]}
-            index={selectedIndex}
+            post={store.posts[store.selectedIndex]}
+            index={store.selectedIndex}
             handleLike={handleLike}
             handleAddComment={handleAddComment}
-            onBack={() => setSelectedIndex(null)}
+            onBack={handleBack}
           />
           <Footer />
         </>
-      ) : showAddForm ? (
+      ) : store.showAddForm ? (
         <>
           <AddNewPost 
             onAddPost={handleAddPost} 
-            onCancel={() => setShowAddForm(false)}
+            onCancel={handleShowAddForm}
           />
           <Footer />
         </>
       ) : (
         <>
-          {/* <div className="parallax-header">
-            <Link to="/main" className="blog-title-link">
-              <h1>Mo'Money Blog</h1>
-            </Link>
-            <button 
-              className="floating-add-btn"
-              onClick={() => setShowAddForm(true)}
-              aria-label="Add new post"
-            >
-              +
-            </button>
-          </div> */}
           <ParallaxScroll 
-            posts={posts} 
-            onPostSelect={setSelectedIndex} 
-            onAddNewPostClick={() => setShowAddForm(true)}  // <--- Aquí el cambio
+            posts={store.posts} 
+            onPostSelect={(index) =>
+              dispatch({ type: "set_selected_index", payload: { index } })
+            } 
+            onAddNewPostClick={handleShowAddForm}
           />
           <Footer />
         </>
       )}
     </div>
   );
-}
+};
 
 export default BlogPage;

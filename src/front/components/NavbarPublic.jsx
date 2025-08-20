@@ -23,7 +23,7 @@ export const NavbarPublic = () => {
               />
             </Link>
           </div>
-              <Link to="/" className="navbar-brand fw-bold text-white" style={{fontSize: "4.5vh"}}>
+              <Link to="/" className="navbar-brand fw-bold text-black" style={{fontSize: "4.5vh"}}>
                 Mo’money
             </Link>
         </div>

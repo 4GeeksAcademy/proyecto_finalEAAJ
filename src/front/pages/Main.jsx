@@ -5,6 +5,7 @@ import { HashLink } from "react-router-hash-link";
 import OnboardingTutorial from "./OnboardingTutorial";
 import { motion, AnimatePresence } from "framer-motion";
 //import { motion, AnimatePresence } from "framer-motion";
+import Loader from "./Loader.jsx";
 
 export const Main = () => {
   const [sueldo, setSueldo] = useState(0);
@@ -18,6 +19,7 @@ export const Main = () => {
   const [dineroDisponible, setDineroDisponible] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -247,11 +249,15 @@ export const Main = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      setLoading(false);
       setMostrarContenido(true);
-    }, 200);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
+  if (loading) {
+  return <Loader />;
+}
   if (!mostrarContenido) {
     return null;
   }
@@ -457,7 +463,8 @@ export const Main = () => {
         <div style={{
           display: "flex",
           justifyContent: "center",
-          gap: "30vh",
+          flexWrap: "wrap",
+          gap: "2rem",
           alignItems: "center",
           marginTop: "2rem"
         }}>
