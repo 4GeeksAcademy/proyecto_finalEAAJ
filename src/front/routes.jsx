@@ -28,7 +28,7 @@ import { NavbarPublic } from './components/NavbarPublic';
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<Page404 />} /* loader={<Loader />} */>
-      <Route path="/" element={<Home />} />
+      <Route index element={<Home />} />
       <Route path="/Main" element={<Main />} />
       <Route path="/Objetivos" element={<Objetivos />} />
       <Route path="/inversion" element={<Inversion />} />
