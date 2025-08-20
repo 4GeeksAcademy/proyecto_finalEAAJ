@@ -4,22 +4,13 @@ import { checkTokenExpiration, refreshTokenWithCooldown } from "../utils/token";
 
 export const NavbarPrivate = () => {
   const navigate = useNavigate();
-  const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isLogoDropdownOpen, setLogoDropdownOpen] = useState(false);
-  const profileDropdownRef = useRef();
+  const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
   const logoDropdownRef = useRef();
+  const userDropdownRef = useRef();
   const [username, setUsername] = useState("");
-  
-  const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
-
-  
 
   useEffect(() => {
-    /* const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
-      return;
-    } */
     const token = localStorage.getItem("token");
     if (!token) return;
     fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
@@ -30,13 +21,10 @@ export const NavbarPrivate = () => {
       },
     })
       .then(res => res.json())
-    .then(data => {
-      setUsername(data.user.username || "");
-      if (data.user.perfil) {
-        setFotoPerfil(data.user.perfil);
-      }
-    });
-}, []);
+      .then(data => {
+        setUsername(data.user.username || "");
+      });
+  }, []);
 
   useEffect(() => {
     const expired = checkTokenExpiration();
@@ -49,13 +37,9 @@ export const NavbarPrivate = () => {
     const handleActivity = () => {
       refreshTokenWithCooldown();
     };
-
-    // Escuchamos cambios de actividad en la página
     window.addEventListener("click", handleActivity);
     window.addEventListener("scroll", handleActivity);
     window.addEventListener("keydown", handleActivity);
-
-    // cleanup al desmontar
     return () => {
       window.removeEventListener("click", handleActivity);
       window.removeEventListener("scroll", handleActivity);
@@ -64,24 +48,22 @@ export const NavbarPrivate = () => {
   }, []);
 
   const handleLogout = () => {
-    const token = localStorage.getItem("token");/* 
-    localStorage.removeItem("username");
-    localStorage.removeItem("user"); */
+    const token = localStorage.getItem("token");
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-        body: JSON.stringify({
+      body: JSON.stringify({
         is_active: false,
       }),
     })
-    .then(res => {
-      if (!res.ok) throw new Error("No se pudo actualizar el perfil");
+      .then(res => {
+        if (!res.ok) throw new Error("No se pudo actualizar el perfil");
         return res.json();
-    })
-    .catch(err => console.error("Error al actualizar el perfil:", err));
+      })
+      .catch(err => console.error("Error al actualizar el perfil:", err));
     localStorage.removeItem("token");
     navigate("/");
   };
@@ -89,16 +71,16 @@ export const NavbarPrivate = () => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
-        profileDropdownRef.current &&
-        !profileDropdownRef.current.contains(e.target)
-      ) {
-        setProfileDropdownOpen(false);
-      }
-      if (
         logoDropdownRef.current &&
         !logoDropdownRef.current.contains(e.target)
       ) {
         setLogoDropdownOpen(false);
+      }
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(e.target)
+      ) {
+        setUserDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -111,8 +93,6 @@ export const NavbarPrivate = () => {
       className="navbar navbar-light bg-light px-4 py-3 shadow-sm"
       style={{
         background: "linear-gradient(to left,  #f4ffc4, #b7ff00, #f4ffc4)",
-        backgroundSize: "100%",
-        transition: "0.3s linear",
         minHeight: "6.6vh",
       }}
     >
@@ -124,7 +104,6 @@ export const NavbarPrivate = () => {
             style={{ cursor: "pointer", fontSize: "2.5vh" }}
             onClick={() => setLogoDropdownOpen(!isLogoDropdownOpen)}
           >
-            
             Mo’Money ⌄
           </div>
 
@@ -133,87 +112,33 @@ export const NavbarPrivate = () => {
               className="dropdown-menu show mt-2"
               style={{ position: "absolute", top: "100%", left: 0 }}
             >
-              <Link
-                className="dropdown-item"
-                to="/main"
-                onClick={() => setLogoDropdownOpen(false)}
-              >
-                Main
-              </Link>
-              <Link
-                className="dropdown-item"
-                to="/objetivos"
-                onClick={() => setLogoDropdownOpen(false)}
-              >
-                Añadir Objetivos
-              </Link>
-              <Link
-                className="dropdown-item"
-                to="/addnewgasto"
-                onClick={() => setLogoDropdownOpen(false)}
-              >
-                Añadir Gastos
-              </Link>
-              <Link
-                className="dropdown-item"
-                to="/inversion"
-                onClick={() => setLogoDropdownOpen(false)}
-              >
-                Invertir
-              </Link>
-              <Link
-                className="dropdown-item"
-                to="/blog"
-                onClick={() => setLogoDropdownOpen(false)}
-              >
-                Conoce nuestro blog
-              </Link>
+              <Link className="dropdown-item" to="/main" onClick={() => setLogoDropdownOpen(false)}>Main</Link>
+              <Link className="dropdown-item" to="/objetivos" onClick={() => setLogoDropdownOpen(false)}>Añadir Objetivos</Link>
+              <Link className="dropdown-item" to="/addnewgasto" onClick={() => setLogoDropdownOpen(false)}>Añadir Gastos</Link>
+              <Link className="dropdown-item" to="/inversion" onClick={() => setLogoDropdownOpen(false)}>Invertir</Link>
+              
             </div>
           )}
         </div>
 
-        {/* Bienvenida y perfil */}
-        <div className="d-flex align-items-center gap-3">
-          {/* Texto de bienvenida */}
-          <span style={{ color: "black", fontWeight: "bold" }}>
-            Bienvenid@, {username || "Usuario"}
+        {/* Bienvenida con dropdown de usuario */}
+        <div className="position-relative" ref={userDropdownRef}>
+          <span
+            style={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+            onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
+          >
+            Bienvenid@, {username || "Usuario"} ⌄
           </span>
 
-          {/* Botón de perfil con dropdown */}
-          <div className="position-relative" ref={profileDropdownRef}>
-            <button
-              className="btn btn-outline-light rounded-circle p-0"
-              onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
-              style={{ width: "60px", height: "60px", overflow: "hidden" }}
+          {isUserDropdownOpen && (
+            <div
+              className="dropdown-menu dropdown-menu-end show mt-2"
+              style={{ position: "absolute", right: 0, top: "100%" }}
             >
-              <img
-  src={fotoPerfil}
-  alt="Perfil"
-  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-/>
-            </button>
-
-            {isProfileDropdownOpen && (
-              <div
-                className="dropdown-menu dropdown-menu-end show mt-2"
-                style={{ position: "absolute", right: 0, top: "100%" }}
-              >
-                <Link
-                  className="dropdown-item"
-                  to="/perfil"
-                  onClick={() => setProfileDropdownOpen(false)}
-                >
-                  Perfil
-                </Link>
-                <button
-                  className="dropdown-item text-danger"
-                  onClick={handleLogout}
-                >
-                  Cerrar Sesión
-                </button>
-              </div>
-            )}
-          </div>
+              <Link className="dropdown-item" to="/perfil" onClick={() => setUserDropdownOpen(false)}>Perfil</Link>
+              <button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button>
+            </div>
+          )}
         </div>
       </div>
     </nav>
