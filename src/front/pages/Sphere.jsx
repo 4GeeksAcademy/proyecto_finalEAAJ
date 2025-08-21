@@ -4,7 +4,7 @@ const Sphere = () => {
     <div
       className="meridian"
       key={`meridian-${i}`}
-      style={{ transform: `rotateX(${(i - 1) * 10}deg)`, backgroundColor:"#ffffff10"}} />
+      style={{ transform: `rotateX(${(i - 1) * 10}deg)`}} />
   ));
 
   const latitudes = [
