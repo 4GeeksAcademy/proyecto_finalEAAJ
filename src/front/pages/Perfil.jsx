@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 //import { ProfileImageUploader } from "../components/ProfileImageUploader";
 import ImageViewer from "../components/ImageViewer";
-//import NavbarPrivate from "../components/NavbarPrivate";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../pages/Loader"; // 👈 importamos tu Loader
 import Swal from "sweetalert2";
+
 const Perfil = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true); 
@@ -17,7 +17,6 @@ const Perfil = () => {
     telefono: "",
     sueldo: "",
     situacion: "",
-    perfil: "",
     perfil: "",
   });
   const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
@@ -194,9 +193,6 @@ const Perfil = () => {
       ...usuario,
       [e.target.name]: e.target.value,
     });
-      console.log("Objeto usuario: "+usuario.perfil);
-      console.log("Constante fotoperfil: "+fotoPerfil);
-      console.log("Objeto usuario: "+usuario.email);
   };
 
   const inputStyle = {
@@ -226,7 +222,7 @@ const Perfil = () => {
     > <h1>Perfil</h1><br></br>
       <div style={{ marginBottom: "20px" }}>
         {/* <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} /> */}
-        <ImageViewer image={usuario.perfil} onImageChange={handleChange} />
+        <ImageViewer image={fotoPerfil} onImageChange={setFotoPerfil} />
       </div>
 
       <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} placeholder="Usuario" />
