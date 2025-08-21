@@ -137,7 +137,7 @@ export const NavbarPrivate = () => {
             style={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
             onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
           >
-            Bienvenid@, {username || "Usuario"} 
+            Bienvenid@, {username+"   " || "Usuario   "} 
          {/*  <div className="position-relative" ref={profileDropdownRef}> */}
             <button
               className="btn btn-outline-light rounded-circle p-0"

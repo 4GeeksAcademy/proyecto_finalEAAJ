@@ -71,7 +71,7 @@ function BlogPostDetail({ post, index, handleLike, handleAddComment, onBack }) {
         {post.title}
       </h2>
       <p style={{ color: '#888', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-        {new Date(post.createdOn).toLocaleDateString()}
+        {post.createdOn}
       </p>
 
       {post.body && post.body.map((line, i) => (

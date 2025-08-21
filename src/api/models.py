@@ -94,7 +94,7 @@ class Articulo(db.Model):
     titulo = db.Column(db.String(255), nullable=False)
     autor = db.Column(db.String(255), nullable=False)
     texto = db.Column(db.Text, nullable=False)
-    fecha = db.Column(db.DateTime, nullable=True)
+    fecha = db.Column(db.String(120), nullable=True)
     likes = db.Column(db.Integer, nullable=False)
 
     def serialize(self):
@@ -103,7 +103,7 @@ class Articulo(db.Model):
             "titulo": self.titulo,
             "autor": self.autor,
             "texto": self.texto,
-            "fecha": self.fecha.strftime('%Y-%m-%d') if self.fecha else None,
+            "fecha": self.fecha,
             "likes": self.likes,
         }
 class Link(db.Model): 

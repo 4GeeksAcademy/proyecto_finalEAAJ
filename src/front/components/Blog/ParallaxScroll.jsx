@@ -173,7 +173,7 @@ const ParallaxScroll = ({ posts = [], onPostSelect, onAddNewPostClick }) => {
                 fontSize: '0.9rem',
                 margin: '0'
               }}>
-                {post.date || "Fecha desconocida"}
+                {post.createdOn || "Fecha desconocida"}
               </p>
             </div>
           </div>

@@ -530,9 +530,9 @@ def delete_articulo(articulo_id):
 def register_link():
     body = request.get_json()
     new_link = Link()
-    new_link.titulo = body["imagen"]
-    new_link.autor = body["enlace"]
-    new_link.texto = body["id_articulo"]
+    new_link.imagen = body["imagen"]
+    new_link.enlace = body["enlace"]
+    new_link.articulo_id = body["articulo_id"]
 
     db.session.add(new_link)
     db.session.commit()

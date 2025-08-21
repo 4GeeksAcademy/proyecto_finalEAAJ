@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f9bfa44a8bde
+Revision ID: be48e50a9a0d
 Revises: 
-Create Date: 2025-08-18 09:31:28.169720
+Create Date: 2025-08-21 21:09:50.703791
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f9bfa44a8bde'
+revision = 'be48e50a9a0d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('titulo', sa.String(length=255), nullable=False),
     sa.Column('autor', sa.String(length=255), nullable=False),
     sa.Column('texto', sa.Text(), nullable=False),
-    sa.Column('fecha', sa.DateTime(), nullable=True),
+    sa.Column('fecha', sa.String(length=120), nullable=True),
     sa.Column('likes', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -36,7 +36,7 @@ def upgrade():
     sa.Column('firstname', sa.String(length=120), nullable=True),
     sa.Column('lastname', sa.String(length=120), nullable=True),
     sa.Column('country', sa.String(length=120), nullable=True),
-    sa.Column('perfil', sa.String(length=120), nullable=True),
+    sa.Column('perfil', sa.String(length=255), nullable=True),
     sa.Column('phone', sa.String(length=27), nullable=False),
     sa.Column('sueldo', sa.Float(), nullable=False),
     sa.Column('is_student', sa.Boolean(), nullable=False),
@@ -56,8 +56,7 @@ def upgrade():
     )
     op.create_table('link',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('img_nombre', sa.String(length=120), nullable=True),
-    sa.Column('imagen', sa.LargeBinary(), nullable=True),
+    sa.Column('imagen', sa.String(length=255), nullable=True),
     sa.Column('enlace', sa.String(length=255), nullable=True),
     sa.Column('articulo_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['articulo_id'], ['articulo.id'], ),

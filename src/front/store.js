@@ -1,4 +1,40 @@
-import initialPostsData from "./assets/img/BlogPosts.js";
+// store.js
+export const initialStore = () => {
+  return {
+    posts: [],
+    selectedIndex: null,
+    showAddForm: false
+  };
+};
+
+export default function storeReducer(store, action = {}) {
+  switch (action.type) {
+    case "set_posts": {
+      return { ...store, posts: action.payload.posts };
+    }
+    case "add_post": {
+      const { post } = action.payload;
+      return { ...store, posts: [post, ...store.posts], showAddForm: false };
+    }
+    case "like_post": {
+      const { index } = action.payload;
+      const updatedPosts = [...store.posts];
+      updatedPosts[index].likes++;
+      return { ...store, posts: updatedPosts };
+    }
+    case "set_selected_index": {
+      const { index } = action.payload;
+      return { ...store, selectedIndex: index };
+    }
+    case "toggle_add_form": {
+      return { ...store, showAddForm: !store.showAddForm };
+    }
+    default:
+      throw new Error("Unknown action type: " + action.type);
+  }
+}
+
+/* import initialPostsData from "./assets/img/BlogPosts.js";
 
 export const initialStore = () => {
   return {
@@ -15,7 +51,7 @@ export default function storeReducer(store, action = {}) {
       const newPost = {
         ...post,
         body: post.body.split("\n"),
-        comments: [],
+        //comments: [],
         likes: 0,
         createdOn: Date.now(),
         image: post.image || "https://placehold.co/600x400"
@@ -27,7 +63,7 @@ export default function storeReducer(store, action = {}) {
       };
     }
 
-    case "add_comment": {
+    /* case "add_comment": {
       const { postIndex, comment } = action.payload;
       const updatedPosts = [...store.posts];
       updatedPosts[postIndex].comments.push({
@@ -38,7 +74,7 @@ export default function storeReducer(store, action = {}) {
         ...store,
         posts: updatedPosts
       };
-    }
+    } 
 
     case "like_post": {
       const { index } = action.payload;
@@ -68,4 +104,4 @@ export default function storeReducer(store, action = {}) {
     default:
       throw new Error("Unknown action type: " + action.type);
   }
-}
+} */

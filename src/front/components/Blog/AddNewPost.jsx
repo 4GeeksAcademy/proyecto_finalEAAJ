@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProfileImageUploader } from '../ProfileImageUploader';
+//import { ProfileImageUploader } from '../ProfileImageUploader';
 import ImageViewer from '../ImageViewer';
 
 
@@ -16,7 +16,7 @@ function AddNewPost({ onAddPost, onCancel }) {
 
  const handleApiSubmit = async (e) => {
     e.preventDefault();
-
+    var date = new Date();
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + "api/articulo/register", {
         method: 'POST',
@@ -24,49 +24,37 @@ function AddNewPost({ onAddPost, onCancel }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          titulo: titulo,
-          autor: autor,
-          texto: texto,
-          fecha: Date.now(),
+          titulo: titulo || "",
+          autor: autor || "",
+          texto: texto || "",
+          fecha: date.toLocaleDateString() || "",
           likes: 0,
         }),
       });
-
-      const data = await response.json();
-
+      
       if (response.status === 201) {
-
-        alert("articulo registrado con éxito ✅");
-        setTimeout(() => {
-          navigate({ handleBack });
-        }, 1000);
-      } else if (response.status >= 400) {
-        alert("Error: " + data.msg);
-      }
-      const response2 = await fetch(import.meta.env.VITE_BACKEND_URL + "api/link/register", {
-        method: 'POST',
+        const data = await response.json();
+        const response2 =await fetch(import.meta.env.VITE_BACKEND_URL + "api/link/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-
-         articulo_id: data.id,
-          imagen:imagen,
-          enlace:enlace, 
-          
+          articulo_id: data.articulo.id,
+          imagen:imagen || "",
+          enlace:enlace || "",
         }),
       });
-
       const data2 = await response2.json();
-
       if (response2.status === 201) {
-
         alert("articulo registrado con éxito ✅");
         setTimeout(() => {
           navigate({ handleBack });
         }, 1000);
       } else if (response2.status >= 400) {
         alert("Error: " + data2.msg);
+      }} else if (response.status >= 400) {
+        alert("Error: " + data.msg);
       }
     } catch (error) {
       console.error("Error al enviar el artículo:", error);
@@ -74,13 +62,13 @@ function AddNewPost({ onAddPost, onCancel }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  /* const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.title && formData.body && formData.image) {
       onAddPost(formData);
       setFormData({ title: '', image: '', body: '' });
     }
-  };
+  }; */
 
   const handleBack = () => {
     // Si el padre pasó onCancel, lo usamos para cerrar el formulario en el componente padre.
@@ -138,7 +126,7 @@ function AddNewPost({ onAddPost, onCancel }) {
         {/* <ProfileImageUploader 
         onImageChange={setImagen}
         /> */}
-        <ImageViewer image={setImagen} onImageChange={setImagen} />
+        <ImageViewer image={imagen} onImageChange={setImagen} />
 
         {/*         <input
           className="form-control"
