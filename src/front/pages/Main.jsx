@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Loader from "./Loader.jsx";
 import Swal from "sweetalert2";
 
+
 export const Main = () => {
   const [sueldo, setSueldo] = useState(0);
   const [ahorro, setAhorro] = useState(0);
@@ -133,6 +134,7 @@ export const Main = () => {
         confirmBtn.style.fontSize = "16px";
         confirmBtn.style.borderRadius = "8px";
         confirmBtn.style.cursor = "pointer";
+        confirmBtn.style.marginRight = "12px";
       }
 
       if (cancelBtn) {
@@ -289,6 +291,7 @@ const eliminarObjetivo = async (id) => {
         confirmBtn.style.fontSize = "16px";
         confirmBtn.style.borderRadius = "8px";
         confirmBtn.style.cursor = "pointer";
+        confirmBtn.style.marginRight = "12px";
       }
 
       if (cancelBtn) {

@@ -162,32 +162,62 @@ const Perfil = () => {
       return;
     }
 
-    try {
-      const res = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/delete", {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    
+try {
+  const res = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/delete", {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-      if (res.status === 200) {
-        localStorage.removeItem("token");
-        //localStorage.removeItem("user");
-        //localStorage.removeItem("fotoPerfil");
-        alert("✅ Tu cuenta ha sido eliminada correctamente.");
-        navigate("/");
-      } else {
-        const data = await res.json();
-        alert("❌ No se pudo eliminar la cuenta: " + (data.msg || "Error desconocido."));
+  if (res.status === 200) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("fotoPerfil");
+
+    // ✅ Éxito con SweetAlert2
+    Swal.fire({
+      title: "✅ Tu cuenta ha sido eliminada correctamente.",
+      confirmButtonText: "Aceptar",
+      confirmButtonColor: "#7bff00",
+      customClass: {
+        confirmButton: "text-black"
       }
-    } catch (err) {
-      console.error("Error al eliminar usuario:", err);
-      alert("❌ Error al eliminar la cuenta. Intenta de nuevo más tarde.");
-    } finally {
-      setShowPopup(false);
-    }
-  };
+    }).then(() => {
+      navigate("/");
+    });
 
+  } else {
+    const data = await res.json();
+
+    // ❌ Error controlado
+    Swal.fire({
+      title: "❌ No se pudo eliminar la cuenta",
+      text: data.msg || "Error desconocido.",
+      confirmButtonText: "Reintentar",
+      confirmButtonColor: "#7bff00",
+      customClass: {
+        confirmButton: "text-black"
+      }
+    });
+  }
+} catch (err) {
+  console.error("Error al eliminar usuario:", err);
+
+  // 🚨 Error en el servidor
+  Swal.fire({
+    title: "❌ Error al eliminar la cuenta",
+    text: "Intenta de nuevo más tarde.",
+    confirmButtonText: "Cerrar",
+    confirmButtonColor: "#7bff00",
+    customClass: {
+      confirmButton: "text-black"
+    }
+  });
+} finally {
+  setShowPopup(false);
+}}
   const handleChange = (e) => {
     setUsuario({
       ...usuario,

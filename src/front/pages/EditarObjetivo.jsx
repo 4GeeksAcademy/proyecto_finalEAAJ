@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
+import Loader from "./Loader.jsx";
 
 export const EditarObjetivo = () => {
   const { id } = useParams();
@@ -155,7 +156,7 @@ export const EditarObjetivo = () => {
 
   
   if (!mostrarContenido) {
-    return null;
+    return <Loader />;
   }
 
   return (
