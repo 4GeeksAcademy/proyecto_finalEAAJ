@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
+import Loader from "./Loader.jsx";
 
 export const EditarGasto = () => {
   const { id } = useParams();
@@ -139,7 +140,7 @@ export const EditarGasto = () => {
   const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-  if (!mostrarContenido) return null; 
+  if (!mostrarContenido) return <Loader />; 
 
   return (
     <div style={containerStyle}>
