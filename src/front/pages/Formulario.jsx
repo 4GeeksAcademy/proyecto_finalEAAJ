@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "/user-profile.png";
+import Swal from "sweetalert2";
 
 const PasswordValidation = ({ password }) => {
   if (!password) return null;
@@ -105,35 +106,67 @@ export const Formulario = () => {
 
 
 
-  try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/user/register`, {
-      method: 'POST',
+  
+
+try {
+  const response = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}api/user/register`,
+    {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
+    }
+  );
+
+  console.log("📥 Status de respuesta:", response.status);
+
+  const data = await response.json();
+  console.log("📥 Respuesta del servidor:", data);
+
+  if (response.status === 201) {
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      console.log("🔑 Token guardado en localStorage");
+    }
+
+    // ✅ Éxito con botón verde y letras negras
+    Swal.fire({
+      title: "Usuario registrado con éxito ✅",
+      confirmButtonText: "Continuar",
+      confirmButtonColor: "#7bff00",
+      customClass: {
+        confirmButton: "text-black"
+      }
+    }).then(() => {
+      navigate("/main");
     });
 
-    console.log("📥 Status de respuesta:", response.status);
-
-    const data = await response.json();
-    console.log("📥 Respuesta del servidor:", data);
-
-    if (response.status === 201) {
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        console.log("🔑 Token guardado en localStorage");
+  } else {
+    // ❌ Error controlado
+    Swal.fire({
+      title: "Error",
+      text: data.error || "Error al registrar usuario ❌",
+      confirmButtonText: "Reintentar",
+      confirmButtonColor: "#7bff00",
+      customClass: {
+        confirmButton: "text-black"
       }
-      alert("Usuario registrado con éxito ✅");
-      navigate("/main");
-    } else {
-      alert(data.error || "Error al registrar usuario ❌");
-    }
-  } catch (err) {
-    console.error("🚨 Error en el registro:", err);
-    alert("Hubo un problema con el servidor ❌");
+    });
   }
-};
+
+} catch (err) {
+  console.error("🚨 Error en el registro:", err);
+  Swal.fire({
+    title: "Hubo un problema con el servidor ❌",
+    confirmButtonText: "Cerrar",
+    confirmButtonColor: "#7bff00",
+    customClass: {
+      confirmButton: "text-black"
+    }
+  });
+}}
 
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: "#ffffff", minHeight: "80vh" }}>
