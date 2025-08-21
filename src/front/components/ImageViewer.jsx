@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Loader from "../pages/Loader.jsx";
 
 export default function ImageViewer({ image, onImageChange }) {
   const [url, setUrl] = useState(image || "");
