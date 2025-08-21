@@ -9,8 +9,17 @@ export const NavbarPrivate = () => {
   const logoDropdownRef = useRef();
   const userDropdownRef = useRef();
   const [username, setUsername] = useState("");
-
+  const [fotoPerfil, setFotoPerfil] = useState("");
+  
   useEffect(() => {
+    refresh();
+    const listener = () => refresh();
+    window.addEventListener("refresh-navbar", listener);
+    
+    return () => window.removeEventListener("refresh-navbar", listener);
+  }, []);
+
+  const refresh=()=>{
     const token = localStorage.getItem("token");
     if (!token) return;
     fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
@@ -23,8 +32,9 @@ export const NavbarPrivate = () => {
       .then(res => res.json())
       .then(data => {
         setUsername(data.user.username || "");
+        setFotoPerfil(data.user.perfil|| "/user-profile.png")
       });
-  }, []);
+  }
 
   useEffect(() => {
     const expired = checkTokenExpiration();
@@ -127,9 +137,20 @@ export const NavbarPrivate = () => {
             style={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
             onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
           >
-            Bienvenid@, {username || "Usuario"} ⌄
-          </span>
-
+            Bienvenid@, {username || "Usuario"} 
+         {/*  <div className="position-relative" ref={profileDropdownRef}> */}
+            <button
+              className="btn btn-outline-light rounded-circle p-0"
+              onClick={() => setProfileDropdownOpen(!isProfileDropdownOpen)}
+              style={{ width: "60px", height: "60px", overflow: "hidden" }}
+            >
+              <img
+                src={fotoPerfil}
+                alt="Perfil"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </button>
+            </span>
           {isUserDropdownOpen && (
             <div
               className="dropdown-menu dropdown-menu-end show mt-2"

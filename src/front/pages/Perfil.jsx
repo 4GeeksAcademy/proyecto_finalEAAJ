@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 //import { ProfileImageUploader } from "../components/ProfileImageUploader";
 import ImageViewer from "../components/ImageViewer";
+//import NavbarPrivate from "../components/NavbarPrivate";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../pages/Loader"; // 👈 importamos tu Loader
 import Swal from "sweetalert2";
 const Perfil = () => {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(true); 
-
   const [usuario, setUsuario] = useState({
     username: "",
     nombre: "",
@@ -18,8 +17,8 @@ const Perfil = () => {
     telefono: "",
     sueldo: "",
     situacion: "",
+    perfil: "",
   });
-
   const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
   const [showPopup, setShowPopup] = useState(false); // ✅ Estado para la pop up
 
@@ -69,8 +68,6 @@ const Perfil = () => {
     );
   }
 
-  
-
   const handleGuardar = () => {
   const token = localStorage.getItem("token");
   fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update", {
@@ -88,6 +85,7 @@ const Perfil = () => {
       phone: usuario.telefono,
       sueldo: Number(usuario.sueldo),
       is_student: usuario.situacion === "estudiante",
+      perfil:fotoPerfil,
     }),
   })
     .then(res => res.json())
@@ -106,7 +104,7 @@ const Perfil = () => {
 
       if (data.perfil) {
         setFotoPerfil(data.perfil);
-        localStorage.setItem("fotoPerfil", data.perfil);
+        //localStorage.setItem("fotoPerfil", data.perfil);
       }
 
       // 🚀 SweetAlert2 con botón verde fosfo (#7bff00) y letras negras
@@ -120,6 +118,7 @@ const Perfil = () => {
           confirmButton: "swal2-confirm-custom",
         },
       }).then(() => {
+        window.dispatchEvent(new Event("refresh-navbar"));
         navigate("/main");
       });
 
