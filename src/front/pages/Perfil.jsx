@@ -15,9 +15,10 @@ const Perfil = () => {
     telefono: "",
     sueldo: "",
     situacion: "",
+    perfil: "",
   });
 
-  const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
+  const [fotoPerfil, setFotoPerfil] = useState("");
   const [showPopup, setShowPopup] = useState(false); // ✅ Estado para la pop up
 
   useEffect(() => {
@@ -46,14 +47,15 @@ const Perfil = () => {
           telefono: u.phone || "",
           sueldo: u.sueldo || "",
           situacion: u.is_student ? "estudiante" : (u.is_student === false ? "trabajador" : ""),
+          perfil: u.perfil,
         });
-
-        if (u.perfil) setFotoPerfil(u.perfil);
+      setFotoPerfil(u.perfil);
       })
       .catch(err => console.error("Error al cargar el perfil:", err));
+      
   }, []);
 
-  const handleGuardarFoto = () => {
+  /* const handleGuardarFoto = () => {
   const token = localStorage.getItem("token");
   fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/update_photo", {
     method: "PUT",
@@ -69,7 +71,7 @@ const Perfil = () => {
       localStorage.setItem("fotoPerfil", data.perfil);
     })
     .catch(err => console.error("Error al guardar foto:", err));
-};
+}; */
 
   const handleGuardar = () => {
   const token = localStorage.getItem("token");
@@ -88,7 +90,7 @@ const Perfil = () => {
       phone: usuario.telefono,
       sueldo: Number(usuario.sueldo),
       is_student: usuario.situacion === "estudiante",
-      perfil: fotoPerfil, // 🔹 Ahora sí enviamos la foto
+      perfil: usuario.perfil, // 🔹 Ahora sí enviamos la foto
     }),
   })
     .then(res => res.json())
@@ -103,12 +105,8 @@ const Perfil = () => {
         telefono: data.phone || prev.telefono,
         sueldo: data.sueldo || prev.sueldo,
         situacion: data.is_student ? "estudiante" : "trabajador",
+        perfil: data.perfil || prev.perfil,
       }));
-
-      if (data.perfil) {
-        setFotoPerfil(data.perfil);
-        localStorage.setItem("fotoPerfil", data.perfil);
-      }
 
       alert("Perfil actualizado con éxito");
       setTimeout(() => {
@@ -135,8 +133,8 @@ const Perfil = () => {
 
       if (res.status === 200) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("fotoPerfil");
+        //localStorage.removeItem("user");
+        //localStorage.removeItem("fotoPerfil");
         alert("✅ Tu cuenta ha sido eliminada correctamente.");
         navigate("/");
       } else {
@@ -156,6 +154,9 @@ const Perfil = () => {
       ...usuario,
       [e.target.name]: e.target.value,
     });
+      console.log("Objeto usuario: "+usuario.perfil);
+      console.log("Constante fotoperfil: "+fotoPerfil);
+      console.log("Objeto usuario: "+usuario.email);
   };
 
   const inputStyle = {
@@ -185,7 +186,7 @@ const Perfil = () => {
     >
       <div style={{ marginBottom: "20px" }}>
         {/* <ProfileImageUploader image={fotoPerfil} onImageChange={setFotoPerfil} /> */}
-        <ImageViewer image={fotoPerfil} onImageChange={setFotoPerfil} />
+        <ImageViewer image={usuario.perfil} onImageChange={handleChange} />
       </div>
 
       <input type="text" name="username" value={usuario.username} onChange={handleChange} style={inputStyle} placeholder="Usuario" />

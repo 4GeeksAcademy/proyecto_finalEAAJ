@@ -43,7 +43,7 @@ export async function refreshToken() {
     const data = await resp.json();
     if (data.token) {
       localStorage.setItem("token", data.token); // Guardamos el nuevo token
-      console.log("🔄 Token refrescado ");//, data.token);
+      //console.log("🔄 Token refrescado ");//, data.token);
       return data.token;
     }
   } catch (err) {
