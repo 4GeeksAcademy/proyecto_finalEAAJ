@@ -12,8 +12,9 @@ export const Objetivos = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [emoji, setEmoji] = useState(null);
   const [token, setToken] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
 
   const baseBtnStyle = {
     backgroundColor: "#7bff00",
@@ -28,13 +29,8 @@ export const Objetivos = () => {
     color: "white",
   };
 
-  const hoverBtnStyle = {
-    ...baseBtnStyle,
-    backgroundColor: "#a0ff00",
-  };
-
+  const hoverBtnStyle = { ...baseBtnStyle, backgroundColor: "#a0ff00" };
   const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
-  const [loading, setLoading] = useState(false);
 
   const handleMouseEnter = () => setBtnStyle(hoverBtnStyle);
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
@@ -42,7 +38,7 @@ export const Objetivos = () => {
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     setToken(savedToken);
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,7 +84,10 @@ export const Objetivos = () => {
         concepto.substring(0, start) + emojiChar + concepto.substring(end);
       setConcepto(newText);
       setTimeout(() => {
-        input.setSelectionRange(start + emojiChar.length, start + emojiChar.length);
+        input.setSelectionRange(
+          start + emojiChar.length,
+          start + emojiChar.length
+        );
         input.focus();
       }, 0);
     } else {
