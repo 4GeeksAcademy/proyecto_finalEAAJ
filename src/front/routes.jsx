@@ -41,7 +41,7 @@ export const router = createBrowserRouter(
       <Route path="/addnewgasto" element={<AddNewGasto />} />
       <Route path="/Perfil" element={<Perfil />} />
       <Route path="/blog" element={<BlogPage />} />
-      <Route path="/loader" element={<Loader />} />
+      
       
       {/* <Route path="/loader" element={<Loader />} /> Esta pagina es un intento independiente. Alexis */}
     </Route>

@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
@@ -8,13 +8,15 @@ export const Objetivos = () => {
   const [cantidad, setCantidad] = useState(0);
   const [fechaLimite, setFechaLimite] = useState("");
   const [explicacion, setExplicacion] = useState("");
+  const [frecuencia, setFrecuencia] = useState("diario"); // ✅ NUEVO estado
   const [showPicker, setShowPicker] = useState(false);
   const [emoji, setEmoji] = useState(null);
   const [token, setToken] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
 
-const baseBtnStyle = {
+  const baseBtnStyle = {
     backgroundColor: "#7bff00",
     border: "none",
     fontWeight: "600",
@@ -27,48 +29,50 @@ const baseBtnStyle = {
     color: "white",
   };
 
-  const hoverBtnStyle = {
-    ...baseBtnStyle,
-    backgroundColor: "#a0ff00",
-  };
-
+  const hoverBtnStyle = { ...baseBtnStyle, backgroundColor: "#a0ff00" };
   const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
-  const [loading, setLoading] = useState(false);
 
   const handleMouseEnter = () => setBtnStyle(hoverBtnStyle);
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-useEffect(() => {
+  useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
     setToken(savedToken);
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const nuevoObjetivo = { "titulo":concepto, "cantidad_meta":cantidad, "fecha_limite":fechaLimite, "descripcion":explicacion, "emoji":""};
+    const nuevoObjetivo = { 
+      titulo: concepto, 
+      cantidad_meta: cantidad, 
+      fecha_limite: fechaLimite, 
+      descripcion: explicacion, 
+      emoji: emoji || "", 
+      frecuencia // ✅ añadimos frecuencia
+    };
 
-  try {
-    const res = await fetch(import.meta.env.VITE_BACKEND_URL + "api/objetivo/register", {
-  method: "POST",
-  headers: { 
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}` 
-  },
-  body: JSON.stringify(nuevoObjetivo),
-});
+    try {
+      const res = await fetch(import.meta.env.VITE_BACKEND_URL + "api/objetivo/register", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify(nuevoObjetivo),
+      });
 
-    if (!res.ok) throw new Error("Error al guardar objetivo");
+      if (!res.ok) throw new Error("Error al guardar objetivo");
 
-    megaConfeti();
+      megaConfeti();
 
-    setTimeout(() => navigate("/main"), 1500)
+      setTimeout(() => navigate("/main"), 1500)
 
-  } catch (err) {
-    console.error(err);
-    alert("No se pudo guardar el objetivo");
-  }
-};
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo guardar el objetivo");
+    }
+  };
 
   const onEmojiClick = (emojiObject) => {
     const emojiChar = emojiObject.emoji;
@@ -80,7 +84,10 @@ useEffect(() => {
         concepto.substring(0, start) + emojiChar + concepto.substring(end);
       setConcepto(newText);
       setTimeout(() => {
-        input.setSelectionRange(start + emojiChar.length, start + emojiChar.length);
+        input.setSelectionRange(
+          start + emojiChar.length,
+          start + emojiChar.length
+        );
         input.focus();
       }, 0);
     } else {
@@ -90,51 +97,20 @@ useEffect(() => {
     setShowPicker(false);
   };
 
-  // Confeti en el botón de guardar objetivo
-
+  // 🎉 Confeti en el botón de guardar objetivo
   const megaConfeti = () => {
-  const colors = ["#bb0000", "#ffffff", "#00ff00", "#0000ff", "#ff00ff", "#ffa500"];
-
-  // Explosión 1 - centro
-  confetti({
-    particleCount: 120,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors,
-  });
-
-  // Explosión 2 - izquierda
-  setTimeout(() => {
-    confetti({
-      particleCount: 80,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-      colors,
-    });
-  }, 300);
-
-  // Explosión 3 - derecha
-  setTimeout(() => {
-    confetti({
-      particleCount: 80,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-      colors,
-    });
-  }, 600);
-
-  // Lluvia final
-  setTimeout(() => {
-    confetti({
-      particleCount: 150,
-      spread: 100,
-      origin: { y: 0 },
-      colors,
-    });
-  }, 1000);
-};
+    const colors = ["#bb0000", "#ffffff", "#00ff00", "#0000ff", "#ff00ff", "#ffa500"];
+    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors });
+    setTimeout(() => {
+      confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 }, colors });
+    }, 300);
+    setTimeout(() => {
+      confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 }, colors });
+    }, 600);
+    setTimeout(() => {
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0 }, colors });
+    }, 1000);
+  };
 
   return (
     <div className="container mt-5" style={{
@@ -145,8 +121,8 @@ useEffect(() => {
         position: "relative",
         backgroundColor: "#fff",
       }} >
-      <h3 classname="text-center">Crear objetivo de ahorro</h3>
-      <br></br>
+      <h3 className="text-center">Crear objetivo de ahorro</h3>
+      <br />
       <form onSubmit={handleSubmit}>
         {/* Concepto */}
         <div className="mb-3">
@@ -189,8 +165,6 @@ useEffect(() => {
             step="50"
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
-            onMouseOver={(e) => e.target.blur()
-            }
           />
         </div>
 
@@ -206,7 +180,22 @@ useEffect(() => {
           />
         </div>
 
-        {/* ✅ Explicación */}
+        {/* ✅ Frecuencia */}
+        <div className="mb-3">
+          <label className="form-label">¿Cómo quieres que se calcule tu ahorro?</label>
+          <select
+            className="form-select"
+            value={frecuencia}
+            onChange={(e) => setFrecuencia(e.target.value)}
+            required
+          >
+            <option value="diario">Diariamente</option>
+            <option value="mensual">Mensualmente</option>
+            <option value="anual">Anualmente</option>
+          </select>
+        </div>
+
+        {/* Explicación */}
         <div className="mb-3">
           <label className="form-label">Explicación (opcional)</label>
           <textarea

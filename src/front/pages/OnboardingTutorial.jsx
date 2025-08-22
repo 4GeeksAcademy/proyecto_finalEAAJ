@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const tutorialSteps = [
   {
+    title: "Mo'Money",
+    description: "Web que se dedica a dividir tu cuenta usando la regla 50-30-20. ",
+    
+  },
+  {
     title: "Bienvenido a tu panel",
     description: "Aquí puedes ver un resumen de tu dinero, objetivos, gastos e inversiones.",
     emoji: "👋"
