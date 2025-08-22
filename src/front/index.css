@@ -256,3 +256,40 @@ body {
     padding: 0.5rem;
   }
 }
+input[type="range"] {
+  -webkit-appearance: none; /* quita estilos por defecto en Chrome/Safari */
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background: #d4ff50;
+  outline: none;
+  transition: background 0.3s;
+}
+
+input[type="range"]:focus {
+  outline: none;
+  box-shadow: none; 
+}
+
+/* Personalizar el "thumb" (el circulito) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #7bff00;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #7bff00;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

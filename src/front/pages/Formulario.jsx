@@ -133,7 +133,7 @@ try {
 
     // ✅ Éxito con botón verde y letras negras
     Swal.fire({
-      title: "Usuario registrado con éxito ✅",
+      title: "Usuario registrado con éxito ",
       confirmButtonText: "Continuar",
       confirmButtonColor: "#7bff00",
       customClass: {

@@ -181,7 +181,7 @@ try {
     localStorage.removeItem("fotoPerfil");
 
     Swal.fire({
-      title: "✅ Tu cuenta ha sido eliminada correctamente.",
+      title: " Tu cuenta ha sido eliminada correctamente.",
       confirmButtonText: "Aceptar",
       confirmButtonColor: "#7bff00",
       customClass: {
