@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
@@ -11,10 +11,11 @@ export const Objetivos = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [emoji, setEmoji] = useState(null);
   const [token, setToken] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
 
-const baseBtnStyle = {
+  const baseBtnStyle = {
     backgroundColor: "#7bff00",
     border: "none",
     fontWeight: "600",
@@ -27,48 +28,64 @@ const baseBtnStyle = {
     color: "white",
   };
 
-  const hoverBtnStyle = {
-    ...baseBtnStyle,
-    backgroundColor: "#a0ff00",
-  };
-
+  const hoverBtnStyle = { ...baseBtnStyle, backgroundColor: "#a0ff00" };
   const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
-  const [loading, setLoading] = useState(false);
 
   const handleMouseEnter = () => setBtnStyle(hoverBtnStyle);
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-useEffect(() => {
-    const savedToken = localStorage.getItem("token") || "";
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (!savedToken || savedToken.length < 10) {
+      navigate("/main");
+      return;
+    }
     setToken(savedToken);
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    setLoading(true);
 
-  const nuevoObjetivo = { "titulo":concepto, "cantidad_meta":cantidad, "fecha_limite":fechaLimite, "descripcion":explicacion, "emoji":""};
+    if (!concepto.trim()) {
+      alert("El concepto es obligatorio");
+      setLoading(false);
+      return;
+    }
 
-  try {
-    const res = await fetch(import.meta.env.VITE_BACKEND_URL + "api/objetivo/register", {
-  method: "POST",
-  headers: { 
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}` 
-  },
-  body: JSON.stringify(nuevoObjetivo),
-});
+    const nuevoObjetivo = {
+      titulo: concepto,
+      cantidad_meta: cantidad,
+      fecha_limite: fechaLimite,
+      descripcion: explicacion,
+      emoji: emoji || "",
+    };
 
-    if (!res.ok) throw new Error("Error al guardar objetivo");
+    try {
+      const res = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "api/objetivo/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(nuevoObjetivo),
+        }
+      );
 
-    megaConfeti();
+      if (!res.ok) throw new Error("Error al guardar objetivo");
 
-    setTimeout(() => navigate("/main"), 1500)
+      megaConfeti();
 
-  } catch (err) {
-    console.error(err);
-    alert("No se pudo guardar el objetivo");
-  }
-};
+      setTimeout(() => navigate("/main"), 1500);
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo guardar el objetivo");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onEmojiClick = (emojiObject) => {
     const emojiChar = emojiObject.emoji;
@@ -80,7 +97,10 @@ useEffect(() => {
         concepto.substring(0, start) + emojiChar + concepto.substring(end);
       setConcepto(newText);
       setTimeout(() => {
-        input.setSelectionRange(start + emojiChar.length, start + emojiChar.length);
+        input.setSelectionRange(
+          start + emojiChar.length,
+          start + emojiChar.length
+        );
         input.focus();
       }, 0);
     } else {

@@ -11,29 +11,27 @@ export const EditarGasto = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const [mostrarContenido, setMostrarContenido] = useState(false);
   const errorShownRef = useRef(false);
-  const [mostrarContenido, setMostrarContenido] = useState(false); // 👈 nuevo estado
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token") || "";
-    setToken(storedToken);
+    const storedToken = localStorage.getItem("token");
 
-    if (!storedToken) return;
+    if (!storedToken || storedToken.length < 10) {
+      navigate("/main");
+      return;
+    }
+
+    setToken(storedToken);
 
     const fetchGasto = async () => {
       try {
         const url = `${import.meta.env.VITE_BACKEND_URL}api/gasto/${id}`;
         const res = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
+          headers: { Authorization: `Bearer ${storedToken}` },
         });
 
-        if (!res.ok) {
-          const errorMsg = await res.text();
-          console.error("Respuesta de error:", errorMsg);
-          throw new Error("Error al cargar gasto");
-        }
+        if (!res.ok) throw new Error("Error al cargar gasto");
 
         const data = await res.json();
 
@@ -43,12 +41,9 @@ export const EditarGasto = () => {
           emoji: data.gasto.emoji || "",
         });
 
-        // ⏳ Pequeña espera para mostrar todo junto
-        setTimeout(() => {
-          setMostrarContenido(true);
-        }, 200);
+        setTimeout(() => setMostrarContenido(true), 200);
       } catch (err) {
-        console.error("Fallo al cargar el gasto:", err.message);
+        console.error(err);
         if (!errorShownRef.current) {
           alert("No se pudo cargar el gasto.");
           errorShownRef.current = true;
@@ -58,7 +53,7 @@ export const EditarGasto = () => {
     };
 
     fetchGasto();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,24 +82,27 @@ export const EditarGasto = () => {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gasto/update/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...gasto,
-          cantidad: parseFloat(gasto.cantidad),
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/gasto/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            ...gasto,
+            cantidad: parseFloat(gasto.cantidad),
+          }),
+        }
+      );
 
       if (!res.ok) throw new Error("Error al actualizar gasto");
 
-      setMensaje(`✅ Gasto actualizado: ${gasto.concepto} ${gasto.emoji} - ${gasto.cantidad}€`);
-      setTimeout(() => {
-        navigate("/main");
-      }, 1500);
+      setMensaje(
+        `✅ Gasto actualizado: ${gasto.concepto} ${gasto.emoji} - ${gasto.cantidad}€`
+      );
+      setTimeout(() => navigate("/main"), 1500);
     } catch (err) {
       console.error(err);
       alert("No se pudo actualizar el gasto.");
@@ -136,66 +134,61 @@ export const EditarGasto = () => {
   };
 
   const [btnStyle, setBtnStyle] = useState(baseBtnStyle);
-
   const handleMouseEnter = () => setBtnStyle({ ...baseBtnStyle, backgroundColor: "#5fd800" });
   const handleMouseLeave = () => setBtnStyle(baseBtnStyle);
 
-  if (!mostrarContenido) return <Loader />; 
+  if (!mostrarContenido) return <Loader />;
 
   return (
     <div style={containerStyle}>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Editar gasto</h1>
       <form onSubmit={handleSubmit}>
-        <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Editar gasto</h1>
-
-        <div className="mb-4">
-          <label htmlFor="concepto" className="form-label">Concepto del gasto</label>
+        {/* Concepto */}
+        <div className="mb-3">
+          <label className="form-label">Concepto</label>
           <input
             type="text"
-            id="concepto"
-            name="concepto"
             className="form-control"
+            name="concepto"
             value={gasto.concepto}
             onChange={handleChange}
-            placeholder="Ej. Comida, transporte..."
             required
           />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="cantidad" className="form-label">Cantidad (€)</label>
-          <input
-            type="number"
-            id="cantidad"
-            name="cantidad"
-            className="form-control"
-            value={gasto.cantidad}
-            onChange={handleChange}
-            placeholder="0.00"
-            step="0.01"
-            min="0"
-            required
-          />
-        </div>
-
-        <div className="mb-4 position-relative">
-          <label className="form-label">Emoji (opcional)</label>
-          <div className="d-flex align-items-center gap-3">
+          <div className="mt-2">
             <button
               type="button"
               className="btn btn-outline-secondary"
               onClick={() => setShowPicker(!showPicker)}
               style={{ width: "45px", height: "40px", fontSize: "20px", padding: 0 }}
             >
-              {gasto.emoji || "😀"}
+              {gasto.emoji || "😊"}
             </button>
-            {showPicker && (
-              <div style={{ position: "absolute", zIndex: 100 }}>
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            )}
           </div>
+          {showPicker && (
+            <div style={{ position: "absolute", zIndex: 1000 }}>
+              <EmojiPicker onEmojiClick={onEmojiClick} />
+            </div>
+          )}
         </div>
 
+        {/* Cantidad */}
+        <div className="mb-3">
+          <label className="form-label">
+            Cantidad: <strong>{gasto.cantidad} €</strong>
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            name="cantidad"
+            value={gasto.cantidad}
+            onChange={handleChange}
+            min="0.01"
+            step="0.01"
+            required
+          />
+        </div>
+
+        {/* Botón */}
         <button
           type="submit"
           style={btnStyle}
@@ -203,9 +196,10 @@ export const EditarGasto = () => {
           onMouseLeave={handleMouseLeave}
           disabled={loading}
         >
-          {loading ? "Guardando..." : "Guardar cambios"}
+          Guardar cambios
         </button>
 
+        {/* Mensaje */}
         {mensaje && (
           <div className="text-center mt-3">
             <p>{mensaje}</p>

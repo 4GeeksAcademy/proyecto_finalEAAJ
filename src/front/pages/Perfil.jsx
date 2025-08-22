@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 //import { ProfileImageUploader } from "../components/ProfileImageUploader";
 import ImageViewer from "../components/ImageViewer";
 import { Link, useNavigate } from "react-router-dom";
-import Loader from "../pages/Loader"; // 👈 importamos tu Loader
+import Loader from "../pages/Loader"; 
 import Swal from "sweetalert2";
 
 const Perfil = () => {
@@ -22,42 +22,47 @@ const Perfil = () => {
   const [fotoPerfil, setFotoPerfil] = useState("/user-profile.png");
   const [showPopup, setShowPopup] = useState(false); // ✅ Estado para la pop up
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false); // 👈 si no hay token, dejamos de cargar
-      return;
-    }
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
-    fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  // 🔒 Protección de token
+  if (!token || token.length < 10) {
+    navigate("/main");
+    return;
+  }
+
+  fetch(import.meta.env.VITE_BACKEND_URL + "api/user/profile", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
+      return res.json();
     })
-      .then(res => {
-        if (!res.ok) throw new Error("No se pudo obtener la información del usuario");
-        return res.json();
-      })
-      .then(data => {
-        const u = data.user;
-        setUsuario({
-          username: u.username || "",
-          nombre: u.firstname || "",
-          apellido: u.lastname || "",
-          email: u.email || "",
-          pais: u.country || "",
-          telefono: u.phone || "",
-          sueldo: u.sueldo || "",
-          situacion: u.is_student ? "estudiante" : (u.is_student === false ? "trabajador" : ""),
-          perfil: u.perfil,
-        });
-      setFotoPerfil(u.perfil);
-      })
-      .catch(err => console.error("Error al cargar el perfil:", err))
-      .finally(() => setLoading(false)); 
-  }, []);
+    .then((data) => {
+      const u = data.user;
+      setUsuario({
+        username: u.username || "",
+        nombre: u.firstname || "",
+        apellido: u.lastname || "",
+        email: u.email || "",
+        pais: u.country || "",
+        telefono: u.phone || "",
+        sueldo: u.sueldo || "",
+        situacion: u.is_student ? "estudiante" : u.is_student === false ? "trabajador" : "",
+        perfil: u.perfil,
+      });
+      setFotoPerfil(u.perfil || "/user-profile.png");
+    })
+    .catch((err) => {
+      console.error("Error al cargar el perfil:", err);
+      navigate("/main");
+    })
+    .finally(() => setLoading(false));
+}, [navigate]);
 
   // 
   if (loading) {
@@ -108,13 +113,12 @@ const Perfil = () => {
         //localStorage.setItem("fotoPerfil", data.perfil);
       }
 
-      // 🚀 SweetAlert2 con botón verde fosfo (#7bff00) y letras negras
       Swal.fire({
         title: "Perfil actualizado con éxito",
         icon: "success",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#7bff00",
-        color: "#000", // color del texto del contenido
+        color: "#000", 
         customClass: {
           confirmButton: "swal2-confirm-custom",
         },
@@ -123,11 +127,11 @@ const Perfil = () => {
         navigate("/main");
       });
 
-      // pequeño truco: aplicar estilo inline al botón
+      
       setTimeout(() => {
         const btn = document.querySelector(".swal2-confirm-custom");
         if (btn) {
-          btn.style.color = "#000"; // texto negro
+          btn.style.color = "#000"; 
           btn.style.fontWeight = "bold";
         }
       }, 0);
@@ -176,7 +180,6 @@ try {
     localStorage.removeItem("user");
     localStorage.removeItem("fotoPerfil");
 
-    // ✅ Éxito con SweetAlert2
     Swal.fire({
       title: "✅ Tu cuenta ha sido eliminada correctamente.",
       confirmButtonText: "Aceptar",
@@ -191,7 +194,6 @@ try {
   } else {
     const data = await res.json();
 
-    // ❌ Error controlado
     Swal.fire({
       title: "❌ No se pudo eliminar la cuenta",
       text: data.msg || "Error desconocido.",
@@ -205,7 +207,6 @@ try {
 } catch (err) {
   console.error("Error al eliminar usuario:", err);
 
-  // 🚨 Error en el servidor
   Swal.fire({
     title: "❌ Error al eliminar la cuenta",
     text: "Intenta de nuevo más tarde.",
