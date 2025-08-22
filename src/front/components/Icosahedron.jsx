@@ -93,9 +93,9 @@ export const Icosahedron = () => {
             ];
             if (normale[2] > 0) {
                 let intensite = cosinus(normale, lumiere);
-                intensite = Math.max(0.2 + intensite * 0.9, 0.1);
+                intensite = Math.max(0.9 + intensite * 0.9, 0.5);
                 points = [rendu(sommets[s1]), rendu(sommets[s2]), rendu(sommets[s3])];
-                polygone(ctx, `rgb(${intensite * 183},${intensite * 255},${intensite * 0})`, points);
+                polygone(ctx, `rgb(${intensite * 123},${intensite * 255},${intensite * 0})`, points);
             }
         }
 
