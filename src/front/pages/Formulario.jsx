@@ -120,15 +120,15 @@ try {
     }
   );
 
-  console.log("📥 Status de respuesta:", response.status);
+  //console.log("📥 Status de respuesta:", response.status);
 
   const data = await response.json();
-  console.log("📥 Respuesta del servidor:", data);
+  //console.log("📥 Respuesta del servidor:", data);
 
   if (response.status === 201) {
     if (data.token) {
       localStorage.setItem("token", data.token);
-      console.log("🔑 Token guardado en localStorage");
+      //console.log("🔑 Token guardado en localStorage");
     }
 
     // ✅ Éxito con botón verde y letras negras
