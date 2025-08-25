@@ -30,6 +30,7 @@ export const BlogPage = () => {
             return {
               id: art.id,
               title: art.titulo,
+              autor: art.autor,
               body: art.texto ? art.texto.split("\n") : [],
               likes: art.likes,
               createdOn: art.fecha,

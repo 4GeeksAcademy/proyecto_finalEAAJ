@@ -7,6 +7,8 @@ export const initialStore = () => {
   };
 };
 
+
+
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
     case "set_posts": {
@@ -20,6 +22,28 @@ export default function storeReducer(store, action = {}) {
       const { index } = action.payload;
       const updatedPosts = [...store.posts];
       updatedPosts[index].likes++;
+      console.log(index);
+      const likesPut = async (ind, lik) => {
+        try {
+          const response = await fetch(import.meta.env.VITE_BACKEND_URL + "api/articulo/update/"+ind, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              likes: lik,
+            }),
+          });
+          if (response.status === 201) {
+            alert("articulo actualizado con éxito ✅");
+          } else if (response.status >= 400) {
+            alert("Error: " + data.msg);
+          }} catch (error) {
+            console.error("Error al enviar el artículo:", error);
+            alert("Error al enviar el artículo ❌");
+          }
+      }
+      likesPut(index, updatedPosts[index].likes);
       return { ...store, posts: updatedPosts };
     }
     case "set_selected_index": {

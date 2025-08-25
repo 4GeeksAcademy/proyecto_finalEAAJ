@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Link} from "react-router-dom";
 
 function BlogPostDetail({ post, index, handleLike, handleAddComment, onBack }) {
 
@@ -71,7 +72,7 @@ function BlogPostDetail({ post, index, handleLike, handleAddComment, onBack }) {
         {post.title}
       </h2>
       <p style={{ color: '#888', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-        {post.createdOn}
+        {post.createdOn+" - "+post.autor}
       </p>
 
       {post.body && post.body.map((line, i) => (
@@ -79,8 +80,24 @@ function BlogPostDetail({ post, index, handleLike, handleAddComment, onBack }) {
           {line}
         </p>
       ))}
+      <Link to={post.enlace}>
+        <button
+          className="btn btn-default"
+          style={{
+            backgroundColor: '#004d00',
+            color: 'white',
+            padding: '0.5rem 1rem',
+            border: 'none',
+            borderRadius: '5px',
+            fontSize: '1rem',
+            cursor: 'pointer',
+            marginTop: '1rem'
+          }}
+        >Enlace
+        </button>
+      </Link>
 
-      <button
+      {/* <button
         className="btn btn-default"
         onClick={() => handleLike(index)}
         style={{
@@ -95,7 +112,7 @@ function BlogPostDetail({ post, index, handleLike, handleAddComment, onBack }) {
         }}
       >
         <i className="fa fa-heart" style={{ marginRight: '0.4rem' }} /> Like ({post.likes})
-      </button>
+      </button> */}
 
       <div className="comments" style={{ marginTop: '2rem' }}>
         {/* Aquí puedes mapear los comentarios actuales y añadir el formulario de añadir comentario */}

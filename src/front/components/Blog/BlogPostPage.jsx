@@ -8,7 +8,7 @@ function BlogPostPage({ posts, setSelectedIndex }) {
         <div className="col-md-4 post" key={index} onClick={() => setSelectedIndex(index)}>
           <img src={post.image} alt={post.title} className="img-responsive" />
           <h2>{post.title}</h2>
-          <p>{post.createdOn}</p>
+          <p>{post.createdOn+" - "+post.autor}</p>
         </div>
       ))}
     </div>
