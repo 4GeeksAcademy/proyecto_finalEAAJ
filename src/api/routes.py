@@ -569,13 +569,11 @@ def update_link(link_id):
     link = Link.query.filter_by(id=link_id).first()
     if not link:
         return jsonify({"msg": "Link no encontrado"}), 404
-
-    if 'imagen' in request.files:
-        link.imagen = request.files['imagen']
-
-    if 'enlace' in request.form:
-        link.enlace = request.form['enlace']
-
+    body = request.get_json()
+    if 'imagen' in body:
+        link.imagen = body['imagen']
+    if 'enlace' in body:
+        link.enlace = body['enlace']
     db.session.commit()
     return jsonify({"msg": "Link actualizado correctamente", "link": link.serialize()}), 200
 
