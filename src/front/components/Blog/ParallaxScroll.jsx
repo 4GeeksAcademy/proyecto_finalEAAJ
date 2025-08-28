@@ -181,7 +181,7 @@ const ParallaxScroll = ({ posts = [], onPostSelect, onAddNewPostClick }) => {
       </div>
 
       {/* Pestaña para añadir nuevo post (ahora no es fixed) */}
-      <div
+      {/*  <div
         className="add-post-tab"
         onClick={onAddNewPostClick}
         style={{
@@ -210,7 +210,7 @@ const ParallaxScroll = ({ posts = [], onPostSelect, onAddNewPostClick }) => {
         }}
       >
         + Añadir nuevo post
-      </div>
+      </div> */}
     </div>
   );
 };
